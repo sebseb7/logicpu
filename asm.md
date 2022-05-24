@@ -1,5 +1,6 @@
 registers: a,b,c,d
 memory: 0-7fff (ram) ; 8000-ffff (rom)
+big endian
 
 ```assembly
 ld reg,mem      ;mem->reg
@@ -27,6 +28,6 @@ hlt
 outa            ; reg a -> debug display
 cie             ; clear interupt enable
 sie             ; set interrupt enable
-reti            ; return from interrupt (address of interrupt handler need to be placed at 0xfffe)
+reti            ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian)
 
 ```
