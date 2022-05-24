@@ -1,5 +1,7 @@
 registers: a,b,c,d
+
 memory: 0-7fff (ram) ; 8000-ffff (rom)
+
 big endian
 
 ```assembly
