@@ -5,33 +5,33 @@ memory: 0-7fff (ram) ; 8000-ffff (rom)
 big endian
 
 ```assembly
-ld reg,mem      ;mem->reg
-ldi reg,val     ;val->reg
-st reg,mem      ;reg->mem
+ld reg,mem      ;mem->reg (4 cycles) 
+ldi reg,val     ;val->reg (2 cycles)
+st reg,mem      ;reg->mem (4 cycles)
 
-add reg_a,reg_b ;reg_a = reg_a+reg_b
-sub reg_a,reg_b ;reg_a = reg_a-reg_b
-subi reg,value  ;reg=reg-value
-addi reg,value  ;reg=reg+value
+add reg_a,reg_b ;reg_a = reg_a+reg_b (3 cycles)
+sub reg_a,reg_b ;reg_a = reg_a-reg_b (3 cycles)
+subi reg,value  ;reg=reg-value (3 cycles)
+addi reg,value  ;reg=reg+value (3 cycles)
 
-mv reg_a,reg_b  ;reg_a->reg_b (mv a,a == nop)
-jmp mem
-jmpz mem
+mv reg_a,reg_b  ;reg_a->reg_b (mv a,a == nop, otherwise: 2 cycles)
+jmp mem         ;(4 cylces)
+jmpz mem        ;(4 cycles)
 
-push reg
-pop reg
+push reg        ;(2 cylces)
+pop reg         ;(2 cycles)
 
-call mem
-ret
+call mem        ;(6 cycles)
+ret             ;(5 cycles)
 
-nop
-hlt
+nop             ;(1 cycle)
+hlt             ;(2 cycles)  
 
-outa            ; reg a -> debug display
-cie             ; clear interupt enable
-sie             ; set interrupt enable
-reti            ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian; all registers saved/restored via stack)
-mvia            ; inputs from interrupt -> register a
+outa            ; reg a -> debug display (2 cycles)
+cie             ; clear interupt enable (2 cycles)
+sie             ; set interrupt enable (2 cycles)
+reti            ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian; all registers saved/restored via stack; 11 cycles, entering interrupt: 15 cycles)
+mvia            ; inputs from interrupt -> register a (2 cycles)
 
 ```
 
