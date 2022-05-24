@@ -12,6 +12,7 @@ st reg,mem       ;reg->mem (4 cycles)
 add reg_a,reg_b  ;reg_a = reg_a+reg_b (3 cycles)
 addc reg_a,reg_b ; add + carry (3 cycles)
 sub reg_a,reg_b  ;reg_a = reg_a-reg_b (3 cycles)
+subc reg_a,reg_b ; sub + carry (3 cycles)
 subi reg,value   ;reg=reg-value (3 cycles)
 addi reg,value   ;reg=reg+value (3 cycles)
 
