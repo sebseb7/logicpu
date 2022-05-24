@@ -58,6 +58,7 @@ keyb:
 
 .org 0x8000 ; ROM
 
+	sie
 start:
 	ld a,keyup
 	outa
