@@ -57,7 +57,7 @@ keyb:
 
 start:
 	ld a,keyup
-	outa a
+	outa
 	jmp start
 
 irq:
