@@ -38,10 +38,27 @@ mvia            ; inputs from interrupt -> register a
 example interrupt handler:
 
 ```assembly
-.org 0xfffe ; IRQ
-   .byte irq
+.org 0x0000 ; RAM
 
-.org 0x8000
+keyup:
+	.byte 0
+keydown:
+	.byte 0
+keyleft:
+	.byte 0
+keyright:
+	.byte 0
+keya:
+	.byte 0
+keyb:
+	.byte 0
+
+.org 0x8000 ; ROM
+
+start:
+	ld a,keyup
+	outa a
+	jmp start
 
 irq:
 	cie
@@ -66,11 +83,42 @@ irq:
 	sie
 	reti
 key_down:
-key_up:
-key_right:
-key_left:
-key_a:
-key_b:
+	ld a,keydown
+	addi a,1
+	st a,keydown
 	sie
 	reti
+key_up:
+	ld a,keyup
+	addi a,1
+	st a,keyup
+	sie
+	reti
+key_right:
+	ld a,keyright
+	addi a,1
+	st a,keyright
+	sie
+	reti
+key_left:
+	ld a,keyleft
+	addi a,1
+	st a,keyleft
+	sie
+	reti
+key_a:
+	ld a,keya
+	addi a,1
+	st a,keya
+	sie
+	reti
+key_b:
+	ld a,keyb
+	addi a,1
+	st a,keyb
+	sie
+	reti
+
+.org 0xfffe ; IRQ
+   .byte irq
 ```
