@@ -15,6 +15,9 @@ mv reg_a,reg_b  ;reg_a->reg_b (mv a,a == nop)
 jmp mem
 jmpz mem
 
+push reg
+pop reg
+
 call mem
 ret
 
