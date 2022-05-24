@@ -120,5 +120,5 @@ key_b:
 	reti
 
 .org 0xfffe ; IRQ
-   .byte irq
+   .2byte irq
 ```
