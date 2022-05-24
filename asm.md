@@ -61,7 +61,7 @@ start:
 	jmp start
 
 irq:
-	cie
+	cie ;stack overflow possible otherwise
 	mvia
 	subi a,1
 	jmpz key_up
