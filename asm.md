@@ -16,7 +16,8 @@ addi reg,value  ;reg=reg+value (3 cycles)
 
 mv reg_a,reg_b  ;reg_a->reg_b (mv a,a == nop, otherwise: 2 cycles)
 jmp mem         ;(4 cylces)
-jmpz mem        ;(4 cycles)
+jmpz mem        ;zero (4 cycles)
+jmpc mem        ;carry (4 c<cles)
 
 push reg        ;(2 cylces)
 pop reg         ;(2 cycles)
