@@ -30,7 +30,7 @@ hlt
 outa            ; reg a -> debug display
 cie             ; clear interupt enable
 sie             ; set interrupt enable
-reti            ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian)
+reti            ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian; all registers saved/restored via stack)
 mvia            ; inputs from interrupt -> register a
 
 ```
