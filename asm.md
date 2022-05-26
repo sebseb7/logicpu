@@ -5,26 +5,25 @@ memory: 0-7fff (ram) ; 8000-ffff (rom)
 big endian
 
 ```assembly
-ld reg,mem       ;mem->reg (4 cycles) 
+ld reg,[mem]       ;mem->reg (4 cycles) 
 ldi reg,val      ;val->reg (2 cycles)
-st reg,mem       ;reg->mem (4 cycles)
+st reg,[mem]       ;reg->mem (4 cycles)
 
-add reg_a,reg_b  ;reg_a = reg_a+reg_b (3 cycles)
-addc reg_a,reg_b ; add + carry (3 cycles)
-sub reg_a,reg_b  ;reg_a = reg_a-reg_b (3 cycles)
-subc reg_a,reg_b ; sub + carry (3 cycles)
-subi reg,value   ;reg=reg-value (3 cycles)
-addi reg,value   ;reg=reg+value (3 cycles)
+add reg_a,reg_b|[mem]|value  ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
+addc reg_a,reg_b|[mem]|value ; add + carry (3 cycles; 5 cycles if op2 == mem)
+sub reg_a,reg_b|[mem]|value  ;reg_a = reg_a-reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
+subc reg_a,reg_b|[mem]|value ; sub + carry (3 cycles; 5 cycles if op2 == mem)
+
 
 mv reg_a,reg_b   ;reg_a->reg_b (mv a,a == nop, otherwise: 2 cycles)
-jmp mem          ;(4 cylces)
-jmpz mem         ;zero (4 cycles)
-jmpc mem         ;carry (4 cycles)
+jmp [mem]         ;(4 cylces)
+jmpz [mem]         ;zero (4 cycles)
+jmpc [mem]         ;carry (4 cycles)
 
 push reg         ;(2 cylces)
 pop reg          ;(2 cycles)
 
-call mem         ;(6 cycles)
+call [mem]         ;(6 cycles)
 ret              ;(5 cycles)
 
 nop              ;(1 cycle)
@@ -60,66 +59,66 @@ keyb:
 
 	sie
 start:
-	ld a,keyup
+	ld a,[keyup]
 	outa
-	jmp start
+	jmp [start]
 
 irq:
 	cie ;stack overflow possible otherwise
 	mvia
-	subi a,1
-	jmpz key_up
+	sub a,1
+	jmpz [key_up]
 	mvia
-	subi a,2
-	jmpz key_left
+	sub a,2
+	jmpz [key_left]
 	mvia
-	subi a,4
-	jmpz key_right
+	sub a,4
+	jmpz [key_right]
 	mvia 
-	subi a,8
-	jmpz key_b
+	sub a,8
+	jmpz [key_b]
 	mvia
-	subi a,16
-	jmpz key_a
+	sub a,16
+	jmpz [key_a]
 	mvia
-	subi a,32
-	jmpz key_down
+	sub a,32
+	jmpz [key_down]
 	sie
 	reti
 key_down:
-	ld a,keydown
-	addi a,1
-	st a,keydown
+	ld a,[keydown]
+	add a,1
+	st a,[keydown]
 	sie
 	reti
 key_up:
-	ld a,keyup
-	addi a,1
-	st a,keyup
+	ld a,[keyup]
+	add a,1
+	st a,[keyup]
 	sie
 	reti
 key_right:
-	ld a,keyright
-	addi a,1
-	st a,keyright
+	ld a,[keyright]
+	add a,1
+	st a,[keyright]
 	sie
 	reti
 key_left:
-	ld a,keyleft
-	addi a,1
-	st a,keyleft
+	ld a,[keyleft]
+	add a,1
+	st a,[keyleft]
 	sie
 	reti
 key_a:
-	ld a,keya
-	addi a,1
-	st a,keya
+	ld a,[keya]
+	add a,1
+	st a,[keya]
 	sie
 	reti
 key_b:
-	ld a,keyb
-	addi a,1
-	st a,keyb
+	ld a,[keyb]
+	add a,1
+	st a,[keyb]
 	sie
 	reti
 
