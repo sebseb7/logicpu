@@ -12,6 +12,8 @@ add reg_a,reg_b|[mem]|value  ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles 
 addc reg_a,reg_b|[mem]|value ; add + carry (3 cycles; 5 cycles if op2 == mem)
 sub reg_a,reg_b|[mem]|value  ;reg_a = reg_a-reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
 subc reg_a,reg_b|[mem]|value ; sub + carry (3 cycles; 5 cycles if op2 == mem)
+nand reg_a,reg_b|[mem]|value ; sub + carry (3 cycles; 5 cycles if op2 == mem)
+rsh reg
 
 jmp [mem]         ;(4 cylces)
 jmpz [mem]         ;zero (4 cycles)
