@@ -19,8 +19,8 @@ jmp [mem]         ;(4 cylces)
 jmpz [mem]         ;zero (4 cycles)
 jmpc [mem]         ;carry (4 cycles)
 
-push reg         ;(2 cylces)
-pop reg          ;(2 cycles)
+push reg|value    ;(2 cylces)
+pop ?reg          ;(2 cycles)
 
 call [mem]         ;(6 cycles)
 ret              ;(5 cycles)
