@@ -1,4 +1,10 @@
-const lines = {
+const fs = require('fs');
+// 0x70/112
+// 0x7f/127
+// 0xf0/240
+// 0xff/255
+
+var lines = {
 	db_tar_sel0:  1,
 	db_tar_sel1:  2,
 	db_tar_sel2:  4,
@@ -12,7 +18,7 @@ const lines = {
 	pc_inc:       1024,
 	ab_sel1:      2048,
 	sp_dec:       4096,
-	c13:	      8192,
+	op_out:	      8192,
 	t_reset:      16384,
 	sp_inc:       32768,
 	c_out:        65536,
@@ -30,9 +36,9 @@ const lines = {
 	db_tar_sel4:  134217728,
 	
 	off_dec:      268435456,
-	op_out:       536870912,
-	c30:          1073741824,
-	c31:          2147483648,
+	pc_in:       536870912,
+	alu_bus_sel0: 1073741824,
+	alu_bus_sel1: 2147483648,
 
 
 	sp_abus_out:  512,
@@ -55,7 +61,7 @@ const lines = {
 	d_out:        128+64,
 
 	ir_in:		  1,
-	pc_in:		  2,
+	unused:		  0,
 	addr_inl:     3,
 	addr_inh:     4,
 	ram_in:       5,
@@ -73,6 +79,11 @@ const lines = {
 	off_inl:      134217728+1,
 	c_in:         134217728+2,
 	d_in:         134217728+3,
+
+	alu_bus_sel_a:0,
+	alu_bus_sel_b:1073741824,
+	alu_bus_sel_c:2147483648,
+	alu_bus_sel_d:2147483648+1073741824,
 
 }
 
@@ -145,7 +156,7 @@ const instr = {
 		]
 	},
 	ld_a: {
-		opcode: 112,
+		opcode: 100,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
@@ -153,7 +164,7 @@ const instr = {
 		]
 	},
 	ld_b: {
-		opcode: 113,
+		opcode: 101,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
@@ -161,7 +172,7 @@ const instr = {
 		]
 	},
 	ld_c: {
-		opcode: 114,
+		opcode: 102,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
@@ -169,7 +180,7 @@ const instr = {
 		]
 	},
 	ld_d: {
-		opcode: 115,
+		opcode: 103,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
@@ -177,226 +188,466 @@ const instr = {
 		]
 	},
 	sub_a_a: {
-		opcode: 32,
+		opcode: 208,
 		steps: [
-			lines.a_out + lines.alu_op  + lines.alu_sel1,
+			lines.a_out + lines.alu_op  + lines.alu_sel1 + lines.alu_bus_sel_a,
 			lines.a_in + lines.alu_out,
 		]
 	},
 	sub_a_b: {
-		opcode: 33,
+		opcode: 209,
 		steps: [
-			lines.a_out + lines.alu_op + lines.alu_sel1,
-			lines.b_in + lines.alu_out,
-		]
-	},
-	sub_a_c: {
-		opcode: 34,
-		steps: [
-			lines.a_out + lines.alu_op + lines.alu_sel1,
-			lines.c_in + lines.alu_out,
-		]
-	},
-	sub_a_d: {
-		opcode: 35,
-		steps: [
-			lines.a_out + lines.alu_op + lines.alu_sel1,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	sub_b_a: {
-		opcode: 36,
-		steps: [
-			lines.b_out + lines.alu_op + lines.alu_sel1,
+			lines.a_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_b,
 			lines.a_in + lines.alu_out,
 		]
 	},
-	sub_b_b: {
-		opcode: 37,
+	sub_a_c: {
+		opcode: 210,
 		steps: [
-			lines.b_out + lines.alu_op + lines.alu_sel1,
+			lines.a_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_c,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	sub_a_d: {
+		opcode: 211,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_d,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	sub_b_a: {
+		opcode: 212,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_a,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	sub_b_b: {
+		opcode: 213,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_b,
 			lines.b_in + lines.alu_out,
 		]
 	},
 	sub_b_c: {
-		opcode: 38,
+		opcode: 214,
 		steps: [
-			lines.b_out + lines.alu_op + lines.alu_sel1,
-			lines.c_in + lines.alu_out,
-		]
-	},
-	sub_b_d: {
-		opcode: 39,
-		steps: [
-			lines.b_out + lines.alu_op + lines.alu_sel1,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	sub_c_a: {
-		opcode: 40,
-		steps: [
-			lines.c_out + lines.alu_op + lines.alu_sel1,
-			lines.a_in + lines.alu_out,
-		]
-	},
-	sub_c_b: {
-		opcode: 41,
-		steps: [
-			lines.c_out + lines.alu_op + lines.alu_sel1,
+			lines.b_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_c,
 			lines.b_in + lines.alu_out,
 		]
 	},
-	sub_c_c: {
-		opcode: 42,
+	sub_b_d: {
+		opcode: 215,
 		steps: [
-			lines.c_out + lines.alu_op + lines.alu_sel1,
+			lines.b_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_d,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	sub_c_a: {
+		opcode: 216,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_a,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	sub_c_b: {
+		opcode: 217,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_b,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	sub_c_c: {
+		opcode: 218,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_c,
 			lines.c_in + lines.alu_out,
 		]
 	},
 	sub_c_d: {
-		opcode: 43,
+		opcode: 219,
 		steps: [
-			lines.c_out + lines.alu_op + lines.alu_sel1,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	sub_d_a: {
-		opcode: 44,
-		steps: [
-			lines.d_out + lines.alu_op + lines.alu_sel1,
-			lines.a_in + lines.alu_out,
-		]
-	},
-	sub_d_b: {
-		opcode: 45,
-		steps: [
-			lines.d_out + lines.alu_op + lines.alu_sel1,
-			lines.b_in + lines.alu_out,
-		]
-	},
-	sub_d_c: {
-		opcode: 46,
-		steps: [
-			lines.d_out + lines.alu_op + lines.alu_sel1,
+			lines.c_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_d,
 			lines.c_in + lines.alu_out,
 		]
 	},
-	sub_d_d: {
-		opcode: 47,
+	sub_d_a: {
+		opcode: 220,
 		steps: [
-			lines.d_out + lines.alu_op + lines.alu_sel1,
+			lines.d_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_a,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_d_b: {
+		opcode: 221,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_b,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_d_c: {
+		opcode: 222,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_c,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_d_d: {
+		opcode: 223,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_sel1 + lines.alu_bus_sel_d,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_a: {
+		opcode: 84,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_a + lines.alu_sel1,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	sub_b: {
+		opcode: 85,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_c: {
+		opcode: 86,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_d: {
+		opcode: 87,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_d + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_a_di: {
+		opcode: 80,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_a + lines.alu_sel1,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	sub_b_di: {
+		opcode: 81,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_c_di: {
+		opcode: 82,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	sub_d_di: {
+		opcode: 83,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_d + lines.alu_sel1,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_a: {
+		opcode: 104,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_a,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	add_b: {
+		opcode: 105,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_c: {
+		opcode: 106,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_d: {
+		opcode: 107,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
+			lines.addr_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_d,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_a_di: {
+		opcode: 108,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_a,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	add_b_di: {
+		opcode: 109,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_c_di: {
+		opcode: 110,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_d_di: {
+		opcode: 111,
+		steps: [
+			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_d,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	addc_a_a: {
+		opcode: 176,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	addc_a_b: {
+		opcode: 177,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	addc_a_c: {
+		opcode: 178,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	addc_a_d: {
+		opcode: 179,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_d,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	addc_b_a: {
+		opcode: 180,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	addc_b_b: {
+		opcode: 181,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	addc_b_c: {
+		opcode: 182,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	addc_b_d: {
+		opcode: 183,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_d,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	addc_c_a: {
+		opcode: 184,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	addc_c_b: {
+		opcode: 185,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	addc_c_c: {
+		opcode: 186,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	addc_c_d: {
+		opcode: 187,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_d,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	addc_d_a: {
+		opcode: 188,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	addc_d_b: {
+		opcode: 189,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	addc_d_c: {
+		opcode: 190,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	addc_d_d: {
+		opcode: 191,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_d,
 			lines.d_in + lines.alu_out,
 		]
 	},
 	add_a_a: {
-		opcode: 48,
+		opcode: 224,
 		steps: [
-			lines.a_out + lines.alu_op,
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_a,
 			lines.a_in + lines.alu_out,
 		]
 	},
 	add_a_b: {
-		opcode: 49,
+		opcode: 225,
 		steps: [
-			lines.a_out + lines.alu_op,
-			lines.b_in + lines.alu_out,
-		]
-	},
-	add_a_c: {
-		opcode: 50,
-		steps: [
-			lines.a_out + lines.alu_op,
-			lines.c_in + lines.alu_out,
-		]
-	},
-	add_a_d: {
-		opcode: 51,
-		steps: [
-			lines.a_out + lines.alu_op,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	add_b_a: {
-		opcode: 52,
-		steps: [
-			lines.b_out + lines.alu_op,
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_b,
 			lines.a_in + lines.alu_out,
 		]
 	},
-	add_b_b: {
-		opcode: 53,
+	add_a_c: {
+		opcode: 226,
 		steps: [
-			lines.b_out + lines.alu_op,
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	add_a_d: {
+		opcode: 227,
+		steps: [
+			lines.a_out + lines.alu_op + lines.alu_bus_sel_d,
+			lines.a_in + lines.alu_out,
+		]
+	},
+	add_b_a: {
+		opcode: 228,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	add_b_b: {
+		opcode: 229,
+		steps: [
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_b,
 			lines.b_in + lines.alu_out,
 		]
 	},
 	add_b_c: {
-		opcode: 54,
+		opcode: 230,
 		steps: [
-			lines.b_out + lines.alu_op,
-			lines.c_in + lines.alu_out,
-		]
-	},
-	add_b_d: {
-		opcode: 55,
-		steps: [
-			lines.b_out + lines.alu_op,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	add_c_a: {
-		opcode: 56,
-		steps: [
-			lines.c_out + lines.alu_op,
-			lines.a_in + lines.alu_out,
-		]
-	},
-	add_c_b: {
-		opcode: 57,
-		steps: [
-			lines.c_out + lines.alu_op,
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_c,
 			lines.b_in + lines.alu_out,
 		]
 	},
-	add_c_c: {
-		opcode: 58,
+	add_b_d: {
+		opcode: 231,
 		steps: [
-			lines.c_out + lines.alu_op,
+			lines.b_out + lines.alu_op + lines.alu_bus_sel_d,
+			lines.b_in + lines.alu_out,
+		]
+	},
+	add_c_a: {
+		opcode: 232,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	add_c_b: {
+		opcode: 233,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.c_in + lines.alu_out,
+		]
+	},
+	add_c_c: {
+		opcode: 234,
+		steps: [
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_c,
 			lines.c_in + lines.alu_out,
 		]
 	},
 	add_c_d: {
-		opcode: 59,
+		opcode: 235,
 		steps: [
-			lines.c_out + lines.alu_op,
-			lines.d_in + lines.alu_out,
-		]
-	},
-	add_d_a: {
-		opcode: 60,
-		steps: [
-			lines.d_out + lines.alu_op,
-			lines.a_in + lines.alu_out,
-		]
-	},
-	add_d_b: {
-		opcode: 61,
-		steps: [
-			lines.d_out + lines.alu_op,
-			lines.b_in + lines.alu_out,
-		]
-	},
-	add_d_c: {
-		opcode: 62,
-		steps: [
-			lines.d_out + lines.alu_op,
+			lines.c_out + lines.alu_op + lines.alu_bus_sel_d,
 			lines.c_in + lines.alu_out,
 		]
 	},
-	add_d_d: {
-		opcode: 63,
+	add_d_a: {
+		opcode: 236,
 		steps: [
-			lines.d_out + lines.alu_op,
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_a,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_d_b: {
+		opcode: 237,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_b,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_d_c: {
+		opcode: 238,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_c,
+			lines.d_in + lines.alu_out,
+		]
+	},
+	add_d_d: {
+		opcode: 239,
+		steps: [
+			lines.d_out + lines.alu_op + lines.alu_bus_sel_d,
 			lines.d_in + lines.alu_out,
 		]
 	},
@@ -474,15 +725,8 @@ const instr = {
 			lines.a_in + lines.alu_out,
 		]
 	},
-	subi: {
-		opcode: 24, // 18
-		steps: [
-			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_sel1,
-			lines.a_in + lines.alu_out,
-		]
-	},
 	irq: {
-		opcode: 26, // 1a
+		opcode: 127,
 		steps: [
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.flags_out,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.a_out,
@@ -501,7 +745,7 @@ const instr = {
 		]
 	},
 	reti: {
-		opcode: 27, // 1b
+		opcode: 126,
 		steps: [
 			lines.sp_inc,
 			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl,
@@ -515,6 +759,64 @@ const instr = {
 			lines.addr_abus_out + lines.pc_in,
 		]
 	},
+	push_a: {
+		opcode: 76,
+		steps: [
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.a_out,
+		]
+	},	
+	push_b: {
+		opcode: 77,
+		steps: [
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.b_out,
+		]
+	},	
+	push_c: {
+		opcode: 78,
+		steps: [
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.c_out,
+		]
+	},	
+	push_d: {
+		opcode: 79,
+		steps: [
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.d_out,
+		]
+	},	
+	pop_a: {
+		opcode: 72,
+		steps: [
+			lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.a_in,
+		]
+	},	
+	pop_b: {
+		opcode: 73,
+		steps: [
+			lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.b_in,
+		]
+	},	
+	pop_c: {
+		opcode: 74,
+		steps: [
+			lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.c_in,	
+		]
+	},	
+	pop_d: {
+		opcode: 75,
+		steps: [
+			lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.d_in,
+		]
+	},
+	pop: {
+		opcode: 6,
+		steps: [
+			lines.sp_inc,
+		]
+	},	
 	mvia: {
 		opcode: 28, // 1c
 		steps: [
@@ -590,94 +892,94 @@ const instr = {
 		]
 	},
 	mv_a_a: {
-		opcode: 64,
+		opcode: 192,
 		steps: [
 		]
 	},
 	mv_a_b: {
-		opcode: 65,
-		steps: [
-			lines.b_in + lines.a_out,
-		]
-	},
-	mv_a_c: {
-		opcode: 66,
-		steps: [
-			lines.c_in + lines.a_out,
-		]
-	},
-	mv_a_d: {
-		opcode: 67,
-		steps: [
-			lines.d_in + lines.a_out,
-		]
-	},
-	mv_b_a: {
-		opcode: 68,
+		opcode: 193,
 		steps: [
 			lines.a_in + lines.b_out,
 		]
 	},
-	mv_b_b: {
-		opcode: 69,
-		steps: [
-		]
-	},
-	mv_b_c: {
-		opcode: 70,
-		steps: [
-			lines.c_in + lines.b_out,
-		]
-	},
-	mv_b_d: {
-		opcode:71,
-		steps: [
-			lines.d_in + lines.b_out,
-		]
-	},
-	mv_c_a: {
-		opcode: 72,
+	mv_a_c: {
+		opcode: 194,
 		steps: [
 			lines.a_in + lines.c_out,
 		]
 	},
-	mv_c_b: {
-		opcode: 73,
-		steps: [
-			lines.b_in + lines.c_out,
-		]
-	},
-	mv_c_c: {
-		opcode: 74,
-		steps: [
-		]
-	},
-	mv_c_d: {
-		opcode: 75,
-		steps: [
-			lines.d_in + lines.c_out,
-		]
-	},
-	mv_d_a: {
-		opcode: 76,
+	mv_a_d: {
+		opcode: 195,
 		steps: [
 			lines.a_in + lines.d_out,
 		]
 	},
-	mv_d_b: {
-		opcode: 77,
+	mv_b_a: {
+		opcode: 196,
+		steps: [
+			lines.b_in + lines.a_out,
+		]
+	},
+	mv_b_b: {
+		opcode: 197,
+		steps: [
+		]
+	},
+	mv_b_c: {
+		opcode: 198,
+		steps: [
+			lines.b_in + lines.c_out,
+		]
+	},
+	mv_b_d: {
+		opcode:199,
 		steps: [
 			lines.b_in + lines.d_out,
 		]
 	},
-	mv_d_c: {
-		opcode: 78,
+	mv_c_a: {
+		opcode: 200,
+		steps: [
+			lines.c_in + lines.a_out,
+		]
+	},
+	mv_c_b: {
+		opcode: 201,
+		steps: [
+			lines.c_in + lines.b_out,
+		]
+	},
+	mv_c_c: {
+		opcode: 202,
+		steps: [
+		]
+	},
+	mv_c_d: {
+		opcode: 203,
 		steps: [
 			lines.c_in + lines.d_out,
 		]
 	},
+	mv_d_a: {
+		opcode: 204,
+		steps: [
+			lines.d_in + lines.a_out,
+		]
+	},
+	mv_d_b: {
+		opcode: 205,
+		steps: [
+			lines.d_in + lines.b_out,
+		]
+	},
+	mv_d_c: {
+		opcode: 206,
+		steps: [
+			lines.d_in + lines.c_out,
+		]
+	},
 	mv_d_d: {
-		opcode:79,
+		opcode: 207,
 		steps: [
 		]
 	},
@@ -688,16 +990,16 @@ function output() {
 	console.log('v3.0 hex words addressed');
 	var file = 'v3.0 hex words addressed\n';
 
-	for (let i = 0; i < 128; i++) {
-		const lineprefix = (i*16).toString(16).padStart(3, "0")+':';
-		const lineprefix2 = (i*16+8).toString(16).padStart(3, "0")+':';
+	for (let i = 0; i < 240; i++) {
+		const lineprefix = (i*8).toString(16).padStart(3, "0")+':';
+		//const lineprefix2 = (i*16+8).toString(16).padStart(3, "0")+':';
 
 		var found = false;
 		for (let j of Object.keys(instr)){
 			if(instr[j].opcode == i) {
 				found = true;
 				
-				console.log(j);
+				console.log(j+' '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
 
 				var lineops = ' '+((lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir_in).toString(16).padStart(8,'0'));
 
@@ -710,7 +1012,7 @@ function output() {
 						lineops+= ' '+(lines.t_reset.toString(16).padStart(8,'0'));
 					}
 				}
-				var lineops2='';
+			/*	var lineops2='';
 
 				for( let k = 7; k < 15;k++) {
 					if(instr[j].steps.length > k)
@@ -720,18 +1022,66 @@ function output() {
 					else{
 						lineops2+= ' '+(lines.t_reset.toString(16).padStart(8,'0'));
 					}
-				}
+				}*/
 				console.log(lineprefix+lineops);
 				file+=lineprefix+lineops+'\n';
-				console.log(lineprefix2+lineops2);
-				file+=lineprefix2+lineops2+'\n';
+			//	console.log(lineprefix2+lineops2);
+			//	file+=lineprefix2+lineops2+'\n';
 
 			}
 		}
+		if(! found) console.log('    '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
 		if(! found) console.log(lineprefix+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
 		if(! found) file+=lineprefix+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
-		if(! found) console.log(lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
-		if(! found) file+=lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
+		//if(! found) console.log(lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
+		//if(! found) file+=lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
+	}
+	for (let i = 240; i < 256; i++) {
+		var m = i & 0x7f;
+		const lineprefix = (i*8).toString(16).padStart(3, "0")+':';
+		//const lineprefix2 = (i*16+8).toString(16).padStart(3, "0")+':';
+
+		var found = false;
+		for (let j of Object.keys(instr)){
+			if(instr[j].opcode == m) {
+				found = true;
+				
+				console.log(j+' '+m+' '+m.toString(16)+' (sh2:'+(m>>2)+' '+(m>>2).toString(16)+') (sh4: '+(m>>4)+' '+(m>>4).toString(16)+') (steps 8 to 15)');
+
+				var lineops = '';
+
+				for( let k = 7; k < 15;k++) {
+					if(instr[j].steps.length > k)
+					{
+						lineops+= ' '+(instr[j].steps[k].toString(16).padStart(8,'0'));
+					}
+					else{
+						lineops+= ' '+(lines.t_reset.toString(16).padStart(8,'0'));
+					}
+				}
+			/*	var lineops2='';
+
+				for( let k = 7; k < 15;k++) {
+					if(instr[j].steps.length > k)
+					{
+						lineops2+= ' '+(instr[j].steps[k].toString(16).padStart(8,'0'));
+					}
+					else{
+						lineops2+= ' '+(lines.t_reset.toString(16).padStart(8,'0'));
+					}
+				}*/
+				console.log(lineprefix+lineops);
+				file+=lineprefix+lineops+'\n';
+			//	console.log(lineprefix2+lineops2);
+			//	file+=lineprefix2+lineops2+'\n';
+
+			}
+		}
+		if(! found) console.log('    '+m+' '+m.toString(16)+' (sh2:'+(m>>2)+' '+(m>>2).toString(16)+') (sh4: '+(m>>4)+' '+(m>>4).toString(16)+') (steps 8 to 15)');
+		if(! found) console.log(lineprefix+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
+		if(! found) file+=lineprefix+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
+		//if(! found) console.log(lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
+		//if(! found) file+=lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 	}
 	fs.writeFileSync('mc1',file);
 

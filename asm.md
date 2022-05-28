@@ -6,21 +6,21 @@ big endian
 
 ```assembly
 ld reg_a,reg_b|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
-st reg,[mem]       ;reg->mem (4 cycles)
+st reg,[mem]                     ;reg->mem (4 cycles)
 
-add reg_a,reg_b|[mem]|value  ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
-addc reg_a,reg_b|[mem]|value ; add + carry (3 cycles; 5 cycles if op2 == mem)
-sub reg_a,reg_b|[mem]|value  ;reg_a = reg_a-reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
-subc reg_a,reg_b|[mem]|value ; sub + carry (3 cycles; 5 cycles if op2 == mem)
-nand reg_a,reg_b|[mem]|value ; sub + carry (3 cycles; 5 cycles if op2 == mem)
+add reg_a,reg_b|[mem]|value      ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
+addc reg_a,reg_b|[mem]|value     ;add + carry (3 cycles; 5 cycles if op2 == mem)
+sub reg_a,reg_b|[mem]|value      ;reg_a = reg_a-reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
+subc reg_a,reg_b|[mem]|value     ;sub + carry (3 cycles; 5 cycles if op2 == mem)
+nand reg_a,reg_b|[mem]|value     ;sub + carry (3 cycles; 5 cycles if op2 == mem)
 rsh reg
 
-jmp [mem]         ;(4 cylces)
+jmp [mem]          ;(4 cylces)
 jmpz [mem]         ;zero (4 cycles)
 jmpc [mem]         ;carry (4 cycles)
 
-push reg|value    ;(2 cylces)
-pop ?reg          ;(2 cycles)
+push reg           ;(2 cylces)
+pop ?reg          ;(2 cycles + 1 cycle when register parameter presend)
 
 call [mem]         ;(6 cycles)
 ret              ;(5 cycles)
