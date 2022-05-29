@@ -12,7 +12,7 @@ memory: 0-7fff (ram) ; 8000-ffff (rom)
 big endian
 
 ```assembly
-ld reg_a,reg_b|fpo|ar|[[offset]]|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
+ld reg_a,reg_b|fpo|ar|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
 st reg,fpo|ar|[[offset]]|[mem]                     ;reg->mem (4 cycles)
 ld reg16,reg,reg
 st reg16,reg,reg
