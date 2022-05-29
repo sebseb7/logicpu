@@ -13,25 +13,25 @@ var lines = {
 	db_sel1:      32,
 	db_sel2:      64,
 	db_sel3:      128,
-	halt:         256,
+	idx_in:       256,
 	ab_sel0:      512,
 	pc_inc:       1024,
 	ab_sel1:      2048,
-	sp_dec:       4096,
-	op_out:	      8192,
-	t_reset:      16384,
-	sp_inc:       32768,
+	misc_sel0:    4096,
+	misc_sel1:    8192,
+	misc_sel2:    16384,
+	misc_sel3:    32768,
 	c_out:        65536,
 	z_out:        131072,
 	s_out:        262144,
-	flags_inv:    524288,
-	alu_stc:      1048576,
-	alu_clc:      2097152,
+	op_out:       524288,
+	c19:          1048576,
+	c20:          2097152,
 	alu_sel1:     4194304,
 	alu_sel2:     8388608,
 	
-	cie:          16777216,
-	sie:          33554432,
+	c23:          16777216,
+	c24:          33554432,
 	ab_sel2:      67108864,
 	db_tar_sel4:  134217728,
 	
@@ -59,6 +59,8 @@ var lines = {
 	irq_outh:     128+32,
 	c_out:        128+32+16,
 	d_out:        128+64,
+	idx_outl:     128+64+16,
+	idx_outh:     128+64+32,
 
 	ir_in:		  1,
 	unused:		  0,
@@ -85,6 +87,16 @@ var lines = {
 	alu_bus_sel_c:2147483648,
 	alu_bus_sel_d:2147483648+1073741824,
 
+	cie          :1<<12,
+	sie          :2<<12,
+	t_reset      :3<<12,
+	halt         :4<<12,
+	sp_inc       :5<<12,
+	sp_dec       :6<<12,
+	flags_inv    :7<<12,
+	alu_stc      :8<<12,
+	alu_ctc      :9<<12,
+
 }
 
 const instr = {
@@ -97,6 +109,18 @@ const instr = {
 	nop: {
 		opcode: 1,
 		steps: [
+		]
+	},
+	st_a_ar_di: {
+		opcode: 60,
+		steps: [
+			lines.off2_abus_out + lines.ram_in + lines.a_out,
+		]
+	},
+	st_a_fpo_di: {
+		opcode: 56,
+		steps: [
+			lines.off_abus_out + lines.ram_in + lines.a_out,
 		]
 	},
 	st_a: {
@@ -155,6 +179,20 @@ const instr = {
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.d_in,
 		]
 	},
+	ld_a_fpo_di: {
+		opcode: 64,
+		steps: [
+			lines.off_abus_out + lines.mem_out + lines.a_in,
+		]
+	},
+	ld_a_fpo: {
+		opcode: 68,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.off_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.off_inh,
+			lines.off_abus_out + lines.mem_out + lines.a_in,
+		]
+	},	
 	ld_a: {
 		opcode: 100,
 		steps: [
@@ -678,12 +716,15 @@ const instr = {
 		]
 	},
 	call: {
-		opcode: 16, // 10
+		opcode: 125,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc +lines.addr_inh,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outh,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.idx_outl,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.idx_outh,
+			lines.sp_abus_out + lines.idx_in,
 			lines.addr_abus_out + lines.pc_in,
 		]
 	},
@@ -691,8 +732,10 @@ const instr = {
 		opcode: 17, // 11
 		steps: [
 			lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.idx_inl,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.idx_inh,
 			lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.addr_inl,
-			lines.sp_abus_out + lines.mem_out +lines.addr_inh,
+			lines.sp_abus_out + lines.mem_out + lines.addr_inh,
 			lines.addr_abus_out + lines.pc_in,
 		]
 	},

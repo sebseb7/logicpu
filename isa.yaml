@@ -8,6 +8,8 @@ general:
     - b
     - c
     - d
+    - fpo
+    - ar
   identifier:
     name: seb-isa
     version: "1.0.0"
@@ -20,6 +22,29 @@ operand_sets:
         argument:
           size: 8
           byte_align: true
+  offset:
+    operand_values:
+      offset:
+        type: deferred_numeric
+        argument:
+          size: 16
+          byte_align: false
+  register16a:
+    operand_values:
+      register_off:
+        type: register
+        register: fpo
+        bytecode:
+          value: 0
+          size: 0
+  register16b:
+    operand_values:
+      register_add:
+        type: register
+        register: ar
+        bytecode:
+          value: 0
+          size: 0
   register:
     operand_values:
       register_a:
@@ -190,6 +215,26 @@ instructions:
             list:
               - register
               - register
+      - var3:
+        byte_code:
+          value: 17
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16b
+      - var4:
+        byte_code:
+          value: 16
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16a
   ldidx:
     byte_code:
       value: 32
@@ -269,7 +314,7 @@ instructions:
       size: 8
   call:
     byte_code:
-      value: 16
+      value: 125
       size: 8
     operands:
       count: 1
@@ -286,6 +331,27 @@ instructions:
         list:
           - register
           - address
+    variants:
+      - var1:
+        byte_code:
+          value: 14
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16a
+      - var2:
+        byte_code:
+          value: 15
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16b
   jmp:
     byte_code:
       value: 12
