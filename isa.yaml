@@ -10,6 +10,7 @@ general:
     - d
     - fpo
     - ar
+    - ao
   identifier:
     name: seb-isa
     version: "1.0.0"
@@ -45,6 +46,14 @@ operand_sets:
         bytecode:
           value: 0
           size: 0
+  register16c:
+    operand_values:
+      register_add:
+        type: register
+        register: ao
+        bytecode:
+          value: 0
+          size: 0 
   register:
     operand_values:
       register_a:
@@ -74,6 +83,36 @@ operand_sets:
         bytecode:
           value: 3
           size: 2
+          position: suffix
+  register_4b:
+    operand_values:
+      register_a:
+        type: register
+        register: a
+        bytecode:
+          value: 1
+          size: 4
+          position: suffix
+      register_b:
+        type: register
+        register: b
+        bytecode:
+          value: 2
+          size: 4
+          position: suffix
+      register_c:
+        type: register
+        register: c
+        bytecode:
+          value: 3
+          size: 4
+          position: suffix
+      register_d:
+        type: register
+        register: d
+        bytecode:
+          value: 4
+          size: 4
           position: suffix
   address:
     operand_values:
@@ -235,6 +274,17 @@ instructions:
             list:
               - register
               - register16a
+      - var5:
+        byte_code:
+          value: 8
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            list:
+              - register16c
+              - register_4b
+              - register_4b
   ldidx:
     byte_code:
       value: 32
@@ -352,6 +402,17 @@ instructions:
             list:
               - register
               - register16b
+      - var3:
+        byte_code:
+          value: 9
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            list:
+              - register16c
+              - register_4b
+              - register_4b
   jmp:
     byte_code:
       value: 12
