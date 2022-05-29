@@ -28,8 +28,8 @@ jmp [mem]          ;(4 cylces)
 jmpz [mem]         ;zero (4 cycles)
 jmpc [mem]         ;carry (4 cycles)
 
-push reg           ;(2 cylces)
-pop ?reg          ;(2 cycles + 1 cycle when register parameter presend)
+push reg|count           ;(2 cylces)
+pop ?reg|?count          ;(2 cycles + 1 cycle when register parameter presend)
 
 call [mem]         ;(6 cycles)
 ret              ;(5 cycles)
