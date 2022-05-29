@@ -1,12 +1,19 @@
-registers: a,b,c,d
+8 bit gp registers: a,b,c,d
+16 bit registers:
+- address-offset: ao
+virtual registers:
+- fpo = framepointer - ao (framepointer = stackpointer as of function entry)
+- ar = 0x0 + ao
 
 memory: 0-7fff (ram) ; 8000-ffff (rom)
 
 big endian
 
 ```assembly
-ld reg_a,reg_b|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
-st reg,[mem]                     ;reg->mem (4 cycles)
+ld reg_a,reg_b|fpo|ar|[[offset]]|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
+st reg,fpo|ar|[[offset]]|[mem]                     ;reg->mem (4 cycles)
+ld reg16,reg,reg
+st reg16,reg,reg
 
 add reg_a,reg_b|[mem]|value      ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
 addc reg_a,reg_b|[mem]|value     ;add + carry (3 cycles; 5 cycles if op2 == mem)
