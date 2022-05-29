@@ -12,8 +12,8 @@ memory: 0-7fff (ram) ; 8000-ffff (rom)
 big endian
 
 ```assembly
-ld reg_a,reg_b|fpo|ar|[[offset]]|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
-st reg,fpo|ar|[[offset]]|[mem]                     ;reg->mem (4 cycles)
+ld reg_a,reg_b|fpo|ar|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
+st reg,fpo|ar|[mem]                     ;reg->mem (4 cycles)
 ld reg16,reg,reg
 st reg16,reg,reg
 
@@ -28,8 +28,8 @@ jmp [mem]          ;(4 cylces)
 jmpz [mem]         ;zero (4 cycles)
 jmpc [mem]         ;carry (4 cycles)
 
-push reg           ;(2 cylces)
-pop ?reg          ;(2 cycles + 1 cycle when register parameter presend)
+push reg|count           ;(2 cylces)
+pop ?reg|?count          ;(2 cycles + 1 cycle when register parameter presend)
 
 call [mem]         ;(6 cycles)
 ret              ;(5 cycles)
