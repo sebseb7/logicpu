@@ -1,6 +1,8 @@
 8 bit gp registers: a,b,c,d
+
 16 bit registers:
 - address-offset: ao
+
 virtual registers:
 - fpo = framepointer - ao (framepointer = stackpointer as of function entry)
 - ar = 0x0 + ao
