@@ -13,7 +13,7 @@ big endian
 
 ```assembly
 ld reg_a,reg_b|fpo|ar|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem) 
-st reg,fpo|ar|[[offset]]|[mem]                     ;reg->mem (4 cycles)
+st reg,fpo|ar|[mem]                     ;reg->mem (4 cycles)
 ld reg16,reg,reg
 st reg16,reg,reg
 
