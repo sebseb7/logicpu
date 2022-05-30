@@ -176,6 +176,44 @@ instructions:
             list:
               - register
               - integer
+  xor:
+    byte_code:
+      value: 11
+      size: 6
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - integer
+  and:
+    byte_code:
+      value: 8
+      size: 6
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - integer
+  rsh:
+    byte_code:
+      value: 10
+      size: 6
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register
+  rshc:
+    byte_code:
+      value: 9
+      size: 6
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register
   add:
     byte_code:
       value: 14
@@ -200,6 +238,37 @@ instructions:
       - var2:
         byte_code:
           value: 27
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - integer
+  addc:
+    byte_code:
+      value: 11
+      size: 4
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 12
+          size: 6
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - address
+      - var2:
+        byte_code:
+          value: 13
           size: 6
         operands:
           count: 2
@@ -416,6 +485,15 @@ instructions:
   jmp:
     byte_code:
       value: 12
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpcc:
+    byte_code:
+      value: 10
       size: 8
     operands:
       count: 1
