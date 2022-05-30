@@ -2509,31 +2509,31 @@
     <comp lib="4" loc="(1090,1540)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-64 0 0 28 24 20 80 65
-0 1 29 21 7f 66 0 1
-2a 26 22 80 6a 0 1 36
-13 5a 0 1 67 0 0 bc
-bd 5b 0 0 c2 7 c 80
+7d 80 7 7 c 80 0 64
+0 0 66 0 1 cc 28 24
+20 80 c6 2a 26 22 80 e9
+36 13 29 21 7f bc bd 5a
+0 1 5b 0 0 c2 11
 </a>
     </comp>
     <comp lib="4" loc="(1190,1060)" name="ROM">
       <a name="addrWidth" val="11"/>
       <a name="contents">addr/data: 11 32
 compressed
-eJztWDuC4yAM7TkF9VYChMMcJ8Mk9z/C8vNHQnLiKXanmBQQHg8ZniUZuN/jh0UAsMufUKt7BW6H&#13;
-/6V41uJh4gFNAKV2owYbyejn+LW2YW0b+eNcOjZNKe42eag/+9EqZ5FO6W6964QKP8HgNDk/6mCL&#13;
-KXcrDWJkn5XRBgHog/pU3UIXcmMyUnZbePTxUYtnfVKp2xPBH5+4S8Gle9VmizDFpH+1iJO2ucjv&#13;
-7cUZIgp/3Z4B0yoxlerT3hxxK4QVR+aKG074WeHnOiHB+opz6ysemHWZn0GxDop1UKyLfARFGVCU&#13;
-AUUZhU9DwEHqDwtroBmdXJLI4Pu3+Gnjh7f4eeOjyHeyMjBwz1c6cK77inPdSyC5eBbdL8Om2kjn&#13;
-Nl7Ge5tHSbuyjffClafuYdN8L0UcMlud2FG0AfojuDKDxCReahYu+OI9B8IKmAEgZUiJxJQFiwkj&#13;
-ybjJOp95dA8Xs7mnPQ2Xwce3+OkiP1+1X8TGg5RTv4/25BtrUjjttwlJv5GidUQqEV+KUuklNZde&#13;
-KMlzIBBvKQVSb+Fzju5ck/L/VJP6nk/tI9Fk7qfZ1+pUbHsHln1P+Gnjh7f4eeOjyFeSL0ivNG34&#13;
-lHylz9XlTdDVpPqvx3NtF59L1vKftfiqxSPWkD2kxsNOMbbc6eNXLbAWwbS+kQBTNVATZ0uWLUG2&#13;
-pOhv0bQH/QgJfsf/jv+f48vW3YmbxYFPm0WJnxV+AT1PesO4F3eiEj8r/AKGKXN24w0XjM/8rPAL&#13;
-iNM2pxtH6bQg8rPCP14qePqtDvTEiLTXeXZaPAykn3ikTBfouTNolxwGaZej+wKPZN8QUL0sSZI/&#13;
-tK2e4D9px/kRUuPP/tCNz/6TdlwwLvJnf+jGZ/9JOy4YF/mzP3Tjs/+kHReMz3xRcFAEBEVwkS+q&#13;
-DYp6oKgt8kWpQZEOFKlFvqgzKDqDorPI/+k5/UJ7vWlbc0msR1cf834FNxbedmVNqI9+Twf3dqnW&#13;
-SeqVYcsVfwGu6ie7</a>
+eJztWDuC6yAM7DkF9asECIc9TpZN7n+Ex8fYlpCceIv3ttgUOAzDGMZCxtzv8cMiANjlT6iXewVu&#13;
+h/+leNbiYeIBTQDl6tYr2Eh6P9dfqxtWt5HfzqVj1ZTibpOH+rMf7eIs0iHdrXedUOEnGJwG59dr&#13;
+sEXK3UqFiOyjMlonAL1TH6pb6ERuzEbKbhOPPj5q8ax3Ktd2R/DHO+5WcOte1dkkTJH0ryZxUjcX&#13;
++b2+OENM4Y/bM2CaJaZy+bQ3R8IKYeCeheLAA+HnDUfCz3VAgvrAufrAufrAmToo6qCog6IOkjqC&#13;
+4gwozoDiDEjO8CXgIPWbhbHQjE4uSWTl+7f4aeOHt/h546PId7Iz4GRnBs6dGTj3vSwkF89W98tl&#13;
+UzXSucbL9d7GUdKurPHecuWpe9U030sRh8xWB3Y0bQX9ERzMIDGRMBdu+OI9B8IAzAogZUiJxJQJ&#13;
+j0RiWVBIicTkDUfOZxHdl4vZwtOeLpeVj2/x00V+vqpfzMaDlVO7j/bkHWtSOG23CUm7kVar8FCM&#13;
+tEqFh2FaSC+U5DkQSLSUAmm08DFHd+5J+X/qSX3Op/pIPJnbafa1OhXb3oFl3xN+2vjhLX7e+Cjy&#13;
+leQ7XkvkUaUNn5LveC0R/tX9x9Wk+q/7c28Xn0vW8p+1+KrFI9Yle0iNh51ibLnTx69aYC2CaW1r&#13;
+AkxVoCbOlixbgmxJ0d+iaTf6ERb89v/t/z/7l627EzeLKz5tFiV+VvgF9NPmoot7cScq8bPCL2CY&#13;
+MmcXb7ggPvOzwi8gTtucLo7S14LIzwr/eKjg6bs60C9GpK3Os6/FQ0f6ikfKdIF+dwbtkMMgbXJ0&#13;
+X+CR7BsCqoclSYqHttUT4iftOP+E1PhzPHTxOX7SjgviIn+Ohy4+x0/acUFc5M/x0MXn+Ek7LojP&#13;
+fNFwUAwExXCRL7oNinuguC3yRatBsQ4Uq0W+6DMoPoPis8j/6Tn9Qn2ctI1cEuunq495P4JbJ952&#13;
+Zc2oj35OB/d2qNZJ6pFhyxV/Ac8SJ64=</a>
       <a name="dataWidth" val="32"/>
       <a name="label" val="4x28C16"/>
     </comp>
@@ -2640,6 +2640,10 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <comp lib="4" loc="(690,990)" name="RAM">
       <a name="addrWidth" val="15"/>
       <a name="databus" val="bidir"/>
+    </comp>
+    <comp lib="4" loc="(870,350)" name="Counter">
+      <a name="max" val="0xffff"/>
+      <a name="width" val="16"/>
     </comp>
     <comp lib="5" loc="(1000,110)" name="LED">
       <a name="color" val="#00f000"/>
@@ -5826,12 +5830,13 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(640,1660)" to="(680,1660)"/>
     <wire from="(640,1670)" to="(670,1670)"/>
     <wire from="(640,290)" to="(640,350)"/>
+    <wire from="(640,350)" to="(820,350)"/>
     <wire from="(640,660)" to="(640,680)"/>
     <wire from="(640,660)" to="(690,660)"/>
     <wire from="(650,1480)" to="(660,1480)"/>
     <wire from="(650,1500)" to="(660,1500)"/>
     <wire from="(650,290)" to="(650,330)"/>
-    <wire from="(650,330)" to="(730,330)"/>
+    <wire from="(650,330)" to="(720,330)"/>
     <wire from="(650,510)" to="(650,520)"/>
     <wire from="(650,670)" to="(650,710)"/>
     <wire from="(650,670)" to="(700,670)"/>
@@ -5887,6 +5892,9 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(710,860)" to="(720,860)"/>
     <wire from="(720,250)" to="(720,270)"/>
     <wire from="(720,270)" to="(730,270)"/>
+    <wire from="(720,330)" to="(720,390)"/>
+    <wire from="(720,330)" to="(730,330)"/>
+    <wire from="(720,390)" to="(860,390)"/>
     <wire from="(730,110)" to="(730,160)"/>
     <wire from="(730,160)" to="(790,160)"/>
     <wire from="(730,240)" to="(750,240)"/>
@@ -5928,6 +5936,10 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(810,780)" to="(850,780)"/>
     <wire from="(810,840)" to="(850,840)"/>
     <wire from="(820,130)" to="(820,180)"/>
+    <wire from="(820,350)" to="(820,360)"/>
+    <wire from="(820,360)" to="(820,380)"/>
+    <wire from="(820,360)" to="(840,360)"/>
+    <wire from="(820,380)" to="(850,380)"/>
     <wire from="(830,110)" to="(840,110)"/>
     <wire from="(830,120)" to="(830,180)"/>
     <wire from="(840,110)" to="(840,180)"/>
@@ -5940,10 +5952,12 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(840,820)" to="(850,820)"/>
     <wire from="(850,110)" to="(850,180)"/>
     <wire from="(850,110)" to="(860,110)"/>
+    <wire from="(850,370)" to="(850,380)"/>
     <wire from="(850,440)" to="(860,440)"/>
     <wire from="(850,510)" to="(860,510)"/>
     <wire from="(860,120)" to="(860,180)"/>
     <wire from="(860,120)" to="(880,120)"/>
+    <wire from="(860,370)" to="(860,390)"/>
     <wire from="(860,440)" to="(860,460)"/>
     <wire from="(860,460)" to="(870,460)"/>
     <wire from="(860,480)" to="(860,510)"/>

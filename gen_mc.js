@@ -408,7 +408,7 @@ const instr = {
 		opcode: 37,
 		steps: [
 			lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1 + lines.alu_sel2 + lines.c_jmp,
-			lines.d_in + lines.alu_out,
+			lines.b_in + lines.alu_out,
 		]
 	},
 	rshc_c: {
@@ -436,7 +436,7 @@ const instr = {
 		opcode: 41,
 		steps: [
 			lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1 + lines.alu_sel2,
-			lines.d_in + lines.alu_out,
+			lines.b_in + lines.alu_out,
 		]
 	},
 	rsh_c: {
@@ -464,14 +464,14 @@ const instr = {
 		opcode: 33,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1 + lines.alu_sel0,
-			lines.d_in + lines.alu_out,
+			lines.b_in + lines.alu_out,
 		]
 	},
 	and_c_di: {
 		opcode: 34,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c + lines.alu_sel1 + lines.alu_sel0,
-			lines.d_in + lines.alu_out,
+			lines.c_in + lines.alu_out,
 		]
 	},
 	and_d_di: {
@@ -492,14 +492,14 @@ const instr = {
 		opcode: 45,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel1,
-			lines.d_in + lines.alu_out,
+			lines.b_in + lines.alu_out,
 		]
 	},
 	xor_c_di: {
 		opcode: 46,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c + lines.alu_sel1,
-			lines.d_in + lines.alu_out,
+			lines.c_in + lines.alu_out,
 		]
 	},
 	xor_d_di: {
@@ -520,14 +520,14 @@ const instr = {
 		opcode: 81,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_b + lines.alu_sel0,
-			lines.d_in + lines.alu_out,
+			lines.b_in + lines.alu_out,
 		]
 	},
 	sub_c_di: {
 		opcode: 82,
 		steps: [
 			lines.pc_abus_out +lines.mem_out + lines.pc_inc + lines.alu_op + lines.alu_bus_sel_c + lines.alu_sel0,
-			lines.d_in + lines.alu_out,
+			lines.c_in + lines.alu_out,
 		]
 	},
 	sub_d_di: {
