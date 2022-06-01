@@ -26,6 +26,13 @@ operand_sets:
         argument:
           size: 8
           byte_align: true
+  integer16:
+    operand_values:
+      int16:
+        type: numeric
+        argument:
+          size: 16
+          byte_align: true
   register16_fpo:
     operand_values:
       register_off:
@@ -220,7 +227,7 @@ instructions:
           operand_sets:
             list:
               - register16_ao
-              - address
+              - integer16
   st:
     byte_code:
       value: 13
