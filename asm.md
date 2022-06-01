@@ -1,47 +1,45 @@
-8 bit registers: a,b,c,d,aoh,aol
+8 bit registers: a,b,c,d,aoh,aol ; write only : o
 
 16 bit registers:
 - address-offset: ao
 
 virtual registers:
 - fpo = framepointer - ao (framepointer = stackpointer as of function entry)
-- ar = 0x0 + ao
 
 memory: 0-7fff (ram) ; 8000-ffff (rom)
 
 big endian
 
 ```assembly
-ld reg8_a,reg8_b|fpo|ar|[mem]|value       ;reg_a = reg_b|mem|value (2 cycles; 4 cycles if op2 == mem)
-ld reg16,value
+ld reg8_a,reg8_b|fpo|ao|[mem]|value8       ;reg8_a = reg8_b|mem|value8
+ld reg16,value16
 
-st reg,fpo|ar|[mem]                     ;reg->mem (4 cycles)
+st reg,fpo|ao|[mem]                     ;reg->mem
 
-add reg_a,reg_b|[mem]|value      ;reg_a = reg_a+reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
-addc reg_a,reg_b|[mem]|value     ;add + carry (3 cycles; 5 cycles if op2 == mem)
-sub reg_a,reg_b|[mem]|value      ;reg_a = reg_a-reg_b|mem|value (3 cycles; 5 cycles if op2 == mem)
-subc reg_a,reg_b|[mem]|value     ;sub + carry (3 cycles; 5 cycles if op2 == mem)
-xor reg_a,reg_b|[mem]|value     ; (3 cycles; 5 cycles if op2 == mem)
+add reg_a,reg_b|[mem]|value8      ;reg_a = reg_a+reg_b|mem|value8 
+addc reg_a,reg_b|[mem]|value8     ;add + carry
+sub reg_a,reg_b|[mem]|value8      ;reg_a = reg_a-reg_b|mem|value8
+subc reg_a,reg_b|[mem]|value8     ;sub + carry
+xor reg_a,reg_b|[mem]|value8
+and reg_a,reg_b|[mem]|value8
+rsh reg_a
+rshc reg_a			; ror
 
-jmp [mem]          ;(4 cylces)
-jmpz [mem]         ;zero (4 cycles)
-jmpcc [mem]         ;carry clear(4 cycles)
+jmp [mem]
+jmpz [mem]         ;zero
+jmpcc [mem]         ;carry clear
 
-push reg|count           ;(2 cylces)
-pop ?reg|?count          ;(2 cycles + 1 cycle when register parameter presend)
+push reg|count
+pop ?reg|?count
 
-call [mem]         ;(6 cycles)
-ret              ;(5 cycles)
+call [mem]
 
-nop              ;(1 cycle)
-hlt              ;(2 cycles)  
+nop
+hlt
 
-outa             ; reg a -> debug display (2 cycles)
-cie              ; clear interupt enable (2 cycles)
-sie              ; set interrupt enable (2 cycles)
-reti             ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian; all registers saved/restored via stack; 11 cycles, entering interrupt: 15 cycles)
-mvia             ; inputs from interrupt -> register a (2 cycles)
-
+cie              ; clear interupt enable
+sie              ; set interrupt enable
+reti             ; return from interrupt (place interrupt handler address at 0xfffe-0xffff, big endian; all registers saved/restored via stack)
 ```
 
 example interrupt handler:
