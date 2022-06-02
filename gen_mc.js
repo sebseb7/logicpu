@@ -28,7 +28,7 @@ var lines = {
 	c_jmp:        2**16,
 	z_jmp:        2**17,
 	s_jmp:        2**18,
-	unused1:      2**19,
+	pc_inc:       2**19,
 
 	instb_li:     2**20,
 	instb_lo:     2**21,
@@ -99,7 +99,6 @@ var lines = {
 	flags_inv    :7<<24,
 	alu_stc      :8<<24,
 	alu_ctc      :9<<24,
-	pc_inc       :10<<24,
 
 	alu_add:     0<<13,
 	alu_sub:     1<<13,
@@ -208,7 +207,15 @@ const instr = {
 	//st_r_fpo
 	//st_r_ao
 
-	//add_r_i
+	add_r_i:{
+		opcode: 16,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.op_in,
+			lines.instb_ho + lines.alu_op,
+			lines.instb_hi + lines.alu_out
+		]
+	},
 	add_r_r:{
 		opcode: 17,
 		steps: [
@@ -309,6 +316,31 @@ const instr = {
 		]
 	},
 
+	push: {
+		opcode: 48,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.instb_ho,
+		]
+	},
+	pop: {
+		opcode: 49,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in + lines.sp_inc,
+			lines.sp_abus_out + lines.mem_out + lines.instb_hi,
+		]
+	},
+
+	ld_r16_i:{
+		opcode: 239,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.off_inl,
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.off_inh,
+		]
+	},
+
+
+
 	call: {
 		opcode: 125,
 		steps: [
@@ -362,6 +394,9 @@ const instr = {
 function output() {
 	console.log('v3.0 hex words addressed');
 	var file = 'v3.0 hex words addressed\n';
+	
+	var fetch = ((lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir_in).toString(16).padStart(8,'0'));
+	var hlt = ((lines.halt).toString(16).padStart(8,'0'));
 
 	for (let i = 0; i < 240; i++) {
 		const lineprefix = (i*8).toString(16).padStart(3, "0")+':';
@@ -374,7 +409,7 @@ function output() {
 				
 				console.log(j+' '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
 
-				var lineops = ' '+((lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir_in).toString(16).padStart(8,'0'));
+				var lineops = ' '+fetch;
 
 				for( let k = 0; k < 7;k++) {
 					if(instr[j].steps.length > k)
@@ -405,8 +440,8 @@ function output() {
 			}
 		}
 		if(! found) console.log('    '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
-		if(! found) console.log(lineprefix+' 0a000f69 ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
-		if(! found) file+=lineprefix+' 0a000f69 ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
+		if(! found) console.log(lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
+		if(! found) file+=lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 		//if(! found) console.log(lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
 		//if(! found) file+=lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 	}
@@ -452,8 +487,8 @@ function output() {
 			}
 		}
 		if(! found) console.log('    '+m+' '+m.toString(16)+' (sh2:'+(m>>2)+' '+(m>>2).toString(16)+') (sh4: '+(m>>4)+' '+(m>>4).toString(16)+') (steps 8 to 15)');
-		if(! found) console.log(lineprefix+' 0a000f69 ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
-		if(! found) file+=lineprefix+' 0a000f69 ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
+		if(! found) console.log(lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
+		if(! found) file+=lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 		//if(! found) console.log(lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
 		//if(! found) file+=lineprefix2+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 	}

@@ -159,25 +159,25 @@ instructions:
       size: 8
   ld:
     byte_code:
-      value: 9
+      value: 8
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - register
+          - integer
     variants:
       - var1:
         byte_code:
-          value: 8
+          value: 9
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - integer
+              - register
       - var1b:
         byte_code:
           value: 9
@@ -261,25 +261,25 @@ instructions:
               - register16_ao
   add:
     byte_code:
-      value: 17
+      value: 16
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - register
+          - integer
     variants:
       - var1:
         byte_code:
-          value: 16
+          value: 17
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - integer
+              - register
       - var2:
         byte_code:
           value: 18
