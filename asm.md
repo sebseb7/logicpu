@@ -23,7 +23,7 @@ subc reg_a,reg_b|[mem]|value8     ;sub + carry
 xor reg_a,reg_b|[mem]|value8
 and reg_a,reg_b|[mem]|value8
 rsh reg_a
-rshc reg_a			; ror
+rshc reg_a
 
 jmp [mem]
 jmpz [mem]         ;zero
