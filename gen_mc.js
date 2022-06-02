@@ -50,7 +50,7 @@ var lines = {
 	pc_abus_out:  3<<5,
 	idx_abus_out: 4<<5,
 	off_abus_out: 5<<5,
-	off2_abus_out:6<<6,
+	off2_abus_out:6<<5,
 
 	a_out:        1<<8,
 	b_out:        2<<8,
@@ -205,7 +205,13 @@ const instr = {
 		]
 	},
 	//st_r_fpo
-	//st_r_ao
+	st_r_ao:{
+		opcode: 15,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.off2_abus_out + lines.ram_in + lines.instb_ho,
+		]
+	},
 
 	add_r_i:{
 		opcode: 16,
