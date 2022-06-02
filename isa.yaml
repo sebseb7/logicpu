@@ -159,25 +159,25 @@ instructions:
       size: 8
   ld:
     byte_code:
-      value: 8
+      value: 9
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - integer
+          - register
     variants:
       - var1:
         byte_code:
-          value: 9
+          value: 8
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var1b:
         byte_code:
           value: 9
@@ -259,7 +259,7 @@ instructions:
             list:
               - register
               - register16_ao
-  addrr:
+  add:
     byte_code:
       value: 17
       size: 8
@@ -269,27 +269,17 @@ instructions:
         list:
           - register
           - register
-  add:
-    byte_code:
-      value: 16
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - integer
     variants:
       - var1:
         byte_code:
-          value: 17
+          value: 16
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 18
@@ -320,7 +310,7 @@ instructions:
             list:
               - register
               - register16_ao
-  addcrr:
+  addc:
     byte_code:
       value: 22
       size: 8
@@ -330,27 +320,17 @@ instructions:
         list:
           - register
           - register
-  addc:
-    byte_code:
-      value: 21
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - integer
     variants:
       - var1:
         byte_code:
-          value: 22
+          value: 21
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 23
@@ -383,25 +363,25 @@ instructions:
               - register16_ao
   sub:
     byte_code:
-      value: 26
+      value: 27
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - integer
+          - register
     variants:
       - var1:
         byte_code:
-          value: 27
+          value: 26
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 28
@@ -434,25 +414,25 @@ instructions:
               - register16_ao
   subc:
     byte_code:
-      value: 31
+      value: 32
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - integer
+          - register
     variants:
       - var1:
         byte_code:
-          value: 32
+          value: 31
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 33
@@ -485,25 +465,25 @@ instructions:
               - register16_ao
   xor:
     byte_code:
-      value: 36
+      value: 37
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - integer
+          - register
     variants:
       - var1:
         byte_code:
-          value: 37
+          value: 36
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 38
@@ -536,25 +516,25 @@ instructions:
               - register16_ao
   and:
     byte_code:
-      value: 41
+      value: 42
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
           - register
-          - integer
+          - register
     variants:
       - var1:
         byte_code:
-          value: 42
+          value: 41
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
               - register
-              - register
+              - integer
       - var2:
         byte_code:
           value: 43
