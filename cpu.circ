@@ -1578,13 +1578,13 @@
       <a name="label" val="OFF_INL"/>
     </comp>
     <comp lib="0" loc="(3020,210)" name="Tunnel">
-      <a name="label" val="RAM_IN"/>
+      <a name="label" val="PORTA_IN"/>
     </comp>
     <comp lib="0" loc="(3020,240)" name="Tunnel">
-      <a name="label" val="DISP_IN"/>
+      <a name="label" val="PORTB_IN"/>
     </comp>
     <comp lib="0" loc="(3020,270)" name="Tunnel">
-      <a name="label" val="IR_IN"/>
+      <a name="label" val="DISP_IN"/>
     </comp>
     <comp lib="0" loc="(3020,30)" name="Tunnel">
       <a name="label" val="A_IN"/>
@@ -1593,7 +1593,7 @@
       <a name="label" val="IR2_IN"/>
     </comp>
     <comp lib="0" loc="(3020,330)" name="Tunnel">
-      <a name="label" val="ALU_OP"/>
+      <a name="label" val="IR_IN"/>
     </comp>
     <comp lib="0" loc="(3020,360)" name="Tunnel">
       <a name="label" val="FLAGS_IN"/>
@@ -1608,10 +1608,10 @@
       <a name="label" val="IDX_INH"/>
     </comp>
     <comp lib="0" loc="(3020,480)" name="Tunnel">
-      <a name="label" val="PORTA_IN"/>
+      <a name="label" val="RAM_IN"/>
     </comp>
     <comp lib="0" loc="(3020,510)" name="Tunnel">
-      <a name="label" val="PORTB_IN"/>
+      <a name="label" val="ALU_OP"/>
     </comp>
     <comp lib="0" loc="(3020,540)" name="Tunnel">
       <a name="label" val="ADDR_INH"/>
@@ -2448,77 +2448,14 @@
     <comp lib="4" loc="(1230,1370)" name="ROM">
       <a name="addrWidth" val="11"/>
       <a name="contents">addr/data: 11 32
-aaf9 4000 6*3000 aaf9 7*3000 aaf9 800aaf2 800aaf3
-20000800 4*3000 aaf9 800aaf2 800aaf3 20017800 4*3000 aaf9
-800aaf2 800aaf3 20020800 4*3000 aaf9 5000 52fe 52ff
-80052f2 80002f3 20000800 3000 aaf9 1000 6*3000 aaf9
-2000 6*3000 aaf9 aafa 4000aaf0 5*3000 aaf9 aafa
-40200000 5*3000 aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 800aaf2 800aaf3 62c7 62b7 62d7 62e7 300
-aaf9 5000 80052f2 80052f3 52fd 52f4 52f3 52f2
-aaf9 6287 6217 6227 6237 6247 6277 62c7
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff aaf9 7*ffffffff
-aaf9 7*ffffffff 20000800 7*3000 52f1 2fc 20000800 5*3000
-62b7 8000092 80000a3 20000800 800aaf2 800aaf3 20000800 3000
-</a>
+compressed
+eJztWUt2wyAM3OsUrLsCgTE9TmKH+x+hgOUCBtdx69e+l8oLJjb6zCiERMFJb+/CyHQJ+6bplUvP&#13;
+x819GEdMowZME0YKs28kcJSqZwSVkZTYjTTQXUSPD0IPCTUKr5PzQqN2VX1FxLpVGsebMBFCvt4k&#13;
+WCLT9Sz1hGr6TAhW89otl9zTVTMJMSYJx8lcmBxy8G3Sp5LFGHOhDLbJTDJRKgYaZZNN9PxipdU5&#13;
+x12aRxOwKyxxV19QgF6BV+4nHE9zh8M3Zak7thTOLql24vqCX6j/mcIEAeZ4Xf2i/vpNs3+xbg7r&#13;
+NgVWQKw6u3a0UVPBvLNpBxsbP9K63QgHmbcubKa/QftVli3rYB2sg3WwDtZxqQ5X9AGxO5nCt3LE&#13;
+O+FM+Ai4NES4/tSuWqvQSi2oqcWaCQ3h+hzJOwZ1FFwRIqEmNIQjYSD3YuVnHayDdbAO1sE6WAfr&#13;
+YB3/WkcchzTa5n97ruOPdHwe8uQDqaUhUcLjlM+ActnXNuhdIdxUcUzk6oMnWZ4dwQd82d2J</a>
       <a name="dataWidth" val="32"/>
       <a name="label" val="4x28C16"/>
     </comp>
@@ -2613,8 +2550,29 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <comp lib="4" loc="(640,1210)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-8 10 a 9 21 a 20 80
-9 2 80 9
+7d 80 38 7d 80 9 2 80
+0 8 10 8 8 20 8 ef
+0 2 11 44 c 30 11 43
+1a 20 1 4 80 27 10 60
+1 15 50 0 2 80 12 1a
+10 1 9 71 9 84 4 80
+37 8 20 8 2 80 12 5
+8 10 41 ef 0 2 1a 10
+1 9 91 4 80 70 7d 80
+71 a 20 0 1 1a 20 7f
+3 80 61 8 30 0 f 30
+10 60 1 15 50 0 2 80
+3e 8 30 1 f 30 10 60
+1 15 50 0 2 80 3e 5
+5 30 10 30 20 30 30 30
+40 a 10 0 0 a 30 0
+1 9 41 2e 10 2f 10 29
+10 80 9 23 2e 30 2f 30
+29 30 80 11 32 15 30 13
+2e 20 29 20 7f 16 41 16
+42 d 30 0 1 d 40 0
+0 31 40 31 30 31 20 31
+10 5
 </a>
     </comp>
     <comp lib="4" loc="(660,270)" name="Counter">
@@ -4864,6 +4822,11 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(1950,1690)" to="(2020,1690)"/>
     <wire from="(1950,500)" to="(1950,590)"/>
     <wire from="(1950,590)" to="(2090,590)"/>
+    <wire from="(1960,1460)" to="(1960,1530)"/>
+    <wire from="(1960,1530)" to="(1960,1610)"/>
+    <wire from="(1960,1610)" to="(1960,1680)"/>
+    <wire from="(1960,1680)" to="(1960,1780)"/>
+    <wire from="(1960,1780)" to="(2070,1780)"/>
     <wire from="(1960,650)" to="(1960,670)"/>
     <wire from="(1960,800)" to="(1960,850)"/>
     <wire from="(1960,870)" to="(1960,1010)"/>
@@ -4948,6 +4911,10 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2020,1690)" to="(2060,1690)"/>
     <wire from="(2020,700)" to="(2020,770)"/>
     <wire from="(2030,1010)" to="(2060,1010)"/>
+    <wire from="(2030,1460)" to="(2070,1460)"/>
+    <wire from="(2030,1530)" to="(2070,1530)"/>
+    <wire from="(2030,1610)" to="(2070,1610)"/>
+    <wire from="(2030,1680)" to="(2070,1680)"/>
     <wire from="(2030,310)" to="(2030,390)"/>
     <wire from="(2030,800)" to="(2030,810)"/>
     <wire from="(2030,810)" to="(2040,810)"/>
@@ -4972,6 +4939,11 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2060,1540)" to="(2060,1620)"/>
     <wire from="(2060,1620)" to="(2060,1690)"/>
     <wire from="(2060,800)" to="(2060,940)"/>
+    <wire from="(2070,1460)" to="(2070,1530)"/>
+    <wire from="(2070,1530)" to="(2070,1610)"/>
+    <wire from="(2070,1610)" to="(2070,1680)"/>
+    <wire from="(2070,1680)" to="(2070,1780)"/>
+    <wire from="(2070,1780)" to="(2490,1780)"/>
     <wire from="(2070,730)" to="(2070,770)"/>
     <wire from="(2080,270)" to="(2080,280)"/>
     <wire from="(2080,800)" to="(2080,810)"/>
@@ -5212,7 +5184,7 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2470,1650)" to="(2480,1650)"/>
     <wire from="(2470,1680)" to="(2490,1680)"/>
     <wire from="(2470,1710)" to="(2560,1710)"/>
-    <wire from="(2470,1740)" to="(2570,1740)"/>
+    <wire from="(2470,1740)" to="(2490,1740)"/>
     <wire from="(2470,410)" to="(2470,450)"/>
     <wire from="(2470,450)" to="(2490,450)"/>
     <wire from="(2470,50)" to="(2470,70)"/>
@@ -5236,6 +5208,8 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2480,970)" to="(2530,970)"/>
     <wire from="(2490,1470)" to="(2500,1470)"/>
     <wire from="(2490,1480)" to="(2490,1540)"/>
+    <wire from="(2490,1740)" to="(2490,1780)"/>
+    <wire from="(2490,1740)" to="(2570,1740)"/>
     <wire from="(2490,930)" to="(2490,950)"/>
     <wire from="(2490,980)" to="(2490,1000)"/>
     <wire from="(2490,980)" to="(2550,980)"/>
@@ -5534,8 +5508,8 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2960,160)" to="(2960,270)"/>
     <wire from="(2960,270)" to="(3020,270)"/>
     <wire from="(2960,930)" to="(2960,960)"/>
-    <wire from="(2970,1330)" to="(2970,1410)"/>
-    <wire from="(2970,1410)" to="(3010,1410)"/>
+    <wire from="(2970,1330)" to="(2970,1380)"/>
+    <wire from="(2970,1380)" to="(3010,1380)"/>
     <wire from="(2970,150)" to="(2970,240)"/>
     <wire from="(2970,240)" to="(3020,240)"/>
     <wire from="(2980,1080)" to="(2980,1130)"/>
@@ -5545,8 +5519,8 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <wire from="(2980,210)" to="(3020,210)"/>
     <wire from="(2980,930)" to="(2980,970)"/>
     <wire from="(2990,130)" to="(2990,180)"/>
-    <wire from="(2990,1360)" to="(2990,1380)"/>
-    <wire from="(2990,1380)" to="(3010,1380)"/>
+    <wire from="(2990,1360)" to="(2990,1410)"/>
+    <wire from="(2990,1410)" to="(3010,1410)"/>
     <wire from="(2990,180)" to="(3020,180)"/>
     <wire from="(2990,30)" to="(2990,80)"/>
     <wire from="(2990,30)" to="(3020,30)"/>

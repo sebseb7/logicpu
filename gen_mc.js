@@ -75,17 +75,17 @@ var lines = {
 	d_in:         4,
 	off_inl:      5,
 	off_inh:      6,
-	ram_in:       7,
-	disp_in:      8,
-	ir_in:        9,
+	porta_in:     7,
+	portb_in:     8,
+	disp_in:      9,
 	ir2_in:       10,
-	alu_op:       11,
+	ir_in:        11,
 	flags_in:     12,
 	alu_in:       13,
 	idx_inh:      14,
 	idx_inl:      15,
-	porta_in:     16,
-	portb_in:     17,
+	ram_in:       16,
+	alu_op:       17,
 	addr_inl:     18,
 	addr_inh:     19,
 	op_in:        20,
@@ -190,11 +190,17 @@ const instr = {
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.addr_inh,
-			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.instb_hi,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi,
 		]
 	},
 	//ld_r_fpo
-	//ld_r_ao
+	ld_r_ao:{
+		opcode: 12,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.off2_abus_out + lines.mem_out + lines.instb_hi,
+		]
+	},
 	st_r_a:{
 		opcode: 13,
 		steps: [
