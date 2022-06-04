@@ -56,39 +56,47 @@ var lines = {
 	b_out:        2<<8,
 	c_out:        3<<8,
 	d_out:        4<<8,
-	off_outl:     5<<8,
-	off_outh:     6<<8,
-	alu_out:      7<<8,
-	flags_out:    8<<8,
-	irq_outl:     9<<8,
-	irq_outh:     10<<8,
-	pc_outh:      11<<8,
-	pc_outl:      12<<8,
-	idx_outl:     13<<8,
-	idx_outh:     14<<8,
-	mem_out:      15<<8,
-	io_out:       16<<8,
+	e_out:        5<<8,
+	f_out:        6<<8,
+	g_out:        7<<8,
+	h_out:        8<<8,
+	off_outl:     9<<8,
+	off_outh:     10<<8,
+	alu_out:      11<<8,
+	flags_out:    12<<8,
+	irq_outl:     13<<8,
+	irq_outh:     14<<8,
+	pc_outh:      15<<8,
+	pc_outl:      16<<8,
+	idx_outl:     17<<8,
+	idx_outh:     18<<8,
+	mem_out:      19<<8,
+	io_out:       20<<8,
 
 	a_in:		  1,
 	b_in:		  2,
 	c_in:         3,
 	d_in:         4,
-	off_inl:      5,
-	off_inh:      6,
-	porta_in:     7,
-	portb_in:     8,
-	disp_in:      9,
-	ir2_in:       10,
-	ir_in:        11,
-	flags_in:     12,
-	alu_in:       13,
-	idx_inh:      14,
-	idx_inl:      15,
-	ram_in:       16,
-	alu_op:       17,
-	addr_inl:     18,
-	addr_inh:     19,
-	op_in:        20,
+	e_in:		  5,
+	f_in:		  6,
+	g_in:         7,
+	h_in:         8,
+	off_inl:      9,
+	off_inh:      10,
+	porta_in:     11,
+	portb_in:     12,
+	disp_in:      13,
+	ir2_in:       14,
+	ir_in:        15,
+	flags_in:     16,
+	alu_in:       17,
+	idx_inh:      18,
+	idx_inl:      19,
+	ram_in:       20,
+	alu_op:       21,
+	addr_inl:     22,
+	addr_inh:     23,
+	op_in:        24,
 	
 	cie          :1<<24,
 	sie          :2<<24,
@@ -239,8 +247,16 @@ const instr = {
 	},
 	//add_r_a
 	//add_r_fpo
-	//add_r_ao
 
+	add_r_ao:{
+		opcode: 20,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.off2_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_op,
+			lines.instb_hi + lines.alu_out
+		]
+	},
 	addc_r_i:{
 		opcode: 21,
 		steps: [
@@ -272,7 +288,15 @@ const instr = {
 			lines.instb_hi + lines.alu_out
 		]
 	},
-	//sub_r_r
+	sub_r_r:{
+		opcode: 27,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.pc_inc + lines.ir2_in,
+			lines.instb_lo + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_op,
+			lines.instb_hi + lines.alu_out
+		]
+	},
 	//sub_r_a
 	//sub_r_fpo
 	//sub_r_ao
