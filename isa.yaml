@@ -13,6 +13,7 @@ general:
     - g
     - h
     - o
+    - o2
     - pa
     - pb
     - aoh
@@ -129,25 +130,32 @@ operand_sets:
           position: suffix
   wo_register:
     operand_values:
-      register_o:
+      register_pa:
         type: register
         register: pa
         bytecode:
           value: 11
           size: 4
           position: suffix
-      register_pa:
+      register_pb:
         type: register
         register: pb
         bytecode:
           value: 12
           size: 4
           position: suffix
-      register_pb:
+      register_o:
         type: register
         register: o
         bytecode:
           value: 13
+          size: 4
+          position: suffix
+      register_o2:
+        type: register
+        register: o2
+        bytecode:
+          value: 14
           size: 4
           position: suffix
   address:

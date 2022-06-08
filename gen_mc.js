@@ -86,7 +86,7 @@ var lines = {
 	porta_in:     11,
 	portb_in:     12,
 	disp_in:      13,
-	ir2_in:       14,
+	disp2_in:     14,
 	ir_in:        15,
 	flags_in:     16,
 	alu_in:       17,
@@ -97,6 +97,7 @@ var lines = {
 	addr_inl:     22,
 	addr_inh:     23,
 	op_in:        24,
+	ir2_in:       25,
 	
 	cie          :1<<24,
 	sie          :2<<24,
