@@ -16,7 +16,7 @@ board_b:
 .org 0x8000 ; ROM
 	ld a,0
 	st a,[seed]
-	st b,[random]
+	st a,[random]
 	call [randomize_board]
 start:
 	call [draw]
