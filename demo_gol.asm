@@ -14,10 +14,19 @@ board_b:
 	.fill 64, 0
 
 .org 0x8000 ; ROM
+	nop
+	nop
+	nop
 	ld a,0
 	st a,[seed]
 	st a,[random]
-	call [randomize_board]
+	ld a,1
+	st a,[2]
+	st a,[3]
+	st a,[4]
+	st a,[12]
+	st a,[19]
+;	call [randomize_board]
 start:
 	call [draw]
 	ld a,0
