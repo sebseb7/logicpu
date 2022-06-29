@@ -1,6 +1,6 @@
 description: SEB ISA
 general:
-  min_version: 0.1.4
+  min_version: 0.2.1
   endian: big
   address_size: 16
   registers:
@@ -201,6 +201,42 @@ instructions:
       operand_sets:
         list:
           - address
+  jmpc:
+    byte_code:
+      value: 120
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpzc:
+    byte_code:
+      value: 121
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpo:
+    byte_code:
+      value: 122
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpoc:
+    byte_code:
+      value: 123
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
   ret:
     byte_code:
       value: 5
@@ -224,6 +260,16 @@ instructions:
           - register
           - integer
     variants:
+      - var0b:
+        byte_code:
+          value: 8
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - wo_register
+              - integer
       - var1:
         byte_code:
           value: 9
@@ -254,6 +300,16 @@ instructions:
             list:
               - register
               - address
+      - var2b:
+        byte_code:
+          value: 10
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - wo_register
+              - address
       - var3:
         byte_code:
           value: 11
@@ -264,6 +320,16 @@ instructions:
             list:
               - register
               - register16_fpo
+      - var3b:
+        byte_code:
+          value: 11
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - wo_register
+              - register16_fpo
       - var4:
         byte_code:
           value: 12
@@ -273,6 +339,16 @@ instructions:
           operand_sets:
             list:
               - register
+              - register16_ao
+      - var4b:
+        byte_code:
+          value: 12
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - wo_register
               - register16_ao
       - var5:
         byte_code:
@@ -641,7 +717,7 @@ instructions:
           - register
   push:
     byte_code:
-      value: 48
+      value: 49
       size: 8
     operands:
       count: 1
@@ -650,7 +726,7 @@ instructions:
           - register 
   pop:
     byte_code:
-      value: 49
+      value: 50
       size: 8
     operands:
       count: 1

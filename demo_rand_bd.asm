@@ -7,9 +7,15 @@ seed2:
 
 .org 0x8000 ; ROM
 
+	ld a,0x00
+    st a,[seed1]
+	ld a,0x00
+    st a,[seed2]
 start:
+
 	call [rand]
 	ld o,a
+	nop
 	jmp [start]
 
 rand:
@@ -28,13 +34,10 @@ rand:
 	addc c,0x13
 	rsh b
 	and b,0x7f
-	addc d,a
+	add d,a
 	addc d,b
 	st c,[seed2]
 	st d,[seed1]
 
 	ld a,c
 	ret
-
-
-

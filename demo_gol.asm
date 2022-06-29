@@ -17,9 +17,23 @@ board_b:
 	nop
 	nop
 	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	ld a,0
-	st a,[seed]
-	st a,[random]
+	ld ao,66
+ramClearNext:
+	sub aol,1
+	st a,ao
+	jmpz [ramClearEnd]
+	jmp [ramClearNext]
+ramClearEnd:
 	ld a,1
 	st a,[2]
 	st a,[3]
@@ -331,6 +345,4 @@ lut: ; precomputed neighbours
 	.byte 4,5,6,60,62,52,53,54
 	.byte 5,6,7,61,63,53,54,55
 	.byte 6,7,0,62,56,54,55,48
-
-
-
+				
