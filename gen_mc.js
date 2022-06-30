@@ -577,10 +577,11 @@ function output() {
 
 output();
 
-/*
+var bank = bankA;
+
 const port = new SerialPort({
   path: 'COM8',
-  baudRate: 230400,
+  baudRate: 500000,
 });
 const { ReadlineParser } = require('@serialport/parser-readline')
 
@@ -591,7 +592,7 @@ const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 parser.on('data', function(data){
 	//console.log(data);
 	if(data == 'BOOT'){
-		console.log('booted');
+		console.log('connected to programmer');
 		var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+'ff\n';
 		//var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+bankA[currAddr].toString(16).padStart(2,'0')+'\n';
 		//var cmd = 'RD'+currAddr.toString(16).padStart(4,'0')+'\n';
@@ -602,6 +603,7 @@ parser.on('data', function(data){
 	else if(data == 'DONE'){
 		if(currAddr == 2048 && mode == 'erase'){
 			currAddr = 0;
+			console.log('erase done, writing');
 			mode = 'write';
 		}
 		if(currAddr == 2048 && mode == 'write'){
@@ -610,12 +612,7 @@ parser.on('data', function(data){
 			var cmd = 'RD'+currAddr.toString(16).padStart(4,'0')+'\n';
 			port.write(cmd);
 			//console.log(cmd);
-			console.log('compare');
-		}
-		if(currAddr == 2048 && mode == 'compare'){
-			currAddr = 0;
-			mode = 'finished';
-			console.log('done');
+			console.log('writing done, comparing');
 		}
 
 		if(mode == 'erase'){
@@ -625,7 +622,7 @@ parser.on('data', function(data){
 			//console.log(cmd);
 		}
 		if(mode == 'write'){
-			var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+bankD[currAddr].toString(16).padStart(2,'0')+'\n';
+			var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+bank[currAddr].toString(16).padStart(2,'0')+'\n';
 			currAddr++;
 			port.write(cmd);
 			//console.log(cmd);
@@ -634,8 +631,8 @@ parser.on('data', function(data){
 	}else{
 
 		var red = data.padStart(2,'0');
-		if(red != bankD[currAddr].toString(16).toUpperCase().padStart(2,'0')){
-			console.log('mismatch at '+currAddr.toString(16),red,bankD[currAddr].toString(16).toUpperCase().padStart(2,'0'));
+		if(red != bank[currAddr].toString(16).toUpperCase().padStart(2,'0')){
+			console.log('mismatch at '+currAddr.toString(16),red,bank[currAddr].toString(16).toUpperCase().padStart(2,'0'));
 		}
 		if(currAddr < 2047){
 			currAddr++;
@@ -644,14 +641,14 @@ parser.on('data', function(data){
 			//console.log(cmd);
 		}else{
 			mode = 'finished';
-			console.log('compare completed');
+			console.log('completed');
 			port.close();
 		}
 	}
 })
 
 port.on('open', async () => {
-	console.log('opened'+port.isOpen);
+	console.log('port opened');
 })
 
-*/
+
