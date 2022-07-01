@@ -738,6 +738,57 @@ instructions:
         byte_code:
           value: 50
           size: 8
+  or:
+    byte_code:
+      value: 51
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 52
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - integer
+      - var2:
+        byte_code:
+          value: 53
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - address
+      - var3:
+        byte_code:
+          value: 54
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16_fpo
+      - var4:
+        byte_code:
+          value: 55
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - register16_ao
   call:
     byte_code:
       value: 125

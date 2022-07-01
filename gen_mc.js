@@ -116,13 +116,13 @@ var lines = {
 	alu_c        :7<<24,
 
 	alu_none:    0<<13,
-	alu_add:     1<<13,
-	alu_sub:     2<<13,
-	alu_rsh:     3<<13,
-	alu_xor:     4<<13,
-	alu_and:     5<<13,
-	alu_or:      6<<13,
-	alu_unused:  7<<13,
+	alu_or:      1<<13,
+	alu_and:     2<<13,
+	alu_xor:     3<<13,
+	alu_unused:  4<<13,
+	alu_sub:     5<<13,
+	alu_add:     6<<13,
+	alu_rsh:     7<<13,
 
 }
 	
@@ -414,6 +414,16 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
+	
+	or_r_i:{
+		opcode: 52,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_or,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 
 	push: {
 		opcode: 49,
@@ -501,9 +511,15 @@ function output() {
 	console.log('v3.0 hex words addressed');
 	var file = 'v3.0 hex words addressed\n';
 	
-	var mc = lines.pc_abus_out + lines.ir_in;
+	var mc = BigInt(lines.pc_abus_out + lines.ir_in);
+	mc = mc ^ BigInt(lines.alu_sel0);
+	mc = mc ^ BigInt(lines.alu_sel1);
+	mc = mc ^ BigInt(lines.alu_sel2);
 	var fetch = (mc.toString(16).padStart(8,'0'));
-	mc = lines.halt;
+	mc = BigInt(lines.halt);
+	mc = mc ^ BigInt(lines.alu_sel0);
+	mc = mc ^ BigInt(lines.alu_sel1);
+	mc = mc ^ BigInt(lines.alu_sel2);
 	var hlt = (mc.toString(16).padStart(8,'0'));
 
 	for (let i = 0; i < 256; i++) {
@@ -526,8 +542,11 @@ function output() {
 						mc =  BigInt(instr[j].steps[k]);
 					}
 					else{
-						mc = lines.t_reset;
+						mc = BigInt(lines.t_reset);
 					}
+					mc = mc ^ BigInt(lines.alu_sel0);
+					mc = mc ^ BigInt(lines.alu_sel1);
+					mc = mc ^ BigInt(lines.alu_sel2);
 					lineops+= ' '+(mc.toString(16).padStart(8,'0'));
 				}
 				
@@ -542,6 +561,9 @@ function output() {
 					var addr = (k<<8) + i;
 					mc = mc ^ BigInt(lines.t_reset);
 					mc = mc ^ BigInt(lines.ir_in);
+					mc = mc ^ BigInt(lines.alu_sel0);
+					mc = mc ^ BigInt(lines.alu_sel1);
+					mc = mc ^ BigInt(lines.alu_sel2);
 					bankA[addr] = mc & BigInt(0xff);
 					bankB[addr] = (mc>>BigInt(8)) & BigInt(0xff);
 					bankC[addr] = (mc>>BigInt(16)) & BigInt(0xff);
@@ -561,6 +583,9 @@ function output() {
 				var addr = (k<<8) + i;
 				mc = mc ^ BigInt(lines.t_reset);
 				mc = mc ^ BigInt(lines.ir_in);
+				mc = mc ^ BigInt(lines.alu_sel0);
+				mc = mc ^ BigInt(lines.alu_sel1);
+				mc = mc ^ BigInt(lines.alu_sel2);
 				bankA[addr] = mc & BigInt(0xff);
 				bankB[addr] = (mc>>BigInt(8)) & BigInt(0xff);
 				bankC[addr] = (mc>>BigInt(16)) & BigInt(0xff);
@@ -577,7 +602,8 @@ function output() {
 
 output();
 
-var bank = bankA;
+/*
+var bank = bankB;
 
 const port = new SerialPort({
   path: 'COM8',
@@ -592,7 +618,7 @@ const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 parser.on('data', function(data){
 	//console.log(data);
 	if(data == 'BOOT'){
-		console.log('connected to programmer');
+		console.log('connected to programmer, erasing');
 		var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+'ff\n';
 		//var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+bankA[currAddr].toString(16).padStart(2,'0')+'\n';
 		//var cmd = 'RD'+currAddr.toString(16).padStart(4,'0')+'\n';
@@ -651,4 +677,4 @@ port.on('open', async () => {
 	console.log('port opened');
 })
 
-
+/*
