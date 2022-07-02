@@ -2699,13 +2699,14 @@
       <a name="addrWidth" val="11"/>
       <a name="contents">addr/data: 11 32
 compressed
-eJztmEuShCAMQPc5hetZRU2jfRzG0fsfYfiJ2gZEaqqrpyq9ECzyewGB9Ig4K8SGTIumVV+m57tj&#13;
-GJrWDjM2D6jAPIZGrUPESzVOinpsX6SAkULsUrYe4d22vXXeH5ynOxHnecKJIUw6g6pwMdYohHES&#13;
-ACcwjSol4C3sKcl7Lwh6m54l/A5WwdmaCt1qnFuk6ITxX+jW2/pBgozbttHYoVtHNnffDCbwyp2N&#13;
-s159Q+bMnJWuYA3oagXSwZyTuCViqNUOmajRT1NBBvgyFwYHNFJ+YrI01erbnhPmNWEmzQIFmNdD&#13;
-UKV1cyL2X9HIctZ9vn+eFLcNhUD13Xl9e0ZthIcYE9v5cC2YC8Nvkkrbo4q4vfnh2nCudPy5Urg6&#13;
-pk9eHe+cYOESLuESLuESrltchwK0pEzt02VqlLIE46WUtZWSyl4AogHztthLhmnnfqFYEmcuAC+l&#13;
-dMOX0hkDrE+6DSELVLiES7iES7iES7iES7iE6xO4zOPpr/0K9e6/SUnyP+P6BYNVeFE=</a>
+eJztmc1yhCAMgO95Cs89RWWRfRxq9f0foSCoiwQQ2ulsZ7IHwSE/fCECmVWIi0TshGnRtPLD9FxX&#13;
++aF57xBjy4QSzGPq5D4kaKlukxIj9hcpIKQQh5Sth3+37Widj4HzdOfAeUY4xxRmnUGVuBprwk8j&#13;
+EoBNYFYyJeAsvFIK5/3GpM/lWf0vsAqbrfmmW41Lj+JwQvi/6dbZ+kIBGbd9p3HALY9s7D4JTKCV&#13;
+BzvPdvUTmTITK5VgDehuBdKTiYN4BmJq1faRaNFPU0EGuBgLgwMaRX5hsjTN6uee49c1YSbNAjWY&#13;
+NuqBhzvf62XV2vTDBIarnarP1Q9BllSjqv3SmnLoFzJP16ZOWxb8IKJ2hsEc6S3SLmtRsLj9S21P&#13;
+Q0Ft/4+t9UfXQB8RN7Njfufs+MsFZi7mYi7mYi7mquIKatxrJXxWkq/1crISDmwpdwAXam+VspW7&#13;
+ABwGzNtqLxmmXcZVxFV3fAG4VOtdoVqPDZA+RTUEJyhzMRdzMRdzMRdzMRdzMdc7cJnH093/JWrq&#13;
+bzUO8r/ggm8lmYrW</a>
       <a name="dataWidth" val="32"/>
       <a name="label" val="4x28C16"/>
     </comp>
@@ -2841,56 +2842,34 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
     <comp lib="4" loc="(630,1360)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-10 10 1 1a 10 1 2e 10
-29 10 1 24 10 1 34 10
-1 8 10 1 9 d1 10 10
-1 78 80 1f 2 80 14 8
-10 1 9 d1 1a 10 1 9
-d1 1a 10 1 9 d1 8 10
-1 d 10 0 0 a d0 81
-8f a 10 0 0 9 d1 10
-10 1 d 10 0 0 a d0
-0 0 4 81 8c 2 81 89
-8 10 0 10 10 40 9 d1
-10 10 40 9 d1 10 10 40
-9 d1 10 10 40 9 d1 10
-10 40 9 d1 8 10 0 10
-10 3 9 d1 10 10 3 9
-d1 10 10 3 9 d1 10 10
-3 9 d1 10 10 3 9 d1
-10 10 3 9 d1 10 10 3
-9 d1 10 10 3 9 d1 10
-10 3 9 d1 10 10 3 9
-d1 10 10 3 9 d1 10 10
-3 9 d1 8 10 0 10 10
-5 9 d1 10 10 5 9 d1
-10 10 5 9 d1 10 10 5
-9 d1 10 10 5 9 d1 10
-10 5 9 d1 10 10 5 9
-d1 10 10 5 9 d1 10 10
-5 9 d1 10 10 5 9 d1
-10 10 5 9 d1 10 10 5
-9 d1 10 10 5 9 d1 10
-10 5 9 d1 8 10 0 10
-10 7 9 d1 10 10 7 9
-d1 10 10 7 9 d1 10 10
-7 9 d1 10 10 7 9 d1
-10 10 7 9 d1 10 10 7
-9 d1 10 10 7 9 d1 10
-10 7 9 d1 10 10 7 9
-d1 10 10 7 9 d1 10 10
-7 9 d1 10 10 7 9 d1
-10 10 7 9 d1 8 10 0
-10 10 9 9 d1 10 10 9
-9 d1 10 10 9 9 d1 10
-10 9 9 d1 10 10 9 9
-d1 10 10 9 9 d1 10 10
-9 9 d1 10 10 9 9 d1
-10 10 9 9 d1 10 10 9
-9 d1 10 10 9 9 d1 10
-10 9 9 d1 10 10 9 9
-d1 10 10 9 9 d1 2 80
-0 2 80 50 2 80 50 e7
+8 10 3 d 10 0 0 d
+10 0 1 8 10 2 d 10
+0 2 8 10 0 d 10 0
+3 8 10 8 d 10 0 5
+1b 11 a 10 0 1 16 11
+d 10 0 1 a 10 0 3
+d 10 0 4 16 11 d 10
+0 3 a 10 0 5 1a 10
+1 78 80 6d d 10 0 5
+a 10 0 3 1c 10 0 2
+3 80 60 12 10 0 2 d
+10 0 3 1b 11 2 80 22
+d 10 0 3 8 10 ff 10
+10 ff 2 80 22 a 10 0
+4 1a 10 1 78 80 a3 a
+10 0 2 1a 10 3 78 80
+a6 10 10 2 d 10 0 2
+a 10 0 0 d 10 0 1
+8 10 0 d 10 0 3 8
+10 8 d 10 0 5 1b 11
+2 80 22 2 80 aa a d0
+0 0 a 10 0 0 10 10
+1 78 80 d6 d 10 0 0
+d 10 0 1 1a 10 1 d
+10 0 2 8 10 0 d 10
+0 3 8 10 8 d 10 0
+5 1b 11 2 80 22 8 d0
+c5
 </a>
     </comp>
     <comp lib="4" loc="(650,1670)" name="D Flip-Flop"/>
@@ -4502,7 +4481,7 @@ d1 10 10 9 9 d1 2 80
     </comp>
     <comp lib="6" loc="(950,127)" name="Text"/>
     <comp lib="6" loc="(955,88)" name="Text"/>
-    <comp lib="7" loc="(1020,410)" name="Ground"/>
+    <comp lib="7" loc="(1010,430)" name="Ground"/>
     <comp lib="7" loc="(1140,80)" name="Pull Resistor">
       <a name="facing" val="north"/>
     </comp>
@@ -4536,7 +4515,6 @@ d1 10 10 9 9 d1 2 80
     <wire from="(1010,1320)" to="(1010,1370)"/>
     <wire from="(1010,1370)" to="(1010,1610)"/>
     <wire from="(1020,1310)" to="(1020,1390)"/>
-    <wire from="(1020,410)" to="(1030,410)"/>
     <wire from="(1030,410)" to="(1030,550)"/>
     <wire from="(1110,380)" to="(1200,380)"/>
     <wire from="(1110,410)" to="(1120,410)"/>
@@ -6612,6 +6590,6 @@ d1 10 10 9 9 d1 2 80
     <wire from="(970,1290)" to="(970,1310)"/>
     <wire from="(970,1310)" to="(1020,1310)"/>
     <wire from="(980,110)" to="(980,170)"/>
-    <wire from="(990,410)" to="(1010,410)"/>
+    <wire from="(990,410)" to="(1030,410)"/>
   </circuit>
 </project>

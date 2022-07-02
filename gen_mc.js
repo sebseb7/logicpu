@@ -364,9 +364,35 @@ const instr = {
 	//sub_r_fpo
 	//sub_r_ao
 
-	//subc_r_i
-	//subc_r_r
-	//subc_r_a
+	subc_r_i:{
+		opcode: 31,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	subc_r_r:{
+		opcode: 32,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	subc_r_a:{
+		opcode: 33,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 	//subc_r_fpo
 	//subc_r_ao
 
@@ -602,8 +628,7 @@ function output() {
 
 output();
 
-/*
-var bank = bankB;
+/* var vank = bankB;
 
 const port = new SerialPort({
   path: 'COM8',
@@ -677,4 +702,4 @@ port.on('open', async () => {
 	console.log('port opened');
 })
 
-/*
+*/

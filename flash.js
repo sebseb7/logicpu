@@ -3,12 +3,12 @@ const { SerialPort } = require('serialport');
 
 const port = new SerialPort({
   path: 'COM8',
-  baudRate: 230400,
+  baudRate: 500000,
 });
 const { ReadlineParser } = require('@serialport/parser-readline')
 
 
-var rom = fs.readFileSync('demo_test.bin');
+var rom = fs.readFileSync('demo_prime.bin');
 
 console.log(rom.length);
 
