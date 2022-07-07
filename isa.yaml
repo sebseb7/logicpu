@@ -21,6 +21,7 @@ general:
     - fpo
     - ar
     - ao
+    - sp
   identifier:
     name: seb-isa
     version: "1.0.0"
@@ -163,6 +164,17 @@ operand_sets:
       addr:
         type: indirect_numeric
         argument:
+          size: 16
+          byte_align: true
+  sp_offset:
+    operand_values:
+      sp_plus_16:
+        type: indirect_register
+        register: sp
+        bytecode:
+          value: 0
+          size: 0
+        offset:
           size: 16
           byte_align: true
 instructions:
@@ -360,6 +372,16 @@ instructions:
             list:
               - register16_ao
               - integer16
+      - var6:
+        byte_code:
+          value: 124
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - sp_offset
   st:
     byte_code:
       value: 13
@@ -736,7 +758,7 @@ instructions:
     variants:
       - var1:
         byte_code:
-          value: 50
+          value: 51
           size: 8
   or:
     byte_code:

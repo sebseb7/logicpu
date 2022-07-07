@@ -54,6 +54,7 @@ var lines = {
 	idx_abus_out: 4<<9,
 	off_abus_out: 5<<9,
 	off2_abus_out:6<<9,
+	spo_abus_out: 7<<9,
 
 	mem_out:      0,
 	a_out:        1<<4,
@@ -249,6 +250,15 @@ const instr = {
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.off2_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_r_spo:{
+		opcode: 124,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
 	st_r_a:{
@@ -451,18 +461,24 @@ const instr = {
 		]
 	},
 
-	push: {
+	push_r: {
 		opcode: 49,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.instb_ho + lines.t_reset,
 		]
 	},
-	pop: {
+	pop_r: {
 		opcode: 50,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in + lines.sp_inc,
 			lines.sp_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	pop: {
+		opcode: 51,
+		steps: [
+			lines.sp_inc + lines.prefetch,
 		]
 	},
 
