@@ -22,6 +22,11 @@ ab:
 	.byte 0
 .org 0x8000 ; ROM
 start:
+	ld a,LSB(ab)
+	ld b,BYTE1(ab)
+	ld c,88
+	st c,[ab]
+	ld d,a,b
 ;	ld c,[sp - 1]
 	ld c,88
 	push c
@@ -33,7 +38,7 @@ start:
 	jmp [busy]
 func:
 	ld a,[sp + 3]
-	ld a,[sp - ab]
+	ld a,b,c
 	ret
 
 busy:
