@@ -1,4 +1,3 @@
-; 21 sec
 dividend:
     .byte 0
 result:
@@ -54,7 +53,7 @@ next_div_prime:
 next_div:
     ld a,[dividend]
     add a,1
-    jmpc [repeat]
+    jmpc [start]
     st a,[dividend]
     st a,[result]
     sub a,1
@@ -64,7 +63,4 @@ next_div:
     ld a,8
     st a,[counter]
     jmp [step]
-
-repeat:
-    jmp [start]
 				
