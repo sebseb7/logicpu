@@ -33,7 +33,7 @@ step:
     sub [remainder],[divisor]
     jmpcc [step]
     st a,[remainder]
-   	jmp [step]
+    jmp [step]
 
 end:
     sub [remainder_tmp],1
@@ -47,7 +47,7 @@ end:
     st a,[remainder]
     ld a,8
     st a,[counter]
-   	jmp [step]
+    jmp [step]
 next_div_prime:
     ld o,[dividend]
 	
@@ -63,8 +63,8 @@ next_div:
     st a,[remainder]
     ld a,8
     st a,[counter]
-   	jmp [step]
+    jmp [step]
 
 repeat:
-	jmp [start]
+    jmp [start]
 				
