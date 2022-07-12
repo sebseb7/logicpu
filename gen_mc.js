@@ -29,7 +29,7 @@ var lines = {
 
 	c_jmp:        2**16,
 	z_jmp:        2**17,
-	n_jmp:         2**18,
+	n_jmp:        2**18,
 	o_jmp:        2**19,
 
 	unused:       2**20,
@@ -42,7 +42,7 @@ var lines = {
 	misc_sel2:    2**26,
 	ir_in:        2**27,
 	
-	idx_in:       2**28,
+	unused:       2**28,
 	pc_in:        2**29,
 	t_reset:      2**30,
 	t_reset_pf:   2**31,
@@ -51,9 +51,9 @@ var lines = {
 	sp_abus_out:  1<<9,
 	irq_abus_out: 2<<9,
 	pc_abus_out:  3<<9,
-	idx_abus_out: 4<<9,
-	off_abus_out: 5<<9,
-	off2_abus_out:6<<9,
+	unused_3:     4<<9,
+	unused_1:     5<<9,
+	unused_2:     6<<9,
 	spo_abus_out: 7<<9,
 
 	mem_out:      0,
@@ -66,17 +66,17 @@ var lines = {
 	g_out:        7<<4,
 
 	h_out:        8<<4,
-	off_outl:     9<<4,
-	off_outh:     10<<4,
+	flags_out:    9<<4,
+	unused:       10<<4,
 	alu_out:      11<<4,
-	flags_out:    12<<4,
+	unused:       12<<4,
 	unused:       13<<4,
 	unused:       14<<4,
 	pc_outh:      15<<4,
 
 	pc_outl:      (0<<4) + (2**12),
-	idx_outl:     (1<<4) + (2**12),
-	idx_outh:     (2<<4) + (2**12),
+	unused:       (1<<4) + (2**12),
+	unused:       (2<<4) + (2**12),
 	//mem_out:      (3<<4) + (2**12),
 	io_out:       (4<<4) + (2**12),
 
@@ -89,19 +89,19 @@ var lines = {
 	g_in:         7,
 
 	h_in:         8,
-	off_inl:      9,
-	off_inh:      10,
+	flags_in:     9,
+	unused:       10,
 	porta_in:     11,
 	portb_in:     12,
 	disp_in:      13,
 	disp2_in:     14,
 	ir2_in:       15,
 
-	flags_in:     0 + (2**8),
+	unused:     0 + (2**8),
 	//alu_in:     1 + (2**8),
 	op_in:        1 + (2**8),
-	idx_inh:      2 + (2**8),
-	idx_inl:      3 + (2**8),
+	unused:       2 + (2**8),
+	unused:       3 + (2**8),
 	ram_in:       4 + (2**8),
 	unused:       5 + (2**8),
 	addr_inl:     6 + (2**8),
@@ -150,24 +150,24 @@ const instr = {
 			lines.addr_abus_out + lines.pc_in + lines.t_reset,
 		]
 	},
-	jmpcc: {
-		opcode: 3,
-		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
-			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
-			lines.addr_abus_out + lines.c_jmp + lines.flags_inv + lines.t_reset,
-		]
-	},
 	jmpc: {
-		opcode: 120,
+		opcode: 3,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
 			lines.addr_abus_out + lines.c_jmp + lines.t_reset,
 		]
 	},
-	jmpz: {
+	jmpcc: {
 		opcode: 4,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.c_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	jmpz: {
+		opcode: 5,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
@@ -175,7 +175,7 @@ const instr = {
 		]
 	},
 	jmpzc: {
-		opcode: 121,
+		opcode: 6,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
@@ -183,7 +183,7 @@ const instr = {
 		]
 	},
 	jmpo: {
-		opcode: 122,
+		opcode: 7,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
@@ -191,52 +191,110 @@ const instr = {
 		]
 	},
 	jmpoc: {
-		opcode: 123,
+		opcode: 8,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
 			lines.addr_abus_out + lines.o_jmp + lines.flags_inv + lines.t_reset,
 		]
 	},
-	ret: {
-		opcode: 5, 
+	jmpn: {
+		opcode: 9,
 		steps: [
-			lines.sp_inc,
-		//	lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.idx_inh,
-		//	lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.idx_inl,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc +lines.addr_inl,
-			lines.sp_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.n_jmp + lines.t_reset,
+		]
+	},
+	jmpnc: {
+		opcode: 10,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.n_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	ret: {
+		opcode: 11, 
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh,
 			lines.addr_abus_out + lines.pc_in + lines.t_reset,
 		]
 	},
 	cie: {
-		opcode: 6,
+		opcode: 12,
 		steps: [
 			lines.cie + lines.prefetch,
 		]
 	},
 	sie: {
-		opcode: 7,
+		opcode: 13,
 		steps: [
 			lines.sie + lines.prefetch,
 		]
 	},
+	push_r: {
+		opcode: 14,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in + lines.sp_dec,
+			lines.sp_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
+		]
+	},
+	pop_r: {
+		opcode: 15,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.sp_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset + lines.sp_inc,
+		]
+	},
+	pop: {
+		opcode: 16,
+		steps: [
+			lines.sp_inc + lines.prefetch,
+		]
+	},
+	pop_ra: {
+		opcode: 17,
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.a_in + lines.t_reset + lines.sp_inc,
+		]
+	},
+
+	call: {
+		opcode: 18,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh + lines.sp_dec,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
+			lines.sp_abus_out + lines.ram_in + lines.pc_outh,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+	reti: {
+		opcode: 19,
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl + lines.sie,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh, 
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
 	ld_r_i:{
-		opcode: 8,
+		opcode: 32,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
 	ld_r_r:{
-		opcode: 9,
+		opcode: 33,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.instb_hi + lines.instb_o + lines.prefetch,
 		]
 	},
 	ld_r_a:{
-		opcode: 10,
+		opcode: 34,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -244,16 +302,8 @@ const instr = {
 			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
-	//ld_r_fpo
-	ld_r_ao:{
-		opcode: 12,
-		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.off2_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
-		]
-	},
 	ld_r_spo:{
-		opcode: 124,
+		opcode: 35,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -261,8 +311,49 @@ const instr = {
 			lines.spo_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
+	ld_r_r16:{
+		opcode: 36,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.addr_inl,
+			lines.instb_ho + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_a_i:{
+		opcode: 40,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_a_a:{
+		opcode: 42,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_a_spo:{
+		opcode: 43,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_a_r16:{
+		opcode: 44,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.addr_inl,
+			lines.instb_ho + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
 	st_r_a:{
-		opcode: 13,
+		opcode: 48,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -270,35 +361,35 @@ const instr = {
 			lines.addr_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
 		]
 	},
-	//st_r_fpo
-	st_r_ao:{
-		opcode: 15,
+	st_a_a:{
+		opcode: 56,
 		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.off2_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.ram_in + lines.a_out + lines.t_reset,
 		]
 	},
 
-	add_r_i:{
-		opcode: 16,
+	add_r_r:{
+		opcode: 64,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_o + lines.op_in,
 			lines.instb_ho + lines.alu_add,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	add_r_r:{
-		opcode: 17,
+	add_r_i:{
+		opcode: 65,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.instb_o + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
 			lines.instb_ho + lines.alu_add,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
 	add_r_a:{
-		opcode: 18,
+		opcode: 66,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -308,60 +399,76 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	//add_r_a
-	//add_r_fpo
-
-	add_r_ao:{
-		opcode: 20,
+	add_a_i:{
+		opcode: 69,
 		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.off2_abus_out + lines.mem_out + lines.op_in,
-			lines.instb_ho + lines.alu_add,
-			lines.instb_hi + lines.alu_out + lines.prefetch
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
 		]
 	},
-	addc_r_i:{
-		opcode: 21,
+	add_ra_i:{
+		opcode: 73,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	add_a_a:{
+		opcode: 74,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+
+
+	addc_r_r:{
+		opcode: 80,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_o + lines.op_in,
 			lines.instb_ho + lines.alu_add + lines.alu_c,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	addc_r_r:{
-		opcode: 22,
+	addc_r_i:{
+		opcode: 81,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.instb_o + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
 			lines.instb_ho + lines.alu_add + lines.alu_c,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
 	//addc_r_a
-	//addc_r_fpo
-	//addc_r_ao
 
-	sub_r_i:{
-		opcode: 26,
+	sub_r_r:{
+		opcode: 96,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_o + lines.op_in,
 			lines.instb_ho + lines.alu_sub,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	sub_r_r:{
-		opcode: 27,
+	sub_r_i:{
+		opcode: 97,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.instb_o + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
 			lines.instb_ho + lines.alu_sub,
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
 	sub_r_a:{
-		opcode: 28,
+		opcode: 98,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -371,20 +478,49 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	//sub_r_fpo
-	//sub_r_ao
-
-	subc_r_i:{
-		opcode: 31,
+	sub_a_i:{
+		opcode: 101,
 		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
 			lines.pc_abus_out + lines.mem_out + lines.op_in,
-			lines.instb_ho + lines.alu_sub + lines.alu_c,
-			lines.instb_hi + lines.alu_out + lines.prefetch
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
 		]
 	},
+	sub_a_a:{
+		opcode: 102,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	sub_ra_i:{
+		opcode: 105,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	sub_ra_a:{
+		opcode: 106,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+
 	subc_r_r:{
-		opcode: 32,
+		opcode: 112,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.instb_o + lines.op_in,
@@ -392,8 +528,17 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
+	subc_r_i:{
+		opcode: 113,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 	subc_r_a:{
-		opcode: 33,
+		opcode: 114,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
@@ -403,11 +548,10 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	//subc_r_fpo
-	//subc_r_ao
 
+	//xor_r_r
 	xor_r_i:{
-		opcode: 36,
+		opcode: 129,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.op_in,
@@ -415,13 +559,11 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	//xor_r_r
 	//xor_r_a
-	//xor_r_fpo
-	//xor_r_ao
 
+	//and_r_r
 	and_r_i:{
-		opcode: 41,
+		opcode: 145,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.op_in,
@@ -429,30 +571,10 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	//and_r_r
 	//and_r_a
-	//and_r_fpo
-	//and_r_ao
-
-	rsh:{
-		opcode: 46,
-		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.instb_ho + lines.alu_rsh,
-			lines.instb_hi + lines.alu_out + lines.prefetch
-		]
-	},
-	rshc:{
-		opcode: 47,
-		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.instb_ho + lines.alu_rsh + lines.alu_c,
-			lines.instb_hi + lines.alu_out + lines.prefetch
-		]
-	},
 	
 	or_r_i:{
-		opcode: 52,
+		opcode: 161,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
 			lines.pc_abus_out + lines.mem_out + lines.op_in,
@@ -461,74 +583,50 @@ const instr = {
 		]
 	},
 
-	push_r: {
-		opcode: 49,
+	rsh_r:{
+		opcode: 176,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.instb_ho + lines.t_reset,
+			lines.instb_ho + lines.alu_rsh,
+			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	pop_r: {
-		opcode: 50,
+	rshc_r:{
+		opcode: 192,
 		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.ir2_in + lines.sp_inc,
-			lines.sp_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.alu_rsh + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
-	pop: {
-		opcode: 51,
-		steps: [
-			lines.sp_inc + lines.prefetch,
-		]
-	},
-
-	ld_r16_i:{
-		opcode: 239,
-		steps: [
-			lines.pc_abus_out + lines.mem_out + lines.off_inl,
-			lines.pc_abus_out + lines.mem_out + lines.off_inh + lines.t_reset,
-		]
-	},
-
-	call: {
-		opcode: 125,
+	lsh_a:{
+		opcode: 209,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outh,
-	//		lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.idx_outl,
-	//		lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.idx_outh,
-	//		lines.sp_abus_out + lines.idx_in,
-			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add,
+			lines.addr_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
 		]
 	},
-	reti: {
-		opcode: 126,
+	lshc_a:{
+		opcode: 225,
 		steps: [
-			lines.sp_inc,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl,
-			lines.sp_abus_out + lines.mem_out + lines.addr_inh, //		lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh,
-/*			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.alu_in,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.d_in,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.c_in,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.b_in,
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.a_in,
-			lines.sp_abus_out + lines.mem_out + lines.flags_in + lines.alu_add,*/
-			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add + lines.alu_c,
+			lines.addr_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
 		]
 	},
+	
+
 	irq: {
-		opcode: 127,
+		opcode: 255,
 		steps: [
-			/*lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.flags_out,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.a_out,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.b_out,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.c_out,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.d_out,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.alu_out,*/
+			lines.sp_dec + lines.cie,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
-			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outh,
+			lines.sp_abus_out + lines.ram_in + lines.pc_outh,
 			lines.irq_abus_out + lines.pc_in + lines.t_reset,
 		]
 	},
@@ -573,7 +671,7 @@ function output() {
 			if(instr[j].opcode == i) {
 				found = true;
 				
-				console.log(j+' '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
+				console.log(j+' '+i+' '+i.toString(16));
 
 				var lineops = ' '+fetch;
 
@@ -634,7 +732,7 @@ function output() {
 				bankD[addr] = (mc>>BigInt(24)) & BigInt(0xff);
 			}
 		}
-		if(! found) console.log('    '+i+' '+i.toString(16)+' (sh2:'+(i>>2)+' '+(i>>2).toString(16)+') (sh4: '+(i>>4)+' '+(i>>4).toString(16)+')');
+		if(! found) console.log('    '+i+' '+i.toString(16));
 		if(! found) console.log(lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff');
 		if(! found) file+=lineprefix+' '+fetch+' '+hlt+' ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff\n';
 	}
@@ -644,7 +742,7 @@ function output() {
 
 output();
 
-/* var vank = bankB;
+var bank = bankD;
 
 const port = new SerialPort({
   path: 'COM8',
@@ -718,4 +816,3 @@ port.on('open', async () => {
 	console.log('port opened');
 })
 
-*/

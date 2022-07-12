@@ -12,6 +12,9 @@ general:
     - f
     - g
     - h
+    - flags
+    - df
+    - dd
     - o
     - sp
   identifier:
@@ -91,6 +94,94 @@ operand_sets:
           value: 8
           size: 4
           position: suffix
+      register_flags:
+        type: register
+        register: flags
+        bytecode:
+          value: 9
+          size: 4
+          position: suffix
+      register_dd:
+        type: register
+        register: dd
+        bytecode:
+          value: 10
+          size: 4
+          position: suffix
+  register_a:
+    operand_values:
+      register_a:
+        type: register
+        register: a
+        bytecode:
+          value: 0
+          size: 0
+          position: suffix
+  register_except_a:
+    operand_values:
+      register_b:
+        type: register
+        register: b
+        bytecode:
+          value: 2
+          size: 4
+          position: suffix
+      register_c:
+        type: register
+        register: c
+        bytecode:
+          value: 3
+          size: 4
+          position: suffix
+      register_d:
+        type: register
+        register: d
+        bytecode:
+          value: 4
+          size: 4
+          position: suffix
+      register_e:
+        type: register
+        register: e
+        bytecode:
+          value: 5
+          size: 4
+          position: suffix
+      register_f:
+        type: register
+        register: f
+        bytecode:
+          value: 6
+          size: 4
+          position: suffix
+      register_g:
+        type: register
+        register: g
+        bytecode:
+          value: 7
+          size: 4
+          position: suffix
+      register_h:
+        type: register
+        register: h
+        bytecode:
+          value: 8
+          size: 4
+          position: suffix
+      register_flags:
+        type: register
+        register: flags
+        bytecode:
+          value: 9
+          size: 4
+          position: suffix
+      register_dd:
+        type: register
+        register: dd
+        bytecode:
+          value: 10
+          size: 4
+          position: suffix
   wo_register:
     operand_values:
       register_o:
@@ -98,6 +189,13 @@ operand_sets:
         register: o
         bytecode:
           value: 13
+          size: 4
+          position: suffix
+      register_df:
+        type: register
+        register: df
+        bytecode:
+          value: 14
           size: 4
           position: suffix
   address:
@@ -136,7 +234,7 @@ instructions:
       operand_sets:
         list:
           - address
-  jmpcc:
+  jmpc:
     byte_code:
       value: 3
       size: 8
@@ -145,7 +243,7 @@ instructions:
       operand_sets:
         list:
           - address
-  jmpz:
+  jmpcc:
     byte_code:
       value: 4
       size: 8
@@ -154,9 +252,9 @@ instructions:
       operand_sets:
         list:
           - address
-  jmpc:
+  jmpz:
     byte_code:
-      value: 120
+      value: 5
       size: 8
     operands:
       count: 1
@@ -165,7 +263,7 @@ instructions:
           - address
   jmpzc:
     byte_code:
-      value: 121
+      value: 6
       size: 8
     operands:
       count: 1
@@ -174,7 +272,7 @@ instructions:
           - address
   jmpo:
     byte_code:
-      value: 122
+      value: 7
       size: 8
     operands:
       count: 1
@@ -183,7 +281,25 @@ instructions:
           - address
   jmpoc:
     byte_code:
-      value: 123
+      value: 8
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpn:
+    byte_code:
+      value: 9
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  jmpnc:
+    byte_code:
+      value: 10
       size: 8
     operands:
       count: 1
@@ -192,30 +308,75 @@ instructions:
           - address
   ret:
     byte_code:
-      value: 5
+      value: 11
       size: 8
   cie:
     byte_code:
-      value: 6
+      value: 12
       size: 8
   sie:
     byte_code:
-      value: 7
+      value: 13
+      size: 8
+  push:
+    byte_code:
+      value: 14
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register
+  pop:
+    byte_code:
+      value: 15
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register_except_a 
+    variants:
+      - var1:
+        byte_code:
+          value: 16
+          size: 8
+      - var2:
+        byte_code:
+          value: 17
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - register_a
+  call:
+    byte_code:
+      value: 18
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
+  reti:
+    byte_code:
+      value: 19
       size: 8
   ld:
     byte_code:
-      value: 8
+      value: 32
       size: 8
     operands:
       count: 2
       operand_sets:
         list:
-          - register
+          - register_except_a
           - integer
     variants:
       - var0b:
         byte_code:
-          value: 8
+          value: 32
           size: 8
         operands:
           count: 2
@@ -225,7 +386,7 @@ instructions:
               - integer
       - var1:
         byte_code:
-          value: 9
+          value: 33
           size: 8
         operands:
           count: 2
@@ -235,7 +396,7 @@ instructions:
               - register
       - var1b:
         byte_code:
-          value: 9
+          value: 33
           size: 8
         operands:
           count: 2
@@ -245,17 +406,17 @@ instructions:
               - register
       - var2:
         byte_code:
-          value: 10
+          value: 34
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
-              - register
+              - register_except_a
               - address
       - var2b:
         byte_code:
-          value: 10
+          value: 34
           size: 8
         operands:
           count: 2
@@ -265,17 +426,17 @@ instructions:
               - address
       - var3:
         byte_code:
-          value: 124
+          value: 35
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
-              - register
+              - register_except_a
               - sp_offset
       - var3b:
         byte_code:
-          value: 124
+          value: 35
           size: 8
         operands:
           count: 2
@@ -285,238 +446,49 @@ instructions:
               - sp_offset
       - var4:
         byte_code:
-          value: 128
+          value: 36
           size: 8
         operands:
           count: 3
           operand_sets:
-            reverse_argument_order: true
+            reverse_bytecode_order: true
             list:
-              - register
+              - register_except_a
               - register
               - register
       - var4b:
         byte_code:
-          value: 129
+          value: 36
           size: 8
         operands:
           count: 3
           operand_sets:
-            reverse_argument_order: true
+            reverse_bytecode_order: true
             list:
               - wo_register
               - register
               - register
-  st:
-    byte_code:
-      value: 13
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - address
-    variants:
-      - var1:
+      - var5:
         byte_code:
-          value: 127
+          value: 40
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
-              - register
-              - sp_offset
-      - var2:
-        byte_code:
-          value: 130
-          size: 8
-        operands:
-          count: 3
-          operand_sets:
-            reverse_argument_order: true
-            list:
-              - register
-              - register
-              - register
-  add:
-    byte_code:
-      value: 16
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - integer
-    variants:
-      - var1:
-        byte_code:
-          value: 17
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - register
-      - var2:
-        byte_code:
-          value: 18
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - address
-  addc:
-    byte_code:
-      value: 22
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - register
-    variants:
-      - var1:
-        byte_code:
-          value: 21
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
+              - register_a
               - integer
-      - var2:
+      - var5b:
         byte_code:
-          value: 23
+          value: 42
           size: 8
         operands:
           count: 2
           operand_sets:
             list:
-              - register
+              - register_a
               - address
-  sub:
-    byte_code:
-      value: 27
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - register
-    variants:
-      - var1:
-        byte_code:
-          value: 26
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - integer
-      - var2:
-        byte_code:
-          value: 28
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - address
-  subc:
-    byte_code:
-      value: 32
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - register
-    variants:
-      - var1:
-        byte_code:
-          value: 31
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - integer
-      - var2:
-        byte_code:
-          value: 33
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - address
-  xor:
-    byte_code:
-      value: 37
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - register
-    variants:
-      - var1:
-        byte_code:
-          value: 36
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - integer
-      - var2:
-        byte_code:
-          value: 38
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - address
-  and:
-    byte_code:
-      value: 42
-      size: 8
-    operands:
-      count: 2
-      operand_sets:
-        list:
-          - register
-          - register
-    variants:
-      - var1:
-        byte_code:
-          value: 41
-          size: 8
-        operands:
-          count: 2
-          operand_sets:
-            list:
-              - register
-              - integer
-      - var2:
+      - var5c:
         byte_code:
           value: 43
           size: 8
@@ -524,52 +496,88 @@ instructions:
           count: 2
           operand_sets:
             list:
+              - register_a
+              - sp_offset
+      - var5d:
+        byte_code:
+          value: 44
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_bytecode_order: true
+            list:
+              - register_a
               - register
-              - address
-  rsh:
+              - register
+  st:
     byte_code:
-      value: 46
+      value: 48
       size: 8
     operands:
-      count: 1
+      count: 2
       operand_sets:
         list:
-          - register
-  rshc:
-    byte_code:
-      value: 47
-      size: 8
-    operands:
-      count: 1
-      operand_sets:
-        list:
-          - register
-  push:
-    byte_code:
-      value: 49
-      size: 8
-    operands:
-      count: 1
-      operand_sets:
-        list:
-          - register 
-  pop:
-    byte_code:
-      value: 50
-      size: 8
-    operands:
-      count: 1
-      operand_sets:
-        list:
-          - register 
+          - register_except_a
+          - address
     variants:
       - var1:
         byte_code:
-          value: 51
+          value: 49
           size: 8
-  or:
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - sp_offset
+      - var2:
+        byte_code:
+          value: 50
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_except_a
+              - register
+              - register
+      - var3:
+        byte_code:
+          value: 56
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - address
+      - var3b:
+        byte_code:
+          value: 57
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - sp_offset
+      - var3v:
+        byte_code:
+          value: 58
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_bytecode_order: true
+            list:
+              - register_a
+              - register
+              - register
+  add:
     byte_code:
-      value: 51
+      value: 64
       size: 8
     operands:
       count: 2
@@ -580,7 +588,418 @@ instructions:
     variants:
       - var1:
         byte_code:
-          value: 52
+          value: 65
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - integer
+      - var2:
+        byte_code:
+          value: 66
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - address
+      - var3:
+        byte_code:
+          value: 67
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 68
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_except_a
+              - register
+              - register
+      - varR:
+        byte_code:
+          value: 69
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - address
+              - integer
+      - var5:
+        byte_code:
+          value: 73
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - integer
+      - var5b:
+        byte_code:
+          value: 74
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - address
+      - var5c:
+        byte_code:
+          value: 75
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - sp_offset
+      - var5d:
+        byte_code:
+          value: 76
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_a
+              - register
+              - register
+  addc:
+    byte_code:
+      value: 80
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 81
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - integer
+      - var2:
+        byte_code:
+          value: 82
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - address
+      - var3:
+        byte_code:
+          value: 83
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 84
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_except_a
+              - register
+              - register
+      - var5:
+        byte_code:
+          value: 89
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - integer
+      - var5b:
+        byte_code:
+          value: 90
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - address
+      - var5c:
+        byte_code:
+          value: 91
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - sp_offset
+      - var5d:
+        byte_code:
+          value: 92
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_a
+              - register
+              - register
+  sub:
+    byte_code:
+      value: 96
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 97
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - integer
+      - var2:
+        byte_code:
+          value: 98
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - address
+      - var3:
+        byte_code:
+          value: 99
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 100
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_except_a
+              - register
+              - register
+      - varR:
+        byte_code:
+          value: 101
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - address
+              - integer
+      - varR1:
+        byte_code:
+          value: 102
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - address
+              - address
+      - var5:
+        byte_code:
+          value: 105
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - integer
+      - var5b:
+        byte_code:
+          value: 106
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - address
+      - var5c:
+        byte_code:
+          value: 107
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - sp_offset
+      - var5d:
+        byte_code:
+          value: 108
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_a
+              - register
+              - register
+  subc:
+    byte_code:
+      value: 112
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 113
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - integer
+      - var2:
+        byte_code:
+          value: 114
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - address
+      - var3:
+        byte_code:
+          value: 115
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_except_a
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 116
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_except_a
+              - register
+              - register
+      - var5:
+        byte_code:
+          value: 121
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - integer
+      - var5b:
+        byte_code:
+          value: 122
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - address
+      - var5c:
+        byte_code:
+          value: 123
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_a
+              - sp_offset
+      - var5d:
+        byte_code:
+          value: 124
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_a
+              - register
+              - register
+  xor:
+    byte_code:
+      value: 128
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 129
           size: 8
         operands:
           count: 2
@@ -590,7 +1009,7 @@ instructions:
               - integer
       - var2:
         byte_code:
-          value: 53
+          value: 130
           size: 8
         operands:
           count: 2
@@ -598,20 +1017,231 @@ instructions:
             list:
               - register
               - address
-  call:
+      - var3:
+        byte_code:
+          value: 131
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 132
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register
+              - register
+              - register
+  and:
     byte_code:
-      value: 125
+      value: 144
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 145
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - integer
+      - var2:
+        byte_code:
+          value: 146
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - address
+      - var3:
+        byte_code:
+          value: 147
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 148
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register
+              - register
+              - register
+  or:
+    byte_code:
+      value: 160
+      size: 8
+    operands:
+      count: 2
+      operand_sets:
+        list:
+          - register
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 161
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - integer
+      - var2:
+        byte_code:
+          value: 162
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - address
+      - var3:
+        byte_code:
+          value: 163
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register
+              - sp_offset
+      - var4:
+        byte_code:
+          value: 165
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register
+              - register
+              - register
+  rsh:
+    byte_code:
+      value: 176
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 177
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - address
+      - var2:
+        byte_code:
+          value: 178
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - sp_offset
+      - var3:
+        byte_code:
+          value: 179
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register
+              - register
+  rshc:
+    byte_code:
+      value: 192
+      size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - register
+    variants:
+      - var1:
+        byte_code:
+          value: 193
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - address
+      - var2:
+        byte_code:
+          value: 194
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - sp_offset
+      - var3:
+        byte_code:
+          value: 195
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register
+              - register
+  lsh:
+    byte_code:
+      value: 209
       size: 8
     operands:
       count: 1
       operand_sets:
         list:
           - address
-  reti:
+  lshc:
     byte_code:
-      value: 126
+      value: 225
       size: 8
+    operands:
+      count: 1
+      operand_sets:
+        list:
+          - address
   irq:
     byte_code:
-      value: 127
+      value: 255
       size: 8
