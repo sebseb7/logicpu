@@ -136,7 +136,7 @@ key_b:
 
 8 bit signed division in 142 cycles:
 
-```
+```assembly
 ; reg a dividend/result
 ; reg b divisor
 ; reg d remainder
