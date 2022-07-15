@@ -1,66 +1,61 @@
-dividend:
-    .byte 0
-result:
-    .byte 0
-divisor:
-    .byte 0
-remainder:
-    .byte 0
-remainder_tmp:
-    .byte 0
-counter:
-    .byte 0
 .org 0x8000 ; ROM
+	push a ; dividend      sp+5
+	push a ; result        sp+4
+	push a ; divisor       sp+3
+	push a ; remainder     sp+2
+	push a ; remainder_tmp sp+1
+	push a ; counter       sp
 start:
-    ld a,3 ; dividend/result
-    st a,[dividend]
-    st a,[result]
-    ld a,2 ; divisor
-    st a,[divisor]
-    ld a,0 ; remainder
-    st a,[remainder]
-    ld a,8 ; loopcount
-    st a,[counter]
+    ld a,3 ;
+    st a,[sp + 5]
+    st a,[sp + 4]
+    ld a,2 ;
+    st a,[sp + 3]
+    ld a,0 ;
+    st a,[sp + 2]
+    st a,[sp + 1]
+    ld a,8 ;
+    st a,[sp]
 step:
-    lsh [result]
-    ld a,[remainder]
-    st a,[remainder_tmp]
-    lshc [remainder]
-    sub [counter],1
+    lsh [sp + 4]
+    ld a,[sp + 2]
+    st a,[sp + 1]
+    lshc [sp + 2]
+    sub [sp],1
     jmpc [end]
-    ld a,[remainder]
-    sub [remainder],[divisor]
+    ld a,[sp + 2]
+    sub [sp + 2],[sp + 3]
     jmpcc [step]
-    st a,[remainder]
+    st a,[sp + 2]
     jmp [step]
 
 end:
-    sub [remainder_tmp],1
+    sub [sp + 1],1
     jmpc [next_div]
-    sub [divisor],3
+    sub [sp + 3],3
     jmpc [next_div_prime]
-    add [divisor],2
-    ld a,[dividend]
-    st a,[result]
+    add [sp + 3],2
+    ld a,[sp + 5]
+    st a,[sp + 4]
     ld a,0
-    st a,[remainder]
+    st a,[sp + 2]
     ld a,8
-    st a,[counter]
+    st a,[sp]
     jmp [step]
 next_div_prime:
-    ld o,[dividend]
+    ld o,[sp + 5]
 	
 next_div:
-    ld a,[dividend]
+    ld a,[sp + 5]
     add a,1
     jmpc [start]
-    st a,[dividend]
-    st a,[result]
+    st a,[sp + 5]
+    st a,[sp + 4]
     sub a,1
-    st a,[divisor]
+    st a,[sp + 3]
     ld a,0
-    st a,[remainder]
+    st a,[sp + 2]
     ld a,8
-    st a,[counter]
+    st a,[sp]
     jmp [step]
 				

@@ -214,7 +214,7 @@ operand_sets:
           value: 0
           size: 0
         offset:
-          size: 16
+          size: 8
           byte_align: true
 instructions:
   hlt:
@@ -329,7 +329,7 @@ instructions:
           - register
   pop:
     byte_code:
-      value: 15
+      value: 16
       size: 8
     operands:
       count: 1
@@ -339,11 +339,11 @@ instructions:
     variants:
       - var1:
         byte_code:
-          value: 16
+          value: 17
           size: 8
       - var2:
         byte_code:
-          value: 17
+          value: 18
           size: 8
         operands:
           count: 1
@@ -352,7 +352,7 @@ instructions:
               - register_a
   call:
     byte_code:
-      value: 18
+      value: 19
       size: 8
     operands:
       count: 1
@@ -361,7 +361,7 @@ instructions:
           - address
   reti:
     byte_code:
-      value: 19
+      value: 20
       size: 8
   ld:
     byte_code:
@@ -510,6 +510,18 @@ instructions:
               - register_a
               - register
               - register
+      - var5e:
+        byte_code:
+          value: 45
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - register_a
+              - integer
+              - address
   st:
     byte_code:
       value: 48
@@ -637,6 +649,16 @@ instructions:
           operand_sets:
             list:
               - address
+              - integer
+      - varR3:
+        byte_code:
+          value: 72
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - sp_offset
               - integer
       - var5:
         byte_code:
@@ -849,6 +871,27 @@ instructions:
             list:
               - address
               - address
+      - varR2:
+        byte_code:
+          value: 103
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - sp_offset
+              - sp_offset
+      - varR3:
+        byte_code:
+          value: 104
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - sp_offset
+              - integer
       - var5:
         byte_code:
           value: 105
@@ -1232,6 +1275,16 @@ instructions:
       operand_sets:
         list:
           - address
+    variants:
+      - var2:
+        byte_code:
+          value: 210
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - sp_offset
   lshc:
     byte_code:
       value: 225
@@ -1241,6 +1294,16 @@ instructions:
       operand_sets:
         list:
           - address
+    variants:
+      - var2:
+        byte_code:
+          value: 226
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - sp_offset
   irq:
     byte_code:
       value: 255
