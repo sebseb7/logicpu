@@ -645,6 +645,15 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
+	lsh_r:{
+		opcode: 208,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 	lsh_a:{
 		opcode: 209,
 		steps: [
@@ -664,6 +673,23 @@ const instr = {
 			lines.spo_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
 		]
 	},
+	lsh_ra:{
+		opcode: 211,
+		steps: [
+			lines.a_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	lshc_r:{
+		opcode: 224,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.op_in,
+			lines.instb_ho + lines.alu_add + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 	lshc_a:{
 		opcode: 225,
 		steps: [
@@ -681,6 +707,14 @@ const instr = {
 			lines.spo_abus_out + lines.mem_out + lines.op_in,
 			lines.spo_abus_out + lines.mem_out + lines.alu_add + lines.alu_c,
 			lines.spo_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
+	lshc_ra:{
+		opcode: 227,
+		steps: [
+			lines.a_out + lines.op_in,
+			lines.a_out + lines.alu_add + lines.alu_c,
+			lines.a_in + lines.alu_out + lines.prefetch
 		]
 	},
 	

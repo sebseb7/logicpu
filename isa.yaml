@@ -1276,6 +1276,15 @@ instructions:
         list:
           - address
     variants:
+      - var1:
+        byte_code:
+          value: 208
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - register_except_a
       - var2:
         byte_code:
           value: 210
@@ -1285,6 +1294,15 @@ instructions:
           operand_sets:
             list:
               - sp_offset
+      - var3:
+        byte_code:
+          value: 211
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - register_a
   lshc:
     byte_code:
       value: 225
@@ -1295,6 +1313,15 @@ instructions:
         list:
           - address
     variants:
+      - var1:
+        byte_code:
+          value: 224
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - register_except_a
       - var2:
         byte_code:
           value: 226
@@ -1304,6 +1331,15 @@ instructions:
           operand_sets:
             list:
               - sp_offset
+      - var3:
+        byte_code:
+          value: 227
+          size: 8
+        operands:
+          count: 1
+          operand_sets:
+            list:
+              - register_a
   irq:
     byte_code:
       value: 255
