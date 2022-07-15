@@ -95,104 +95,104 @@ step7:
 
 ```assembly
 .org 0x8000 ; ROM
-	ld a,0 ; remainder low
-	ld b,0 ; remainder high
+    ld a,0 ; remainder low
+    ld b,0 ; remainder high
 
-	ld c,0 ; result/dividend low
-	ld d,255 ; result/dividend high
+    ld c,0 ; result/dividend low
+    ld d,255 ; result/dividend high
 
-	ld e,255 ; divisor low
+    ld e,255 ; divisor low
     ld f,0 ; divisor high
 
-	ld flags,0
+    ld flags,0
 
-	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next]
 cont:
-	ld flags,4
+    ld flags,4
 next:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont1]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next1]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont1]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next1]
 cont1:
-	ld flags,4
+    ld flags,4
 next1:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont2]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next2]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont2]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next2]
 cont2:
-	ld flags,4
+    ld flags,4
 next2:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont3]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next3]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont3]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next3]
 cont3:
-	ld flags,4
+    ld flags,4
 next3:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont4]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next4]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont4]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next4]
 cont4:
-	ld flags,4
+    ld flags,4
 next4:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
-	lshc b
-	sub a,e
-	subc b,f
-	jmpcc [cont5]
-   	add a,e
-	addc b,f
-	ld flags,0
-	jmp [next5]
+    lshc a
+    lshc b
+    sub a,e
+    subc b,f
+    jmpcc [cont5]
+    add a,e
+    addc b,f
+    ld flags,0
+    jmp [next5]
 cont5:
-	ld flags,4
+    ld flags,4
 next5:
-   	lshc c
+    lshc c
     lshc d
-	lshc a
+    lshc a
 	lshc b
 	sub a,e
 	subc b,f
