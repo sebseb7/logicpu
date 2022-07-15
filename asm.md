@@ -1,3 +1,6 @@
+INFORMATION OUTDATED
+
+
 8 bit registers: a,b,c,d,e,f,g,h,aoh,aol ; write only : o
 
 16 bit registers:
