@@ -1,4 +1,4 @@
-8 bit signed division in 138 words, 142 cycles:
+8 bit signed division in 138 words, 141-205 cycles:
 
 ```assembly
 ; reg a dividend/result
