@@ -1,0 +1,2215 @@
+<html>
+	<head>
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js" integrity="sha512-hG/Qw6E14LsVUaQRSgw0RrFA1wl5QPG1a4bCOUgwzkGPIVFsOPUPpbr90DFavEEqFMwFXPVI0NS4MzKsInlKxQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/keymap/vim.min.js" integrity="sha512-v2ud5hEJ+CD2N20EuKBhlN93edH0iFunpVrKf9V1pnwTe/Z8S5JfJOknGZDnQkACo/Pxy8C9htQliBLeDbbnog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
+		<script>
+			
+			var linenames = [
+
+				'n_jmp',
+				
+				'o_jmp',
+				
+				'c_jmp',
+				
+				'z_jmp',
+				
+				'ir_in',
+				
+				'instb_o',
+				
+				'instb_hi',
+				
+				'instb_ho',
+
+				'idx_in',
+				
+				'pc_in',
+				
+				't_reset',
+				
+				't_reset_pf',
+
+				'spo_abus_out',
+				'addr_abus_out',
+				'pc_abus_out',
+				'sp_abus_out',
+				'irq_abus_out',
+				'irq_abus_out2',
+				
+				'a_out',
+				'b_out',
+				'c_out',
+				'd_out',
+				'e_out',
+				'f_out',
+				'g_out',
+				'h_out',
+				'off_outl',
+				'off_outh',
+				'alu_out',
+				'flags_out',
+				'irq_outl',
+				'irq_outh',
+				'pc_outh',
+				'pc_outl',
+				'idx_outl',
+				'idx_outh',
+				'mem_out',
+				'io_out',
+
+				'a_in',
+				'b_in',
+				'c_in',
+				'd_in',
+				'e_in',
+				'f_in',
+				'g_in',
+				'h_in',
+				'off_inl',
+				'off_inh',
+				'porta_in',
+				'portb_in',
+				'disp_in',
+				'disp2_in',
+				'flags_in',
+				'alu_in',
+				'idx_inh',
+				'idx_inl',
+				'ram_in',
+				'alu_op',
+				'addr_inl',
+				'addr_inh',
+				'op_in',
+				'ir2_in',
+				
+				'cie',
+				'sie',
+				'halt',
+				'sp_inc',
+				'sp_dec',
+				'flags_inv',
+				'alu_c',
+
+				'alu_add',
+				'alu_sub',
+				'alu_xor',
+				'alu_or',
+				'alu_and',
+				'alu_rsh',
+
+			];
+
+			var lines = {};
+
+			var instr = {};
+
+			var stepdebug = '';
+
+			function getControlLines(inst,step) {
+			//	console.log('called inst '+inst+' step '+step);
+				if (step == 0){
+					stepdebug = 'fetch<br/><br/>';
+				//	console.log('\t','fetch');
+					return (lines.pc_abus_out + lines.ir_in);
+				}
+				step--;
+				for (let j of Object.keys(instr)){
+					if(instr[j].opcode == inst) {
+						stepdebug = j+' '+step+'<br/><br/>';
+						//console.log('\t',j,step);
+						return instr[j].steps[step]
+					}
+				}
+			}
+
+			var cl = {getControlLines:getControlLines,lines:lines};
+			
+			function init(){
+				var i = 0;
+				for(var line of linenames){
+					lines[line] = BigInt(2**i);
+					i++;
+				}
+				lines['prefetch'] = lines.pc_abus_out + lines.ir_in + lines.t_reset_pf + lines.t_reset;
+
+				instr = {
+	hlt: {
+		opcode: 0,
+		steps: [
+			lines.halt
+		]
+	},
+	nop: {
+		opcode: 1,
+		steps: [
+			lines.prefetch
+		]
+	},
+	jmp: {
+		opcode: 2,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+	jmpc: {
+		opcode: 3,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.c_jmp + lines.t_reset,
+		]
+	},
+	jmpcc: {
+		opcode: 4,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.c_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	jmpz: {
+		opcode: 5,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.z_jmp + lines.t_reset,
+		]
+	},
+	jmpzc: {
+		opcode: 6,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.z_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	jmpo: {
+		opcode: 7,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.o_jmp + lines.t_reset,
+		]
+	},
+	jmpoc: {
+		opcode: 8,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.o_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	jmpn: {
+		opcode: 9,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.n_jmp + lines.t_reset,
+		]
+	},
+	jmpnc: {
+		opcode: 10,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.n_jmp + lines.flags_inv + lines.t_reset,
+		]
+	},
+	ret: {
+		opcode: 11, 
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+	cie: {
+		opcode: 12,
+		steps: [
+			lines.cie + lines.prefetch,
+		]
+	},
+	sie: {
+		opcode: 13,
+		steps: [
+			lines.sie + lines.prefetch,
+		]
+	},
+	push_r: {
+		opcode: 14,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in + lines.sp_dec,
+			lines.sp_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
+		]
+	},
+	pop_r: {
+		opcode: 16,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.sp_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset + lines.sp_inc,
+		]
+	},
+	pop: {
+		opcode: 17,
+		steps: [
+			lines.sp_inc + lines.prefetch,
+		]
+	},
+	pop_ra: {
+		opcode: 18,
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.a_in + lines.t_reset + lines.sp_inc,
+		]
+	},
+
+	call: {
+		opcode: 19,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh + lines.sp_dec,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
+			lines.sp_abus_out + lines.ram_in + lines.pc_outh,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+	reti: {
+		opcode: 20,
+		steps: [
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl + lines.sie,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh, 
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+	ld_r_i:{
+		opcode: 32,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_r_r:{
+		opcode: 33,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_hi + lines.instb_o + lines.prefetch,
+		]
+	},
+	ld_r_a:{
+		opcode: 34,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_r_spo:{
+		opcode: 35,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_r_r16:{
+		opcode: 36,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.addr_inl,
+			lines.instb_ho + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_ra_i:{
+		opcode: 40,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_rfl_i:{
+		opcode: 41,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.flags_in + lines.alu_add + lines.t_reset,
+		]
+	},
+	ld_ra_a:{
+		opcode: 42,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_ra_spo:{
+		opcode: 43,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_ra_r16:{
+		opcode: 44,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.addr_inl,
+			lines.instb_ho + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	ld_ra_a_i:{
+		opcode: 45,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.addr_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
+		]
+	},
+	st_r_a:{
+		opcode: 48,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
+		]
+	},
+	st_r_spo:{
+		opcode: 49,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.ram_in + lines.instb_ho + lines.t_reset,
+		]
+	},
+	st_ra_a:{
+		opcode: 56,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.ram_in + lines.a_out + lines.t_reset,
+		]
+	},
+	st_ra_spo:{
+		opcode: 57,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.ram_in + lines.a_out + lines.t_reset,
+		]
+	},
+
+	add_r_r:{
+		opcode: 64,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	add_r_i:{
+		opcode: 65,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	add_r_a:{
+		opcode: 66,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	add_a_i:{
+		opcode: 69,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	add_spo_i:{
+		opcode: 72,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.spo_abus_out + lines.mem_out + lines.alu_add,
+			lines.spo_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	add_ra_i:{
+		opcode: 73,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	add_ra_a:{
+		opcode: 74,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+
+
+	addc_r_r:{
+		opcode: 80,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_add + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	addc_r_i:{
+		opcode: 81,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_add + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	//addc_r_a
+
+	sub_r_r:{
+		opcode: 96,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_sub,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	sub_r_i:{
+		opcode: 97,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	sub_r_a:{
+		opcode: 98,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	sub_a_i:{
+		opcode: 101,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	sub_a_a:{
+		opcode: 102,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub,
+			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	sub_spo_spo:{
+		opcode: 103,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.alu_sub,
+			lines.spo_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	sub_spo_i:{
+		opcode: 104,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.spo_abus_out + lines.mem_out + lines.alu_sub,
+			lines.spo_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+
+	sub_ra_i:{
+		opcode: 105,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	sub_ra_a:{
+		opcode: 106,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+
+	subc_r_r:{
+		opcode: 112,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	subc_r_i:{
+		opcode: 113,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	subc_r_a:{
+		opcode: 114,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+
+	//xor_r_r
+	xor_r_i:{
+		opcode: 129,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_xor,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	//xor_r_a
+
+	//and_r_r
+	and_r_i:{
+		opcode: 145,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_and,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	//and_r_a
+	
+	or_r_i:{
+		opcode: 161,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_or,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+
+	rsh_r:{
+		opcode: 176,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.alu_rsh,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	rshc_r:{
+		opcode: 192,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.alu_rsh + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	lsh_r:{
+		opcode: 208,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	lsh_a:{
+		opcode: 209,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add,
+			lines.addr_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
+	lsh_spo:{
+		opcode: 210,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.spo_abus_out + lines.mem_out + lines.alu_add,
+			lines.spo_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
+	lsh_ra:{
+		opcode: 211,
+		steps: [
+			lines.a_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	lshc_r:{
+		opcode: 224,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_ho + lines.op_in,
+			lines.instb_ho + lines.alu_add + lines.alu_c,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
+	lshc_a:{
+		opcode: 225,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_add + lines.alu_c,
+			lines.addr_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
+	lshc_spo:{
+		opcode: 226,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.spo_abus_out + lines.mem_out + lines.alu_add + lines.alu_c,
+			lines.spo_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
+	lshc_ra:{
+		opcode: 227,
+		steps: [
+			lines.a_out + lines.op_in,
+			lines.a_out + lines.alu_add + lines.alu_c,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	
+
+	irq: {
+		opcode: 255,
+		steps: [
+			lines.sp_dec + lines.cie,
+			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
+			lines.sp_abus_out + lines.ram_in + lines.pc_outh,
+			lines.irq_abus_out  + lines.mem_out + lines.addr_inl,
+			lines.irq_abus_out2 + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+		]
+	},
+					
+				};
+			}
+			
+			function randomizeRAM(){
+				for(var i = 0 ; i<0x8000;i++){
+					RAM[i] = Math.floor(Math.random() * 0xFF)
+				}
+			}
+
+			var RAM = new Uint8Array(0x8000);
+			randomizeRAM();
+			var ROM = new Uint8Array(0x8000);
+
+			var PC = 0x8000; // program counter 16b
+			var SP = 0x7FFF; // stack pointer 16b
+			var IR = 0; // instruction register 8b
+			var IR2 = 0; // instruction register 2 8b
+			var RA = 0; // register 8b
+			var RB = 0; // register 8b
+			var RC = 0; // register 8b
+			var RD = 0; // register 8b
+			var RE = 0; // register 8b
+			var RF = 0; // register 8b
+			var RG = 0; // register 8b
+			var RH = 0; // register 8b
+			var RO = 0; // operand register 8b
+			var TS = 0; // micro step 4b
+			var AR = 0; // address register (16b)
+			var AO = 0; // address offset register (16b)
+			var FZ = 0; // zero flag
+			var FC = 0; // carry flag
+			var PA = 0; 
+			var DA = 0; 
+			var DB = 0; 
+			var ALU = 0;
+			var controlLines = 0;
+
+			var matrix = [0,0,0,0,0,0,0,0];
+			var start = Date.now();
+			var clockstart = 0;
+
+			//console.log(start);
+
+
+			function draw() {
+				//return;
+				//console.clear();
+				for(var x=0;x<8;x++){
+				
+					for(var i=0;i<8;i++){
+						var cell = 'c'+(7-x)+''+(7-i);
+						if(matrix[x] & (2**i)){
+							document.getElementById(cell).style.backgroundColor = "green";
+						}
+						else{
+							document.getElementById(cell).style.backgroundColor = "black";
+						}
+					}
+				}
+			}
+
+			var irs = {};
+
+			function step() {
+
+				var ctrlLines = cl.getControlLines(IR,TS);
+
+				//console.log(ctrlLines,IR,TS);
+
+				for (let j of Object.keys(cl.lines)){
+					if ((ctrlLines & cl.lines[j]) == cl.lines[j]){
+						//console.log(cl.lines[j].toString(2).padStart(32,'0'),j);
+						stepdebug += j+'<br/>';
+					}
+				}
+
+				if(!irs[IR]){
+					irs[IR] = 0;
+				}
+				irs[IR]++;
+
+				var PC_ = PC;
+				var SP_ = SP;
+				var IR_ = IR;
+				var RA_ = RA;
+				var RB_ = RB;
+				var RC_ = RC;
+				var RD_ = RD;
+				var RE_ = RE;
+				var RF_ = RF;
+				var RG_ = RG;
+				var RH_ = RH;
+				var RO_ = RO;
+				var IR2_ = IR2;
+				var AR_ = AR;
+				var AO_ = AO;
+				var FZ_ = FZ;
+				var FC_ = FC;
+				var PA_ = PA;
+				var DA_ = DA;
+				var DB_ = DB;
+				var ALU_ = ALU;
+				var TS_ = TS+1; if(TS_ == 16) {TS_=0};
+				var abus = 0;
+				var dbus = 0;
+				
+
+				if(ctrlLines & cl.lines.sp_dec){ SP_ = SP-1; ctrlLines-=cl.lines.sp_dec};
+				if(ctrlLines & cl.lines.sp_inc){ SP_ = SP+1; ctrlLines-=cl.lines.sp_inc};
+
+				//abus write
+
+				if(ctrlLines & cl.lines.pc_abus_out){ 
+					abus = PC; 
+					PC_++ ;
+					if(PC_ == 0x10000){PC_=0};
+					ctrlLines-=cl.lines.pc_abus_out
+				};
+				
+				if(ctrlLines & cl.lines.addr_abus_out){ abus = AR;ctrlLines-=cl.lines.addr_abus_out };
+				
+				if(ctrlLines & cl.lines.sp_abus_out){ abus = SP;ctrlLines-=cl.lines.sp_abus_out };
+				
+				//console.log('abus',abus);
+
+				//abus read
+				
+				
+				if(ctrlLines & cl.lines.z_jmp)
+				{
+					if(ctrlLines & cl.lines.flags_inv)
+					{
+						if(FC == 0){
+							PC_ = abus;
+						}
+						ctrlLines-=cl.lines.flags_inv;
+					}
+					else
+					{
+						if(FC == 1){
+							PC_ = abus;
+						}
+					}
+					ctrlLines-=cl.lines.z_jmp;
+				}
+				if(ctrlLines & cl.lines.c_jmp)
+				{
+					if(ctrlLines & cl.lines.flags_inv)
+					{
+						if(FC == 0){
+							PC_ = abus;
+						}
+						ctrlLines-=cl.lines.flags_inv;
+					}
+					else
+					{
+						if(FC == 1){
+							PC_ = abus;
+						}
+					}
+					ctrlLines-=cl.lines.c_jmp;
+				}
+				if(ctrlLines & cl.lines.pc_in){
+					PC_ = abus;
+					ctrlLines-=cl.lines.pc_in;
+				}
+					
+
+				//dbus write
+
+				if(ctrlLines & cl.lines.pc_outl){
+					dbus = PC&0xff;
+					ctrlLines-=cl.lines.pc_outl
+				};
+				if(ctrlLines & cl.lines.pc_outh){
+					dbus = PC>>8;
+					ctrlLines-=cl.lines.pc_outh
+				};
+				if(ctrlLines & cl.lines.alu_out){
+					dbus = ALU;
+					ctrlLines-=cl.lines.alu_out
+				};
+				if(ctrlLines & cl.lines.mem_out){
+					if(abus >= 0x8000){
+						dbus = ROM[abus-0x8000];
+					}else{
+						dbus = RAM[abus];
+					}
+					ctrlLines-=cl.lines.mem_out
+				};
+				if(ctrlLines & cl.lines.instb_ho){
+					//console.log((IR2&0xf0).toString(16));
+					//console.log((IR2&0xf0 == 0x10));
+					if((IR2&0xf0) == 0x10) {dbus = RA}
+					else if((IR2&0xf0) == 0x20) {dbus = RB}
+					else if((IR2&0xf0) == 0x30) {dbus = RC}
+					else if((IR2&0xf0) == 0x40) {dbus = RD}
+					else if((IR2&0xf0) == 0x50) {dbus = RE}
+					else if((IR2&0xf0) == 0x60) {dbus = RF}
+					else if((IR2&0xf0) == 0x70) {dbus = RG}
+					else if((IR2&0xf0) == 0x80) {dbus = RH}
+					else if((IR2&0xf0) == 0x90) {dbus = (AO&0xff00)>>8}
+					else if((IR2&0xf0) == 0xa0) {dbus = AO&0xff}
+					else {
+						console.log('unimplemented ho ',(IR2&0xf0)>>4);
+						stepdebug+='<br/> unimplemented ho '+(IR2&0xf0)>>4+'<br/>';
+						stopit()
+					}
+					/*off_inl:      9,
+					off_inh:      10,
+					porta_in:     11,
+					portb_in:     12,
+					disp_in:      13,
+					disp2_in:     14,*/
+					ctrlLines-=cl.lines.instb_ho;
+				};
+				if(ctrlLines & cl.lines.instb_o){
+					//console.log((IR2&0xf).toString(16));
+					//console.log((IR2&0xf == 0x1));
+					if((IR2&0xf) == 0x1) {dbus = RA}
+					else if((IR2&0xf) == 0x2) {dbus = RB}
+					else if((IR2&0xf) == 0x3) {dbus = RC}
+					else if((IR2&0xf) == 0x4) {dbus = RD}
+					else if((IR2&0xf) == 0x5) {dbus = RE}
+					else if((IR2&0xf) == 0x6) {dbus = RF}
+					else if((IR2&0xf) == 0x7) {dbus = RG}
+					else if((IR2&0xf) == 0x8) {dbus = RH}
+					else if((IR2&0xf) == 0x9) {dbus = (AO&0xff00)>>8}
+					else if((IR2&0xf) == 0xa) {dbus = AO&0xff}
+					else {
+						console.log('unimplemented lo ',(IR2&0xf));
+						stepdebug+='<br/> unimplemented lo '+(IR2&0xf)>>4+'<br/>';
+						stopit()
+					}
+					/*off_inl:      9,
+					off_inh:      10,
+					porta_in:     11,
+					portb_in:     12,
+					disp_in:      13,
+					disp2_in:     14,*/
+					ctrlLines-=cl.lines.instb_o;
+				};
+				if(ctrlLines & cl.lines.a_out){
+					dbus = RA;
+					ctrlLines-=cl.lines.a_out;
+				};
+				
+				
+				//console.log('dbus',dbus);
+
+				//dbus read
+				
+				if(ctrlLines & cl.lines.ir2_in){IR2_ = dbus;ctrlLines-=cl.lines.ir2_in };
+				
+				if(ctrlLines & cl.lines.op_in){RO_ = dbus;ctrlLines-=cl.lines.op_in };
+				
+				if(ctrlLines & cl.lines.instb_hi){
+					//console.log((IR2&0xf0).toString(16));
+					//console.log(((IR2&0xf0) == 0x10));
+					if((IR2&0xf0) == 0x10) {RA_ = dbus}
+					else if((IR2&0xf0) == 0x20) {RB_ = dbus}
+					else if((IR2&0xf0) == 0x30) {RC_ = dbus}
+					else if((IR2&0xf0) == 0x40) {RD_ = dbus}
+					else if((IR2&0xf0) == 0x50) {RE_ = dbus}
+					else if((IR2&0xf0) == 0x60) {RF_ = dbus}
+					else if((IR2&0xf0) == 0x70) {RG_ = dbus}
+					else if((IR2&0xf0) == 0x80) {RH_ = dbus}
+					else if((IR2&0xf0) == 0x90) {AO_ = (AO&0xff)+(dbus<<8)}
+					else if((IR2&0xf0) == 0xa0) {AO_ = (AO&0xff00)+dbus}
+					else if((IR2&0xf0) == 0xb0) {PA_ = dbus}
+					else if((IR2&0xf0) == 0xc0) {matrix[PA] = dbus;if(PA==0)draw()}
+					else if((IR2&0xf0) == 0xd0) {
+						DA_ = dbus;
+						document.getElementById('o_d').innerHTML = '  '+DA_.toString(10).padStart(3,' ')+'  ';
+					}
+					else if((IR2&0xf0) == 0xe0) {DB_ = dbus;}
+					else {
+						console.log('unimplemented hi ',(IR2&0xf0)>>4);
+						stepdebug+='<br/> unimplemented hi '+(IR2&0xf0)>>4+'<br/>';
+						stopit()
+					}
+					//console.log(DA_);
+					/*off_inl:      9,
+					off_inh:      10,
+					porta_in:     11,
+					portb_in:     12,
+					disp_in:      13,
+					disp2_in:     14,*/
+					ctrlLines-=cl.lines.instb_hi;
+				};
+				if(ctrlLines & cl.lines.a_in){
+					RA_ = dbus;
+					ctrlLines-=cl.lines.a_in;
+				};
+
+				if(ctrlLines & cl.lines.ram_in){
+					if(abus >= 0x8000){
+						console.log('ROM is readonly');
+						stepdebug+='<br/> ROM is readonly <br/>';
+						stopit()
+					}else{
+						RAM[abus] = dbus;
+					}
+					ctrlLines-=cl.lines.ram_in;
+				};
+				if(ctrlLines & cl.lines.addr_inh){
+					AR_ = (AR&0xff00)+dbus;
+					ctrlLines-=cl.lines.addr_inh;
+				};
+				if(ctrlLines & cl.lines.addr_inl){
+					AR_ = (AR&0xff)+(dbus<<8);
+					ctrlLines-=cl.lines.addr_inl;
+				};
+				if(ctrlLines & cl.lines.off_inh){
+					AO_ = (AO&0xff00)+dbus;
+					ctrlLines-=cl.lines.off_inh;
+				};
+				if(ctrlLines & cl.lines.off_inl){
+					AO_ = (AO&0xff)+(dbus<<8);
+					ctrlLines-=cl.lines.off_inl;
+				};
+
+				//misc
+				if(ctrlLines & cl.lines.alu_and){
+				
+					ALU_ = dbus & RO;
+					
+					FC_ = 0
+					
+					ctrlLines-=cl.lines.alu_and
+				}
+				if(ctrlLines & cl.lines.alu_rsh){
+				
+					ALU_ = dbus>>1;
+					if(ctrlLines & cl.lines.alu_c){
+						if(FC == 1) {ALU_+=0x80};
+						ctrlLines-=cl.lines.alu_c
+					}
+					if(dbus & 0x01){
+						FC_ = 1
+					}else{
+						FC_ = 0
+					}
+			
+					ctrlLines-=cl.lines.alu_rsh
+				}
+				if(ctrlLines & cl.lines.alu_sub){
+				
+					ALU_ = dbus - RO;
+					if(ctrlLines & cl.lines.alu_c){
+						if(FC == 1) {ALU_--};
+						ctrlLines-=cl.lines.alu_c
+					}
+					if(ALU_ < 0){
+						ALU_ = ALU_ + 0x100;
+						FC_ = 1
+					}else{
+						FC_ = 0
+					}
+			
+					ctrlLines-=cl.lines.alu_sub
+				}
+				if(ctrlLines & cl.lines.alu_add)
+				{
+					ALU_ = dbus + RO;
+					if(ctrlLines & cl.lines.alu_c ){
+						if(FC == 1) {ALU_++};
+						ctrlLines-=cl.lines.alu_c
+					}
+					if(ALU_ > 0xff){
+						ALU_ = ALU_ & 0xff;
+						FC_ = 1
+					}else{
+						FC_ = 0
+					}
+					if(ALU_ == 0){
+						FZ_ = 1
+					}else{
+						FZ_ = 0
+					}
+					ctrlLines-=cl.lines.alu_add
+				
+					if(ctrlLines & cl.lines.flags_in){
+						console.log('implement!');
+						if(dbus == 4){
+							FC_ = 1;
+						}
+						if(dbus == 0){
+							FC_ = 0;
+						}
+						ctrlLines-=cl.lines.flags_in;
+					};
+				}
+
+
+				var breakit = false;
+
+				if(ctrlLines & cl.lines.ir_in){
+					if(abus >= 0x8000){
+						IR_ = ROM[abus-0x8000];
+					}else{
+						IR_ = RAM[abus];
+					}
+
+			
+					if(debugInfo[PC]){
+						if(breaks[debugInfo[PC].sl-1]){
+							stopit();
+							breakit = true;
+						}
+					}
+				
+
+					ctrlLines-=cl.lines.ir_in;
+				};
+
+				if(ctrlLines & cl.lines.t_reset){
+					if(ctrlLines & cl.lines.t_reset_pf){
+						TS_=1;
+						ctrlLines-=cl.lines.t_reset_pf;
+					}else{
+						TS_=0;
+					}
+					ctrlLines-=cl.lines.t_reset;
+				}
+				if(ctrlLines & cl.lines.halt){
+					stopit();
+					ctrlLines-=cl.lines.halt;
+				}
+
+				if(ctrlLines & cl.lines.sie){/* todo implement interrupts */ ctrlLines-=cl.lines.sie };
+				
+				if(ctrlLines != 0) {
+					console.log('unimplemented',ctrlLines);
+					stepdebug+='<br/> unimplemented '+ctrlLines+'<br/>';
+					stopit()
+				}
+
+				
+
+				PC = PC_;
+				SP = SP_;
+				IR = IR_;
+				IR2 = IR2_;
+				RA = RA_;
+				RB = RB_;
+				RC = RC_;
+				RD = RD_;
+				RE = RE_;
+				RF = RF_;
+				RG = RG_;
+				RH = RH_;
+				RO = RO_;
+				TS = TS_;
+				AR = AR_;
+				AO = AO_;
+				FZ = FZ_;
+				FC = FC_;
+				PA = PA_;
+				DA = DA_;
+				DB = DB_;
+				ALU = ALU_;
+
+				clockct++;
+				clockct2++;
+				if(breakit) dump();
+			}
+
+			var lineh = null;
+			var lineh2 = null;
+			var linehd = null;
+			var linehd2 = null;
+			function dump(){
+				const now = Date.now();
+				document.getElementById('cpu_freq').value = Math.round(clockct2/(now-start)*1000);
+				document.getElementById('cpu_ct').value = clockct;
+				document.getElementById('cpu_pc').value = '0x'+PC.toString(16).padStart(4,'0');
+				document.getElementById('cpu_sp').value = '0x'+SP.toString(16).padStart(4,'0');
+				document.getElementById('cpu_ir').value = '0x'+IR.toString(16).padStart(2,'0');
+				document.getElementById('cpu_ir2').value = '0x'+IR2.toString(16).padStart(2,'0');
+				document.getElementById('cpu_ts').value = TS;
+				document.getElementById('cpu_a').value = '0x'+RA.toString(16).padStart(2,'0');
+				document.getElementById('cpu_b').value = '0x'+RB.toString(16).padStart(2,'0');
+				document.getElementById('cpu_c').value = '0x'+RC.toString(16).padStart(2,'0');
+				document.getElementById('cpu_d').value = '0x'+RD.toString(16).padStart(2,'0');
+				document.getElementById('cpu_e').value = '0x'+RE.toString(16).padStart(2,'0');
+				document.getElementById('cpu_f').value = '0x'+RF.toString(16).padStart(2,'0');
+				document.getElementById('cpu_g').value = '0x'+RG.toString(16).padStart(2,'0');
+				document.getElementById('cpu_h').value = '0x'+RH.toString(16).padStart(2,'0');
+				document.getElementById('cpu_op').value = '0x'+RO.toString(16).padStart(2,'0');
+				document.getElementById('cpu_pa').value = '0x'+PA.toString(16).padStart(2,'0');
+				document.getElementById('cpu_da').value = '0x'+DA.toString(16).padStart(2,'0');
+				document.getElementById('o_d').innerHTML = '  '+DA.toString(10).padStart(3,' ')+'  ';
+				document.getElementById('cpu_db').value = '0x'+DB.toString(16).padStart(2,'0');
+				document.getElementById('cpu_fc').value = FC;
+				document.getElementById('cpu_fz').value = FZ;
+				document.getElementById('cpu_alu').value = '0x'+ALU.toString(16).padStart(2,'0');
+				document.getElementById('cpu_ar').value = '0x'+AR.toString(16);
+				document.getElementById('cpu_ao').value = '0x'+AO.toString(16).padStart(4,'0');
+				document.getElementById('stepdebug').innerHTML = stepdebug;
+				if(lineh){
+					editor.removeLineClass(lineh,'background','redb');
+					lineh = null;
+				}
+				if(linehd){
+					editord.removeLineClass(linehd,'background','redb');
+					linehd = null;
+				}
+				if(debugInfo[PC]){
+					lineh = editor.addLineClass(debugInfo[PC].sl-1,'background','redb');
+					linehd = editord.addLineClass(debugInfo[PC].dl,'background','redb');
+					if(lineh2 != debugInfo[PC].sl-1) editor.scrollIntoView({line:debugInfo[PC].sl-1,ch: 0},120);
+					if(linehd2 != debugInfo[PC].dl) editord.scrollIntoView({line:debugInfo[PC].dl,ch: 0},120);
+					lineh2 = debugInfo[PC].sl-1;
+					linehd2 = debugInfo[PC].dl;
+				}
+			}
+
+			var clockct = 0;
+			var clockct2 = 0;
+		
+			init();
+
+
+			function dumpRam(){
+				var str ='';
+				for(var i=0;i<0xfff;i++){
+					str+=(i*8).toString(16).padStart(4,'0')+': ';
+					for(var j=0;j<8;j++){
+						str+=(RAM[i*8+j]).toString(16).padStart(2,'0')+' ';
+
+					}
+					str+='\n';
+
+				}
+				document.getElementById('ram').value=str;
+			}
+
+			var debugInfo = {};
+
+			function assemble(){
+				var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+				var theUrl = "/assemble";
+				xmlhttp.open("POST", theUrl);
+				xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xmlhttp.send(JSON.stringify({ "asm": editor.getValue() }));
+				xmlhttp.onload = function () {
+					var res = JSON.parse(this.responseText);
+					//console.log(res);
+					//document.getElementById('debug').value=res.debug;
+					var lines = res.debug.split('\n');
+					//lines.shift();
+					//lines.shift();
+					editord.setValue(lines.join('\n'));
+					debugInfo={};
+					var currentLine=0;
+					for(var i=2;i<lines.length;i++){
+						//console.log(lines[i]);
+						var segments = lines[i].split('|').map(item => {return item.trim()});
+						
+						if(segments[0] && segments[0] != ''){
+							const parsed = parseInt(segments[0], 10);
+							if (!isNaN(parsed)) {
+								currentLine=parsed;
+							}
+						}
+
+						if(segments[2] && segments[2].match(/0x[0-9A-Fa-f]{4}/)){
+							const parsed = parseInt(segments[2], 16);
+							if (!isNaN(parsed)) {
+								debugInfo[parsed] = {sl:currentLine,dl:i};
+							}
+						}
+					}
+					for(var i=0;i<0x8000;i++){
+						ROM[i]=res.bin.data[i]
+					}
+					var str ='';
+					for(var i=0;i<0xfff;i++){
+						str+=(i*8+0x8000).toString(16).padStart(4,'0')+': ';
+						for(var j=0;j<8;j++){
+							str+=(ROM[i*8+j]).toString(16).padStart(2,'0')+' ';
+
+						}
+						str+='\n';
+
+					}
+					document.getElementById('rom').value=str;
+					reset();
+				};
+			}
+			var keepRunning=0;
+			function step1() {
+				step();
+				dump();
+				dumpRam();
+			}
+			function reset(){
+				keepRunning=0;
+				RAM = new Uint8Array(0x8000);
+				randomizeRAM();
+				PC = 0x8000; // program counter 16b
+				SP = 0x7FFF; // stack pointer 16b
+				IR = 0; // instruction register 8b
+				IR2 = 0; // instruction register 2 8b
+				RA = 0; // register 8b
+				RB = 0; // register 8b
+				RC = 0; // register 8b
+				RD = 0; // register 8b
+				RE = 0; // register 8b
+				RF = 0; // register 8b
+				RG = 0; // register 8b
+				RH = 0; // register 8b
+				RO = 0; // operand register 8b
+				TS = 0; // micro step 4b
+				AR = 0; // address register (16b)
+				AO = 0; // address offset register (16b)
+				FZ = 0; // zero flag
+				FC = 0; // carry flag
+				PA = 0; 
+				DA = 0; 
+				DB = 0; 
+				ALU = 0;
+				clockct=0;
+				dump();
+				dumpRam();
+			}
+			function stopit(){
+				keepRunning=0;
+				dump();
+				dumpRam();
+			}
+			function runit(){
+				if(keepRunning == 0){
+					keepRunning=1;
+					clockct2 = 0;
+					start = Date.now();
+					loopit();
+				}
+			}
+			function loopit(){
+				if(keepRunning == 1){
+					for(var i=0;i<1000;i++)
+					{
+						if(keepRunning) step();
+					}
+					
+					setTimeout(loopit,0);
+				}
+			}
+			var editor;
+			var editord;
+			var breaks = {}
+			function initonload(){
+				editor = CodeMirror.fromTextArea(document.getElementById('asm'), {
+					lineNumbers: true,
+					//keyMap:'vim'
+
+				});
+				editor.on('gutterClick', function(inst,line,gutter,clickEvent){
+					if(breaks[line]){
+						editor.removeLineClass(breaks[line],'gutter','redb');
+						delete breaks[line];
+					}else{
+						breaks[line] = editor.addLineClass(line,'gutter','redb');
+					}
+				});
+				editord = CodeMirror.fromTextArea(document.getElementById('debug'), {
+					lineNumbers: false,
+					readOnly:true
+				});
+				editord.setSize(800,800);
+				dump();
+				draw();
+				dumpRam();
+				var str ='';
+				for(var i=0;i<0xfff;i++){
+					str+=(i*8+0x8000).toString(16).padStart(4,'0')+': ';
+					for(var j=0;j<8;j++){
+						str+=(ROM[i*8+j]).toString(16).padStart(2,'0')+' ';
+
+					}
+					str+='\n';
+
+				}
+				document.getElementById('rom').value=str;
+				setInterval(function(){
+						if(keepRunning){
+							dump();
+							dumpRam();
+						}
+					},100);
+			}
+		</script>
+		<style>
+			table, th, td {
+				border: 1px solid;
+			}
+			.led tr td {
+				width: 20px;
+				height: 20px;
+			}
+			textarea {
+				width: 300px;
+				height: 800px;
+			}
+			.CodeMirror {
+				width: 300px;
+				height: 800px;
+			}
+			.CodeMirrorWide {
+				width: 800px;
+				height: 800px;
+			}
+			textarea.wide {
+				width: 800px;
+				height: 800px;
+			}
+			.redb {
+				background-color:#ffaaaa
+			}
+		</style>
+	</head>
+	<body onload="initonload()">
+		<table>
+			<tr><td>
+				<table class="led">
+					<tr><td id="c70"></td><td id="c71"></td><td id="c72"></td><td id="c73"></td><td id="c74"></td><td id="c75"></td><td id="c76"></td><td id="c77"></td></tr>
+					<tr><td id="c60"></td><td id="c61"></td><td id="c62"></td><td id="c63"></td><td id="c64"></td><td id="c65"></td><td id="c66"></td><td id="c67"></td></tr>
+					<tr><td id="c50"></td><td id="c51"></td><td id="c52"></td><td id="c53"></td><td id="c54"></td><td id="c55"></td><td id="c56"></td><td id="c57"></td></tr>
+					<tr><td id="c40"></td><td id="c41"></td><td id="c42"></td><td id="c43"></td><td id="c44"></td><td id="c45"></td><td id="c46"></td><td id="c47"></td></tr>
+					<tr><td id="c30"></td><td id="c31"></td><td id="c32"></td><td id="c33"></td><td id="c34"></td><td id="c35"></td><td id="c36"></td><td id="c37"></td></tr>
+					<tr><td id="c20"></td><td id="c21"></td><td id="c22"></td><td id="c23"></td><td id="c24"></td><td id="c25"></td><td id="c26"></td><td id="c27"></td></tr>
+					<tr><td id="c10"></td><td id="c11"></td><td id="c12"></td><td id="c13"></td><td id="c14"></td><td id="c15"></td><td id="c16"></td><td id="c17"></td></tr>
+					<tr><td id="c00"></td><td id="c01"></td><td id="c02"></td><td id="c03"></td><td id="c04"></td><td id="c05"></td><td id="c06"></td><td id="c07"></td></tr>
+				</table>
+			</td>
+			<td>
+			Freq <input id="cpu_freq" type="text" readonly><br/>
+			C <input id="cpu_ct" type="text" readonly><br/>
+			PC <input id="cpu_pc" type="text" readonly></br>
+			SP <input id="cpu_sp" type="text" readonly></br>
+			IR <input id="cpu_ir" type="text" readonly></br>
+			IR2 <input id="cpu_ir2" type="text" readonly></br>
+			TS <input id="cpu_ts" type="text" readonly></br>
+			</td>
+			<td>
+			A <input id="cpu_a" type="text" readonly></br>
+			B <input id="cpu_b" type="text" readonly></br>
+			C <input id="cpu_c" type="text" readonly></br>
+			D <input id="cpu_d" type="text" readonly></br>
+			E <input id="cpu_e" type="text" readonly></br>
+			F <input id="cpu_f" type="text" readonly></br>
+			G <input id="cpu_g" type="text" readonly></br>
+			H <input id="cpu_h" type="text" readonly></br>
+			</td>
+			<td>
+			OP <input id="cpu_op" type="text" readonly></br>
+			PA <input id="cpu_pa" type="text" readonly></br>
+			O <input id="cpu_da" type="text" readonly></br>
+			O2 <input id="cpu_db" type="text" readonly></br>
+			FC <input id="cpu_fc" type="text" readonly></br>
+			FZ <input id="cpu_fz" type="text" readonly></br>
+			ALU <input id="cpu_alu" type="text" readonly></br>
+			AR <input id="cpu_ar" type="text" readonly></br>
+			AO <input id="cpu_ao" type="text" readonly></br>
+			</td>
+			<td>
+				<p style="white-space: pre;font-size: 50px;font-family:monospace;background-color:black;color:green" id="o_d">
+				</p>
+			</td>
+			<td>
+				<pre style="white-space: nowrap" id="stepdebug">
+				</pre>
+			</td>
+			</tr>
+		</table>
+		<br/>
+		<br/>
+		<br/>
+		<table>
+			<tr>
+				<td>RAM</td>
+				<td>ROM</td>
+				<td>Debug</td>
+				<td>
+					<input type="button" value="Assemble" onClick="assemble()">
+					<input type="button" value="Run" onClick="runit()">
+					<input type="button" value="Stop" onClick="stopit()">
+					<input type="button" value="Step" onClick="step1()">
+					<input type="button" value="Reset" onClick="reset()">
+				</td>
+			</tr>
+			<tr>
+				<td><textarea id="ram" readonly></textarea></td>
+				<td><textarea id="rom" readonly></textarea></td>
+				<td><textarea class="wide" id="debug" readonly></textarea></td>
+				<td><textarea id="asm">
+
+
+.org 0x8000 ; ROM
+	ld a,40 ; dividend/result
+    ld b,4 ; divisor
+    ld d,0 ; remainder
+
+
+	ld flags,0
+
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont]
+    add d,b
+	ld flags,0
+   	jmp [step]
+cont:
+	ld flags,4
+step:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont1]
+    add d,b
+	ld flags,0
+   	jmp [step1]
+cont1:
+	ld flags,4
+step1:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont2]
+    add d,b
+	ld flags,0
+   	jmp [step2]
+cont2:
+	ld flags,4
+step2:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont3]
+    add d,b
+	ld flags,0
+   	jmp [step3]
+cont3:
+	ld flags,4
+step3:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont4]
+    add d,b
+	ld flags,0
+   	jmp [step4]
+cont4:
+	ld flags,4
+step4:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont5]
+    add d,b
+	ld flags,0
+   	jmp [step5]
+cont5:
+	ld flags,4
+step5:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont6]
+    add d,b
+	ld flags,0
+   	jmp [step6]
+cont6:
+	ld flags,4
+step6:
+    lshc a
+    lshc d
+	sub d,b
+	jmpcc [cont7]
+    add d,b
+	ld flags,0
+   	jmp [step7]
+cont7:
+	ld flags,4
+step7:
+    lshc a
+
+
+	ld o,a
+    hlt	
+				</textarea></td>
+			</tr>
+		</table>
+	</body>
+</html>
+
+<!--
+dividend:
+    .byte 0
+result:
+    .byte 0
+divisor:
+    .byte 0
+remainder:
+    .byte 0
+remainder_tmp:
+    .byte 0
+counter:
+    .byte 0
+
+.org 0x8000 ; ROM
+start:
+	ld a,3 ; dividend/result
+    st a,[dividend]
+    st a,[result]
+    ld a,2 ; divisor
+    st a,[divisor]
+    ld a,0 ; remainder
+    st a,[remainder]
+	ld a,8 ; loopcount
+    st a,[counter]
+	sub a,a
+step:
+    ld a,[result]
+    addc a,a
+    st a,[result]
+    ld a,[remainder]
+    st a,[remainder_tmp]
+    addc a,a
+    st a,[remainder]
+    ld a,[counter]
+    sub a,1
+    jmpc [end]
+    st a,[counter]
+    ld a,[remainder]
+	sub a,[divisor]
+	jmpcc [cont]
+    add a,[divisor]
+    st a,[remainder]
+    sub a,a
+   	jmp [step]
+cont:
+    st a,[remainder]
+	ld a,255
+    add a,255
+	jmp [step]
+
+end:
+    ld a,[remainder_tmp]
+ 	sub a,1
+	jmpc [divisible]
+    ld a,[divisor]
+ 	sub a,3
+	jmpc [next_div_prime]
+	add a,2
+    st a,[divisor]
+    ld a,[dividend]
+    st a,[result]
+    ld a,0
+    st a,[remainder]
+	ld a,8
+    st a,[counter]
+	sub a,a
+   	jmp [step]
+divisible:
+   	jmp [next_div]
+next_div_prime:
+	ld o,[dividend]
+next_div:
+	ld a,[dividend]
+	add a,1
+	jmpc [repeat]
+    st a,[dividend]
+    st a,[result]
+	sub a,1
+    st a,[divisor]
+    ld a,0
+    st a,[remainder]
+	ld a,8
+    st a,[counter]
+	sub a,a
+   	jmp [step]
+
+repeat:
+	jmp [start]
+
+
+
+
+
+
+.org 0x8000 ; ROM
+	ld a,20 ; dividend/result
+    ld b,5 ; divisor
+    ld d,0 ; remainder
+
+	ld c,8 ; loopcount
+	clc
+step:
+    addc a,a
+    addc d,d
+    sub c,1
+    jmpz [end]
+	sub d,b
+	jmpcc [cont]
+    add d,b
+    clc
+   	jmp [step]
+cont:
+	stc
+	jmp [step]
+
+end:
+	rsh d
+    hlt
+-->
+
+<!--
+.org 0x8000 ; ROM
+	ld a,21 ; dividend/result
+    ld b,5 ; divisor
+    ld d,0 ; remainder
+
+	ld c,8 ; loopcount
+	clc
+
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont]
+    add d,b
+    clc
+   	jmp [step]
+cont:
+	stc
+
+step:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont2]
+    add d,b
+    clc
+   	jmp [step2]
+cont2:
+	stc
+
+step2:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont3]
+    add d,b
+    clc
+   	jmp [step3]
+cont3:
+	stc
+
+step3:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont4]
+    add d,b
+    clc
+   	jmp [step4]
+cont4:
+	stc
+
+step4:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont5]
+    add d,b
+    clc
+   	jmp [step5]
+cont5:
+	stc
+
+step5:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont6]
+    add d,b
+    clc
+   	jmp [step6]
+cont6:
+	stc
+
+step6:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont7]
+    add d,b
+    clc
+   	jmp [step7]
+cont7:
+	stc
+
+step7:
+    addc a,a
+    addc d,d
+	sub d,b
+	jmpcc [cont8]
+    add d,b
+    clc
+   	jmp [step8]
+cont8:
+	stc
+
+step8:
+    addc a,a
+
+    hlt
+-->
+
+<!--
+	
+; ################
+; # Game Of Life #
+; ################
+
+
+.org 0x0000 ; RAM
+seed:
+	.byte 0
+random:
+	.byte 0
+board_a:
+	.fill 64, 0
+board_b:
+	.fill 64, 0
+
+.org 0x8000 ; ROM
+	ld a,0
+	ld ao,66
+ramClearNext:
+	sub aol,1
+	st a,ao
+	jmpz [ramClearEnd]
+	jmp [ramClearNext]
+ramClearEnd:
+	ld a,1
+	st a,[2]
+	st a,[3]
+	st a,[4]
+	st a,[12]
+	st a,[19]
+;	call [randomize_board]
+start:
+	call [draw]
+	ld a,0
+	ld b,0
+	ld c,0
+	ld d,0
+	ld e,8
+	ld f,0
+	ld g,0
+
+next_lutitem:
+	ld ao,lut
+	add aol,c
+	addc aoh,d
+	ld b,ao
+	ld ao,board_a
+	add aol,b
+	addc aoh,0
+	add a,ao
+	add c,1
+	addc d,0
+	sub e,1
+	jmpz [done]
+	jmp [next_lutitem]
+done:
+	ld o,a
+	ld o2,f
+	ld e,8
+	ld ao,board_a
+	add aol,f
+	addc aoh,0
+	ld h,ao
+	sub h,1
+	jmpz [live]
+	;dead
+	ld ao,board_b
+	add aol,f
+	addc aoh,0
+	add f,1
+	ld h,3
+	sub h,a
+	jmpz [makelive]
+	ld h,0
+	st h,ao
+	jmp [cont]
+makelive:
+	ld h,1
+	st h,ao
+	jmp [cont]
+live:
+	ld ao,board_b
+	add aol,f
+	addc aoh,0
+	add f,1
+	ld h,3
+	sub h,a
+	jmpz [makelive]
+	ld h,2
+	sub h,a
+	jmpz [makelive]
+	ld h,0
+	st h,ao
+cont:
+	ld a,0
+	ld g,64
+	sub g,f
+	jmpz [done2]
+	ld e,8
+	jmp [next_lutitem]
+done2:
+
+	call [draw_b]
+
+
+	ld a,0
+	ld b,0
+	ld c,0
+	ld d,0
+	ld e,8
+	ld f,0
+	ld g,0
+
+next_lutitem2:
+	ld ao,lut
+	add aol,c
+	addc aoh,d
+	ld b,ao
+	ld ao,board_b
+	add aol,b
+	addc aoh,0
+	add a,ao
+	add c,1
+	addc d,0
+	sub e,1
+	jmpz [done3]
+	jmp [next_lutitem2]
+done3:
+	ld o,a
+	ld e,8
+	ld ao,board_b
+	add aol,f
+	addc aoh,0
+	ld h,ao
+	sub h,1
+	jmpz [live2]
+	;dead
+	ld ao,board_a
+	add aol,f
+	addc aoh,0
+	add f,1
+	ld h,3
+	sub h,a
+	jmpz [makelive2]
+	ld h,0
+	st h,ao
+	jmp [cont2]
+makelive2:
+	ld h,1
+	st h,ao
+	jmp [cont2]
+live2:
+	ld ao,board_a
+	add aol,f
+	addc aoh,0
+	add f,1
+	ld h,3
+	sub h,a
+	jmpz [makelive2]
+	ld h,2
+	sub h,a
+	jmpz [makelive2]
+	ld h,0
+	st h,ao
+cont2:
+	ld a,0
+	ld g,64
+	sub g,f
+	jmpz [done4]
+	ld e,8
+	jmp [next_lutitem2]
+done4:
+	jmp [start]
+
+
+draw:
+	ld a,8
+	ld b,8
+	ld ao,board_a
+next_bit:
+	add d,d
+	ld c,ao
+	add aol,1
+	addc aoh,0
+	add d,c
+	sub b,1
+	jmpz [fin]
+	jmp [next_bit]
+fin:
+	sub a,1
+	ld pa,a
+	ld pb,d
+	jmpz [retrn]
+	ld b,8
+	jmp [next_bit]
+
+draw_b:
+	ld a,8
+	ld b,8
+	ld ao,board_b
+next_bit2:
+	add d,d
+	ld c,ao
+	add aol,1
+	addc aoh,0
+	add d,c
+	sub b,1
+	jmpz [fin2]
+	jmp [next_bit2]
+fin2:
+	sub a,1
+	ld pa,a
+	ld pb,d
+	jmpz [retrn]
+	ld b,8
+	jmp [next_bit2]
+
+randomize_board:
+	ld a,65
+	ld ao,board_a
+randomize_next_cell:
+	sub a,1
+	ld o,a
+	jmpz [retrn]
+	call [rand]
+	ld b,[random]
+	sub b,227
+	jmpcc [set_cell_active]
+	ld c,0
+	st c,ao
+	add aol,1
+	addc aoh,0
+	jmp [randomize_next_cell]
+set_cell_active:
+	ld c,1
+	st c,ao
+	add aol,1
+	addc aoh,0
+	jmp [randomize_next_cell]
+	ret
+retrn:
+	ret
+rand:
+	push a
+	push b
+	push c
+	push d
+	ld a,[seed]
+	ld c,[random]
+	ld d,a
+	rsh a
+	rshc a
+	and a,0x80
+	ld b,c
+	rsh c
+	rshc c
+	and c,0x80
+	add c,b
+	addc c,0x13
+	rsh b
+	and b,0x7f
+	addc d,a
+	addc d,b
+	st c,[random]
+	st d,[seed]
+	pop d
+	pop c
+	pop b
+	pop a
+	ret
+lut: ; precomputed neighbours
+	.byte 15,8,9,7,1,63,56,57
+	.byte 8,9,10,0,2,56,57,58
+	.byte 9,10,11,1,3,57,58,59
+	.byte 10,11,12,2,4,58,59,60
+	.byte 11,12,13,3,5,59,60,61
+	.byte 12,13,14,4,6,60,61,62
+	.byte 13,14,15,5,7,61,62,63
+	.byte 14,15,8,6,0,62,63,56
+	.byte 23,16,17,15,9,7,0,1
+	.byte 16,17,18,8,10,0,1,2
+	.byte 17,18,19,9,11,1,2,3
+	.byte 18,19,20,10,12,2,3,4
+	.byte 19,20,21,11,13,3,4,5
+	.byte 20,21,22,12,14,4,5,6
+	.byte 21,22,23,13,15,5,6,7
+	.byte 22,23,16,14,8,6,7,0
+	.byte 31,24,25,23,17,15,8,9
+	.byte 24,25,26,16,18,8,9,10
+	.byte 25,26,27,17,19,9,10,11
+	.byte 26,27,28,18,20,10,11,12
+	.byte 27,28,29,19,21,11,12,13
+	.byte 28,29,30,20,22,12,13,14
+	.byte 29,30,31,21,23,13,14,15
+	.byte 30,31,24,22,16,14,15,8
+	.byte 39,32,33,31,25,23,16,17
+	.byte 32,33,34,24,26,16,17,18
+	.byte 33,34,35,25,27,17,18,19
+	.byte 34,35,36,26,28,18,19,20
+	.byte 35,36,37,27,29,19,20,21
+	.byte 36,37,38,28,30,20,21,22
+	.byte 37,38,39,29,31,21,22,23
+	.byte 38,39,32,30,24,22,23,16
+	.byte 47,40,41,39,33,31,24,25
+	.byte 40,41,42,32,34,24,25,26
+	.byte 41,42,43,33,35,25,26,27
+	.byte 42,43,44,34,36,26,27,28
+	.byte 43,44,45,35,37,27,28,29
+	.byte 44,45,46,36,38,28,29,30
+	.byte 45,46,47,37,39,29,30,31
+	.byte 46,47,40,38,32,30,31,24
+	.byte 55,48,49,47,41,39,32,33
+	.byte 48,49,50,40,42,32,33,34
+	.byte 49,50,51,41,43,33,34,35
+	.byte 50,51,52,42,44,34,35,36
+	.byte 51,52,53,43,45,35,36,37
+	.byte 52,53,54,44,46,36,37,38
+	.byte 53,54,55,45,47,37,38,39
+	.byte 54,55,48,46,40,38,39,32
+	.byte 63,56,57,55,49,47,40,41
+	.byte 56,57,58,48,50,40,41,42
+	.byte 57,58,59,49,51,41,42,43
+	.byte 58,59,60,50,52,42,43,44
+	.byte 59,60,61,51,53,43,44,45
+	.byte 60,61,62,52,54,44,45,46
+	.byte 61,62,63,53,55,45,46,47
+	.byte 62,63,56,54,48,46,47,40
+	.byte 7,0,1,63,57,55,48,49
+	.byte 0,1,2,56,58,48,49,50
+	.byte 1,2,3,57,59,49,50,51
+	.byte 2,3,4,58,60,50,51,52
+	.byte 3,4,5,59,61,51,52,53
+	.byte 4,5,6,60,62,52,53,54
+	.byte 5,6,7,61,63,53,54,55
+	.byte 6,7,0,62,56,54,55,48
+
+-->
+
+
