@@ -333,3 +333,64 @@ nextf:
     lshc c
     lshc d
 ```
+
+8 bit unsigned multiply, 16 bit result, 84-116 cycles:
+
+```assembly
+.org 0x8000
+    
+    ld a,0 ; multiplicant
+    ld b,0 ; multiplier / result low
+    ld c,0 ; result high
+
+
+    rsh b
+
+    jmpcc [step0]
+    add c,a
+step0:
+    rshc c
+    rshc b
+
+    jmpcc [step1]
+    add c,a
+step1:
+    rshc c
+    rshc b
+
+    jmpcc [step2]
+    add c,a
+step2:
+    rshc c
+    rshc b
+
+    jmpcc [step3]
+    add c,a
+step3:
+    rshc c
+    rshc b
+
+    jmpcc [step4]
+    add c,a
+step4:
+    rshc c
+    rshc b
+
+    jmpcc [step5]
+    add c,a
+step5:
+    rshc c
+    rshc b
+
+    jmpcc [step6]
+    add c,a
+step6:
+    rshc c
+    rshc b
+
+    jmpcc [step7]
+    add c,a
+step7:
+    rshc c
+    rshc b
+```
