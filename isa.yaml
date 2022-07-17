@@ -94,13 +94,6 @@ operand_sets:
           value: 8
           size: 4
           position: suffix
-      register_flags:
-        type: register
-        register: flags
-        bytecode:
-          value: 9
-          size: 4
-          position: suffix
       register_dd:
         type: register
         register: dd
@@ -113,6 +106,15 @@ operand_sets:
       register_a:
         type: register
         register: a
+        bytecode:
+          value: 0
+          size: 0
+          position: suffix
+  register_flags:
+    operand_values:
+      register_flags:
+        type: register
+        register: flags
         bytecode:
           value: 0
           size: 0
@@ -166,13 +168,6 @@ operand_sets:
         register: h
         bytecode:
           value: 8
-          size: 4
-          position: suffix
-      register_flags:
-        type: register
-        register: flags
-        bytecode:
-          value: 9
           size: 4
           position: suffix
       register_dd:
@@ -478,6 +473,16 @@ instructions:
             list:
               - register_a
               - integer
+      - var5a:
+        byte_code:
+          value: 41
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            list:
+              - register_flags
+              - integer
       - var5b:
         byte_code:
           value: 42
@@ -650,6 +655,17 @@ instructions:
             list:
               - address
               - integer
+      - varR2:
+        byte_code:
+          value: 71
+          size: 8
+        operands:
+          count: 2
+          operand_sets:
+            reverse_argument_order: true
+            list:
+              - sp_offset
+              - sp_offset
       - varR3:
         byte_code:
           value: 72

@@ -19,7 +19,6 @@ var lines = {
 	
 	db_tar_sel4:  2**8,
 	ab_sel0:      2**9,
-	ab_sel1:      2**10,
 	ab_sel2:      2**11,
 
 	unused:       2**12,
@@ -320,6 +319,12 @@ const instr = {
 			lines.pc_abus_out + lines.mem_out + lines.a_in + lines.t_reset,
 		]
 	},
+	ld_rfl_i:{
+		opcode: 41,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.flags_in + lines.alu_add + lines.t_reset,
+		]
+	},
 	ld_ra_a:{
 		opcode: 42,
 		steps: [
@@ -424,6 +429,16 @@ const instr = {
 			lines.pc_abus_out + lines.mem_out + lines.op_in,
 			lines.addr_abus_out + lines.mem_out + lines.alu_add,
 			lines.addr_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
+		]
+	},
+	add_spo_spo:{
+		opcode: 71,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.alu_add,
+			lines.spo_abus_out + lines.alu_out + lines.ram_in + lines.t_reset,
 		]
 	},
 	add_spo_i:{
