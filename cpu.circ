@@ -1127,20 +1127,20 @@
       <a name="fanout" val="5"/>
       <a name="incoming" val="5"/>
     </comp>
-    <comp lib="0" loc="(2830,1060)" name="Tunnel">
+    <comp lib="0" loc="(2780,1090)" name="Tunnel">
       <a name="label" val="W_BUS"/>
       <a name="width" val="8"/>
     </comp>
-    <comp lib="0" loc="(2830,1090)" name="Tunnel">
+    <comp lib="0" loc="(2780,1120)" name="Tunnel">
       <a name="label" val="DD_IN"/>
     </comp>
-    <comp lib="0" loc="(2830,1120)" name="Tunnel">
+    <comp lib="0" loc="(2780,1150)" name="Tunnel">
       <a name="label" val="DS_IN"/>
     </comp>
-    <comp lib="0" loc="(2830,1150)" name="Tunnel">
+    <comp lib="0" loc="(2780,1180)" name="Tunnel">
       <a name="label" val="CLK"/>
     </comp>
-    <comp lib="0" loc="(2830,1180)" name="Tunnel">
+    <comp lib="0" loc="(2780,1210)" name="Tunnel">
       <a name="label" val="RESET"/>
     </comp>
     <comp lib="0" loc="(2870,1560)" name="Tunnel">
@@ -3182,10 +3182,11 @@ b ff 3 80 50 2 80 19
       <a name="labelloc" val="north"/>
       <a name="offcolor" val="#202060"/>
     </comp>
-    <comp lib="5" loc="(2670,1040)" name="RGB Video">
+    <comp lib="5" loc="(2620,1070)" name="RGB Video">
       <a name="color" val="8-Color RGB (3 bit)"/>
+      <a name="cursor" val="No Cursor"/>
       <a name="height" val="64"/>
-      <a name="scale" val="3"/>
+      <a name="scale" val="4"/>
     </comp>
     <comp lib="5" loc="(280,110)" name="LED">
       <a name="color" val="#b1b1fc"/>
@@ -3589,7 +3590,7 @@ b ff 3 80 50 2 80 19
     <comp lib="7" loc="(90,1070)" name="Ground">
       <a name="facing" val="north"/>
     </comp>
-    <comp loc="(2800,1120)" name="disp_ctrl">
+    <comp loc="(2730,1120)" name="disp_ctrl">
       <a name="facing" val="west"/>
     </comp>
     <wire from="(1000,110)" to="(1000,180)"/>
@@ -4624,20 +4625,26 @@ b ff 3 80 50 2 80 19
     <wire from="(2600,1690)" to="(2610,1690)"/>
     <wire from="(2610,1680)" to="(2610,1690)"/>
     <wire from="(2610,1680)" to="(2620,1680)"/>
+    <wire from="(2620,1070)" to="(2620,1210)"/>
+    <wire from="(2620,1210)" to="(2780,1210)"/>
     <wire from="(2620,1550)" to="(2670,1550)"/>
+    <wire from="(2630,1070)" to="(2630,1180)"/>
+    <wire from="(2630,1180)" to="(2760,1180)"/>
     <wire from="(2630,1690)" to="(2630,1720)"/>
+    <wire from="(2640,1070)" to="(2640,1150)"/>
+    <wire from="(2640,1150)" to="(2710,1150)"/>
     <wire from="(2650,1670)" to="(2670,1670)"/>
-    <wire from="(2670,1040)" to="(2670,1180)"/>
-    <wire from="(2670,1180)" to="(2830,1180)"/>
-    <wire from="(2680,1040)" to="(2680,1150)"/>
-    <wire from="(2680,1150)" to="(2810,1150)"/>
+    <wire from="(2660,1070)" to="(2660,1140)"/>
+    <wire from="(2660,1140)" to="(2710,1140)"/>
+    <wire from="(2670,1070)" to="(2670,1130)"/>
+    <wire from="(2670,1130)" to="(2710,1130)"/>
+    <wire from="(2680,1070)" to="(2680,1120)"/>
+    <wire from="(2680,1120)" to="(2710,1120)"/>
     <wire from="(2680,440)" to="(2740,440)"/>
     <wire from="(2680,470)" to="(2700,470)"/>
     <wire from="(2680,500)" to="(2710,500)"/>
     <wire from="(2680,530)" to="(2720,530)"/>
     <wire from="(2680,560)" to="(2730,560)"/>
-    <wire from="(2690,1040)" to="(2690,1120)"/>
-    <wire from="(2690,1120)" to="(2760,1120)"/>
     <wire from="(2690,1560)" to="(2700,1560)"/>
     <wire from="(2690,1590)" to="(2700,1590)"/>
     <wire from="(2690,1620)" to="(2700,1620)"/>
@@ -4655,19 +4662,25 @@ b ff 3 80 50 2 80 19
     <wire from="(270,570)" to="(270,620)"/>
     <wire from="(2700,450)" to="(2700,470)"/>
     <wire from="(2700,450)" to="(2740,450)"/>
-    <wire from="(2710,1040)" to="(2710,1110)"/>
-    <wire from="(2710,1110)" to="(2760,1110)"/>
     <wire from="(2710,460)" to="(2710,500)"/>
     <wire from="(2710,460)" to="(2740,460)"/>
-    <wire from="(2720,1040)" to="(2720,1100)"/>
-    <wire from="(2720,1100)" to="(2760,1100)"/>
     <wire from="(2720,470)" to="(2720,530)"/>
     <wire from="(2720,470)" to="(2740,470)"/>
-    <wire from="(2730,1040)" to="(2730,1090)"/>
-    <wire from="(2730,1090)" to="(2760,1090)"/>
     <wire from="(2730,480)" to="(2730,560)"/>
     <wire from="(2730,480)" to="(2740,480)"/>
+    <wire from="(2750,1120)" to="(2760,1120)"/>
+    <wire from="(2750,1130)" to="(2770,1130)"/>
+    <wire from="(2750,1140)" to="(2770,1140)"/>
+    <wire from="(2750,1150)" to="(2760,1150)"/>
+    <wire from="(2760,1090)" to="(2760,1120)"/>
+    <wire from="(2760,1090)" to="(2780,1090)"/>
+    <wire from="(2760,1150)" to="(2760,1180)"/>
+    <wire from="(2760,1180)" to="(2780,1180)"/>
     <wire from="(2760,390)" to="(2760,430)"/>
+    <wire from="(2770,1120)" to="(2770,1130)"/>
+    <wire from="(2770,1120)" to="(2780,1120)"/>
+    <wire from="(2770,1140)" to="(2770,1150)"/>
+    <wire from="(2770,1150)" to="(2780,1150)"/>
     <wire from="(2780,100)" to="(3010,100)"/>
     <wire from="(2780,110)" to="(3010,110)"/>
     <wire from="(2780,120)" to="(3000,120)"/>
@@ -4698,18 +4711,6 @@ b ff 3 80 50 2 80 19
     <wire from="(280,1620)" to="(300,1620)"/>
     <wire from="(280,550)" to="(290,550)"/>
     <wire from="(280,560)" to="(280,620)"/>
-    <wire from="(2800,1090)" to="(2810,1090)"/>
-    <wire from="(2800,1100)" to="(2820,1100)"/>
-    <wire from="(2800,1110)" to="(2820,1110)"/>
-    <wire from="(2800,1120)" to="(2810,1120)"/>
-    <wire from="(2810,1060)" to="(2810,1090)"/>
-    <wire from="(2810,1060)" to="(2830,1060)"/>
-    <wire from="(2810,1120)" to="(2810,1150)"/>
-    <wire from="(2810,1150)" to="(2830,1150)"/>
-    <wire from="(2820,1090)" to="(2820,1100)"/>
-    <wire from="(2820,1090)" to="(2830,1090)"/>
-    <wire from="(2820,1110)" to="(2820,1120)"/>
-    <wire from="(2820,1120)" to="(2830,1120)"/>
     <wire from="(2820,300)" to="(2820,710)"/>
     <wire from="(2820,710)" to="(3020,710)"/>
     <wire from="(2830,290)" to="(2830,680)"/>
@@ -5278,7 +5279,7 @@ b ff 3 80 50 2 80 19
   <circuit name="disp_ctrl">
     <a name="appearance" val="custom"/>
     <appear>
-      <circ-anchor facing="east" height="6" width="6" x="47" y="67"/>
+      <circ-anchor facing="east" height="6" width="6" x="67" y="97"/>
       <circ-port height="10" pin="670,130" width="10" x="85" y="65"/>
       <circ-port height="10" pin="670,160" width="10" x="85" y="75"/>
       <circ-port height="10" pin="670,190" width="10" x="85" y="85"/>
@@ -5287,8 +5288,8 @@ b ff 3 80 50 2 80 19
       <circ-port height="8" pin="220,700" width="8" x="46" y="86"/>
       <circ-port height="8" pin="220,740" width="8" x="46" y="96"/>
       <circ-port height="8" pin="240,240" width="8" x="46" y="66"/>
-      <path d="M66,65 Q70,75 74,65" fill="none" stroke="#808080" stroke-width="2"/>
-      <rect fill="none" height="40" stroke="#000000" stroke-width="2" width="30" x="55" y="64"/>
+      <path d="M66,104 Q70,89 74,104" fill="none" stroke="#808080" stroke-width="2"/>
+      <rect fill="none" height="40" stroke="#000000" stroke-width="2" width="40" x="50" y="65"/>
     </appear>
     <comp lib="0" loc="(160,420)" name="Splitter">
       <a name="bit1" val="0"/>

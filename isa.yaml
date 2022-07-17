@@ -463,6 +463,18 @@ instructions:
               - wo_register
               - register
               - register
+      - var6:
+        byte_code:
+          value: 37
+          size: 8
+        operands:
+          count: 3
+          operand_sets:
+            reverse_bytecode_order: true
+            list:
+              - register_except_a
+              - integer
+              - address
       - var5:
         byte_code:
           value: 40

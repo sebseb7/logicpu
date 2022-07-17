@@ -313,6 +313,17 @@ const instr = {
 			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
+	ld_r_a_i:{
+		opcode: 37,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
 	ld_ra_i:{
 		opcode: 40,
 		steps: [
