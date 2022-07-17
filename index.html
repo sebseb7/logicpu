@@ -764,7 +764,7 @@
 			var ROM = new Uint8Array(0x8000);
 
 			var PC = 0x8000; // program counter 16b
-			var SP = 0x7FFF; // stack pointer 16b
+			var SP = 0x0; // stack pointer 16b
 			var IR = 0; // instruction register 8b
 			var IR2 = 0; // instruction register 2 8b
 			var RA = 0; // register 8b
@@ -778,46 +778,29 @@
 			var RO = 0; // operand register 8b
 			var TS = 0; // micro step 4b
 			var AR = 0; // address register (16b)
-			var AO = 0; // address offset register (16b)
 			var FZ = 0; // zero flag
 			var FC = 0; // carry flag
-			var PA = 0; 
+			var DF = 0; 
+			var LCD_S = 0; 
+			var LCD_P = 0; 
+			var LCD_C = 0; 
 			var DA = 0; 
-			var DB = 0; 
 			var ALU = 0;
 			var controlLines = 0;
 
-			var matrix = [0,0,0,0,0,0,0,0];
 			var start = Date.now();
 			var clockstart = 0;
+							
+			var ctx = null;
 
 			//console.log(start);
 
-
-			function draw() {
-				//return;
-				//console.clear();
-				for(var x=0;x<8;x++){
-				
-					for(var i=0;i<8;i++){
-						var cell = 'c'+(7-x)+''+(7-i);
-						if(matrix[x] & (2**i)){
-							document.getElementById(cell).style.backgroundColor = "green";
-						}
-						else{
-							document.getElementById(cell).style.backgroundColor = "black";
-						}
-					}
-				}
-			}
 
 			var irs = {};
 
 			function step() {
 
 				var ctrlLines = cl.getControlLines(IR,TS);
-
-				//console.log(ctrlLines,IR,TS);
 
 				for (let j of Object.keys(cl.lines)){
 					if ((ctrlLines & cl.lines[j]) == cl.lines[j]){
@@ -845,20 +828,18 @@
 				var RO_ = RO;
 				var IR2_ = IR2;
 				var AR_ = AR;
-				var AO_ = AO;
 				var FZ_ = FZ;
 				var FC_ = FC;
-				var PA_ = PA;
+				var DF_ = DF;
 				var DA_ = DA;
-				var DB_ = DB;
 				var ALU_ = ALU;
 				var TS_ = TS+1; if(TS_ == 16) {TS_=0};
 				var abus = 0;
 				var dbus = 0;
 				
 
-				if(ctrlLines & cl.lines.sp_dec){ SP_ = SP-1; ctrlLines-=cl.lines.sp_dec};
-				if(ctrlLines & cl.lines.sp_inc){ SP_ = SP+1; ctrlLines-=cl.lines.sp_inc};
+				if(ctrlLines & cl.lines.sp_dec){ SP_ = SP-1; if(SP_ < 0) SP_ = 0x7fff; ctrlLines-=cl.lines.sp_dec};
+				if(ctrlLines & cl.lines.sp_inc){ SP_ = SP+1; if(SP_ == 0x8000) SP_=0;ctrlLines-=cl.lines.sp_inc};
 
 				//abus write
 
@@ -872,6 +853,8 @@
 				if(ctrlLines & cl.lines.addr_abus_out){ abus = AR;ctrlLines-=cl.lines.addr_abus_out };
 				
 				if(ctrlLines & cl.lines.sp_abus_out){ abus = SP;ctrlLines-=cl.lines.sp_abus_out };
+				
+				if(ctrlLines & cl.lines.spo_abus_out){ abus = SP+(AR&0xff);ctrlLines-=cl.lines.spo_abus_out };
 				
 				//console.log('abus',abus);
 
@@ -951,8 +934,6 @@
 					else if((IR2&0xf0) == 0x60) {dbus = RF}
 					else if((IR2&0xf0) == 0x70) {dbus = RG}
 					else if((IR2&0xf0) == 0x80) {dbus = RH}
-					else if((IR2&0xf0) == 0x90) {dbus = (AO&0xff00)>>8}
-					else if((IR2&0xf0) == 0xa0) {dbus = AO&0xff}
 					else {
 						console.log('unimplemented ho ',(IR2&0xf0)>>4);
 						stepdebug+='<br/> unimplemented ho '+(IR2&0xf0)>>4+'<br/>';
@@ -977,8 +958,6 @@
 					else if((IR2&0xf) == 0x6) {dbus = RF}
 					else if((IR2&0xf) == 0x7) {dbus = RG}
 					else if((IR2&0xf) == 0x8) {dbus = RH}
-					else if((IR2&0xf) == 0x9) {dbus = (AO&0xff00)>>8}
-					else if((IR2&0xf) == 0xa) {dbus = AO&0xff}
 					else {
 						console.log('unimplemented lo ',(IR2&0xf));
 						stepdebug+='<br/> unimplemented lo '+(IR2&0xf)>>4+'<br/>';
@@ -1017,15 +996,55 @@
 					else if((IR2&0xf0) == 0x60) {RF_ = dbus}
 					else if((IR2&0xf0) == 0x70) {RG_ = dbus}
 					else if((IR2&0xf0) == 0x80) {RH_ = dbus}
-					else if((IR2&0xf0) == 0x90) {AO_ = (AO&0xff)+(dbus<<8)}
-					else if((IR2&0xf0) == 0xa0) {AO_ = (AO&0xff00)+dbus}
-					else if((IR2&0xf0) == 0xb0) {PA_ = dbus}
-					else if((IR2&0xf0) == 0xc0) {matrix[PA] = dbus;if(PA==0)draw()}
 					else if((IR2&0xf0) == 0xd0) {
 						DA_ = dbus;
 						document.getElementById('o_d').innerHTML = '  '+DA_.toString(10).padStart(3,' ')+'  ';
 					}
-					else if((IR2&0xf0) == 0xe0) {DB_ = dbus;}
+					else if((IR2&0xf0) == 0xe0) {DF_ = dbus;}
+					else if((IR2&0xf0) == 0xa0) {
+						if(DF==0){
+							if((dbus & 0x3e) == 0x3e){
+								// on / off
+							}
+							if((dbus & 0xc0) == 0xc0){
+								// startline
+							}
+							if((dbus & 0xb8) == 0xb8){
+								// page
+								LCD_P = dbus & 0x7;
+							}
+							if((dbus & 0x40) == 0x40){
+								// column
+								LCD_C = dbus & 0x3f;
+							}
+						}
+						else{
+
+							var x = LCD_S*64 + LCD_C;
+							var y = LCD_P * 8;
+
+							ctx.fillStyle = "#"+((dbus&1)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+0)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&2)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+1)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&4)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+2)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&8)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+3)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&16)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+4)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&32)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+5)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&64)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+6)*2, 2, 2);
+							ctx.fillStyle = "#"+((dbus&128)?'000000':'00aa00');
+							ctx.fillRect(x*2, (y+7)*2, 2, 2);
+							LCD_C++;
+							if(LCD_C == 64) LCD_C = 0;
+						}
+
+
+					}
 					else {
 						console.log('unimplemented hi ',(IR2&0xf0)>>4);
 						stepdebug+='<br/> unimplemented hi '+(IR2&0xf0)>>4+'<br/>';
@@ -1062,14 +1081,6 @@
 				if(ctrlLines & cl.lines.addr_inl){
 					AR_ = (AR&0xff)+(dbus<<8);
 					ctrlLines-=cl.lines.addr_inl;
-				};
-				if(ctrlLines & cl.lines.off_inh){
-					AO_ = (AO&0xff00)+dbus;
-					ctrlLines-=cl.lines.off_inh;
-				};
-				if(ctrlLines & cl.lines.off_inl){
-					AO_ = (AO&0xff)+(dbus<<8);
-					ctrlLines-=cl.lines.off_inl;
 				};
 
 				//misc
@@ -1188,6 +1199,8 @@
 					stopit()
 				}
 
+				stepdebug+='<br/> abus '+abus.toString(16);
+				stepdebug+='<br/> dbus '+dbus.toString(16);
 				
 
 				PC = PC_;
@@ -1205,13 +1218,12 @@
 				RO = RO_;
 				TS = TS_;
 				AR = AR_;
-				AO = AO_;
 				FZ = FZ_;
 				FC = FC_;
-				PA = PA_;
+				DF = DF_;
 				DA = DA_;
-				DB = DB_;
 				ALU = ALU_;
+				
 
 				clockct++;
 				clockct2++;
@@ -1240,15 +1252,13 @@
 				document.getElementById('cpu_g').value = '0x'+RG.toString(16).padStart(2,'0');
 				document.getElementById('cpu_h').value = '0x'+RH.toString(16).padStart(2,'0');
 				document.getElementById('cpu_op').value = '0x'+RO.toString(16).padStart(2,'0');
-				document.getElementById('cpu_pa').value = '0x'+PA.toString(16).padStart(2,'0');
+				document.getElementById('cpu_df').value = '0x'+DF.toString(16).padStart(2,'0')+' '+'0x'+LCD_S.toString(16).padStart(2,'0')+' '+'0x'+LCD_P.toString(16).padStart(2,'0')+' '+'0x'+LCD_C.toString(16).padStart(2,'0');
 				document.getElementById('cpu_da').value = '0x'+DA.toString(16).padStart(2,'0');
 				document.getElementById('o_d').innerHTML = '  '+DA.toString(10).padStart(3,' ')+'  ';
-				document.getElementById('cpu_db').value = '0x'+DB.toString(16).padStart(2,'0');
 				document.getElementById('cpu_fc').value = FC;
 				document.getElementById('cpu_fz').value = FZ;
 				document.getElementById('cpu_alu').value = '0x'+ALU.toString(16).padStart(2,'0');
 				document.getElementById('cpu_ar').value = '0x'+AR.toString(16);
-				document.getElementById('cpu_ao').value = '0x'+AO.toString(16).padStart(4,'0');
 				document.getElementById('stepdebug').innerHTML = stepdebug;
 				if(lineh){
 					editor.removeLineClass(lineh,'background','redb');
@@ -1276,7 +1286,7 @@
 
 			function dumpRam(){
 				var str ='';
-				for(var i=0;i<0xfff;i++){
+				for(var i=0;i<0x1000;i++){
 					str+=(i*8).toString(16).padStart(4,'0')+': ';
 					for(var j=0;j<8;j++){
 						str+=(RAM[i*8+j]).toString(16).padStart(2,'0')+' ';
@@ -1352,7 +1362,7 @@
 				RAM = new Uint8Array(0x8000);
 				randomizeRAM();
 				PC = 0x8000; // program counter 16b
-				SP = 0x7FFF; // stack pointer 16b
+				SP = 0x0; // stack pointer 16b
 				IR = 0; // instruction register 8b
 				IR2 = 0; // instruction register 2 8b
 				RA = 0; // register 8b
@@ -1366,12 +1376,10 @@
 				RO = 0; // operand register 8b
 				TS = 0; // micro step 4b
 				AR = 0; // address register (16b)
-				AO = 0; // address offset register (16b)
 				FZ = 0; // zero flag
 				FC = 0; // carry flag
-				PA = 0; 
+				DF = 0; 
 				DA = 0; 
-				DB = 0; 
 				ALU = 0;
 				clockct=0;
 				dump();
@@ -1423,7 +1431,6 @@
 				});
 				editord.setSize(800,800);
 				dump();
-				draw();
 				dumpRam();
 				var str ='';
 				for(var i=0;i<0xfff;i++){
@@ -1442,6 +1449,10 @@
 							dumpRam();
 						}
 					},100);
+				var canvas = document.getElementById("lcdmatrix");
+				ctx = canvas.getContext("2d");
+				ctx.fillStyle = "#00aa00";
+				ctx.fillRect(0, 0, 256, 128);
 			}
 		</script>
 		<style>
@@ -1476,16 +1487,7 @@
 	<body onload="initonload()">
 		<table>
 			<tr><td>
-				<table class="led">
-					<tr><td id="c70"></td><td id="c71"></td><td id="c72"></td><td id="c73"></td><td id="c74"></td><td id="c75"></td><td id="c76"></td><td id="c77"></td></tr>
-					<tr><td id="c60"></td><td id="c61"></td><td id="c62"></td><td id="c63"></td><td id="c64"></td><td id="c65"></td><td id="c66"></td><td id="c67"></td></tr>
-					<tr><td id="c50"></td><td id="c51"></td><td id="c52"></td><td id="c53"></td><td id="c54"></td><td id="c55"></td><td id="c56"></td><td id="c57"></td></tr>
-					<tr><td id="c40"></td><td id="c41"></td><td id="c42"></td><td id="c43"></td><td id="c44"></td><td id="c45"></td><td id="c46"></td><td id="c47"></td></tr>
-					<tr><td id="c30"></td><td id="c31"></td><td id="c32"></td><td id="c33"></td><td id="c34"></td><td id="c35"></td><td id="c36"></td><td id="c37"></td></tr>
-					<tr><td id="c20"></td><td id="c21"></td><td id="c22"></td><td id="c23"></td><td id="c24"></td><td id="c25"></td><td id="c26"></td><td id="c27"></td></tr>
-					<tr><td id="c10"></td><td id="c11"></td><td id="c12"></td><td id="c13"></td><td id="c14"></td><td id="c15"></td><td id="c16"></td><td id="c17"></td></tr>
-					<tr><td id="c00"></td><td id="c01"></td><td id="c02"></td><td id="c03"></td><td id="c04"></td><td id="c05"></td><td id="c06"></td><td id="c07"></td></tr>
-				</table>
+				<canvas id="lcdmatrix" width="256" height="128"></canvas>
 			</td>
 			<td>
 			Freq <input id="cpu_freq" type="text" readonly><br/>
@@ -1508,21 +1510,19 @@
 			</td>
 			<td>
 			OP <input id="cpu_op" type="text" readonly></br>
-			PA <input id="cpu_pa" type="text" readonly></br>
+			DF <input id="cpu_df" type="text" readonly></br>
 			O <input id="cpu_da" type="text" readonly></br>
-			O2 <input id="cpu_db" type="text" readonly></br>
 			FC <input id="cpu_fc" type="text" readonly></br>
 			FZ <input id="cpu_fz" type="text" readonly></br>
 			ALU <input id="cpu_alu" type="text" readonly></br>
 			AR <input id="cpu_ar" type="text" readonly></br>
-			AO <input id="cpu_ao" type="text" readonly></br>
 			</td>
 			<td>
 				<p style="white-space: pre;font-size: 50px;font-family:monospace;background-color:black;color:green" id="o_d">
 				</p>
 			</td>
 			<td>
-				<pre style="white-space: nowrap" id="stepdebug">
+				<pre style="white-space: nowrap;font-size:10px" id="stepdebug">
 				</pre>
 			</td>
 			</tr>
