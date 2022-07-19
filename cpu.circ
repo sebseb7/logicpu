@@ -2182,18 +2182,20 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
       <a name="addrWidth" val="11"/>
       <a name="contents">addr/data: 11 32
 compressed
-eJztWduSgyAMfc9X+LxPoFTs51iL//8JS0AENeCt26F1d6YLTi7kJCHcGsaUYKzQP8V0W//onu02&#13;
-A6lzHYKmbqwG/U8WtSMJmqswXPqLz7iA4KoWXEtdoL/KDSNWUS6Y2NVs0mW4YA2jSOkCpyvKddNt&#13;
-pdXZlvTt6LXuHo9O18ZptWl77cUWBxHFbcnjk6If/jwQLVuIm2Cq1MYQst0zPrZAYCXjBM3GBI0b&#13;
-kkpVT1GoqhOBFxYdJyzXHbcBHCRw7yLBIak5Cc6acRKXDTUTVgcRasPQNfWQvBGGIPVRFx3IqChO&#13;
-dy2lItMKuUqmuI59i40MrGYWeWSAvwgodqjkNrRSsDtESulYQJDEIwVEWjRKM8R8PXWF1+eKR8Lf&#13;
-oxXWi/jp5F/uxTEvHG5jsEjkxUJ0kOpRasscz21KzqLOOYnDM/Q8rNS5oVmrIiYvuc7LErm6BmvK&#13;
-g23KyyHep4R9Zjs1sFBzNqX9KGhsOdrDH0Reb4mfVdZrZaaHmxkLtac0zsSMDcrRtQThJUoULedu&#13;
-6/fg6e2a8eeM/wjSt867IB1lLKUSOw2fj0ekTzkh42qWP65pGRLpwPnJQpWhw8LTMjRRsxQ6u6wY&#13;
-Y0W6DFFi3BacYHHyCgL2sDSJsNCkR3F2rUhQooiGLk30Jga3LcnSlFtiz0pTJD/WV7tz0qED53qO&#13;
-LJZXKjLvxDVGG1rW7FyHvtYpH40rXGNaMqJvPs7m4JSPxhVGtNs5R7/WKfnjMmHDGTiJWPSW4Uqu&#13;
-yR+XCZ6MR+/Kvskf1zD1zO5z//k6eCQa7iYcU/L4469aYHJnsmlEzu0dCKQOJheM5MtxYWpAe/jm&#13;
-JniHsCoY25MeYI670j497s4QMKOtnF4vGNN/XFfAJR2J+VddUBJL9X3yWOuW6F9gluOx</a>
+eJztWduSgyAMfecreN4nsKnYz2ld/P9PWK4alCBqZ1a3uzNdcUgCyUmOXDohNAjBzU8L82y/TMs3&#13;
+u9DVx0amT99Fy8w/xdvYBXkp7qTMm5xJsYzUbSG1tMXMW1Mx4o2UYsm8uipbToqt+QglWyzaIqXu&#13;
+5nkz5vwzG9sxav2DRqd/0n2tew4mik87CPD7UmZKiiH8TY4YXQ53ELoxk8no9t/02GAda4TM9HlM&#13;
+7ORCUunbN3B96wFFYdGIymo9cBXOsYLfm7rYLq15Fzs6jYN+eagFeBsZqJ1A37UheQkBlPrWVh5I&#13;
+UtWWu9HSRFlZqUZoabB/2odCsxbe87UBuB5iBZtWGC+vMpa6H8m9+lqiVMqRtw1cDDhvRAPiQVHv&#13;
+SDi2SxKkGgS0EaCwSULHJnsV+CSx8NVb0D+WpGMeRbfchGE0XwWz0xqs1pJ8zl/4M9SlzPkxfh+N&#13;
+o3Irs5+Exqa8lCYvG2ug7ywHvTbxxiHlsNBAc+BLM1kikYyU31ILqLqsK82oL19AWyyWUJygbzU6&#13;
+6g8vKJXPNAesUVV5fuYyLiRfsrwUc9GeyZOeTu6safxqreNkVrPMyISukM17tN9em/vY+/yc83a/&#13;
+EO6GEGCFEGjYjyiHRVcgMcLMwfROaQpGQijSFJ/VPF4gYp4jqMvuntiCiErUBStkl6cuIKgrs291&#13;
+bkCZiM6W2DNq2ppmLKGm3do4gLSdf5L5bb/wsqorg83msP3ZoFzaL7dxDYg+t35j/mpQLu0XrtEe&#13;
+I/q/VjyzXw42W4HJZnXboaz7hibLoitu/S+dMg5G5XHkFTh+UmzO71cowtyJT+WGIT3FqN4IxVOM&#13;
+zVsUKenTlU9G8u1+4dRQew4Vk9ywV1WVx3koPZS/8ixte/MZ4kZDSZK7wfxATN/ul0YHPn1nNrJO&#13;
+nr4Rk7wgld0dT/IU4vNTY9sP+RwpqcYjmem2ASiV5FhG+OvvmtFKgUynr4kA+QgaAZD5m8d58Lzo&#13;
+hVbCKnYJdBWulXXrIRRbXIqzH6LYFaY=</a>
       <a name="dataWidth" val="32"/>
       <a name="label" val="4x28C16"/>
     </comp>
@@ -2208,18 +2210,32 @@ JniHsCoY25MeYI670j497s4QMKOtnF4vGNN/XFfAJR2J+VddUBJL9X3yWOuW6F9gluOx</a>
     <comp lib="4" loc="(630,1360)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-20 e0 0 20 a0 3f 20 a0
-c0 20 a0 b8 20 a0 40 28
-ff 38 0 b 28 7 38 0
-c 20 e0 0 2a 0 c 49
-b8 21 a1 20 a0 40 20 e0
-1 28 3f 22 a0 0 b 69
-1 3 80 37 2 80 2b 65
-0 c 1 3 80 41 2 80
-19 28 7 38 0 c 65 0
-b ff 3 80 50 2 80 19
-45 0 b fe 2 80 19
-</a>
+compressed
+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</a>
     </comp>
     <comp lib="4" loc="(660,270)" name="Counter">
       <a name="max" val="0xffff"/>
@@ -5333,15 +5349,15 @@ b ff 3 80 50 2 80 19
       <a name="facing" val="north"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="0" loc="(280,740)" name="Splitter">
+    <comp lib="0" loc="(270,740)" name="Splitter">
       <a name="appear" val="right"/>
-      <a name="bit2" val="1"/>
-      <a name="bit3" val="1"/>
-      <a name="bit4" val="1"/>
-      <a name="bit5" val="1"/>
-      <a name="bit6" val="1"/>
-      <a name="bit7" val="1"/>
+      <a name="bit3" val="2"/>
+      <a name="bit4" val="2"/>
+      <a name="bit5" val="2"/>
+      <a name="bit6" val="2"/>
+      <a name="bit7" val="2"/>
       <a name="facing" val="north"/>
+      <a name="fanout" val="3"/>
       <a name="incoming" val="8"/>
     </comp>
     <comp lib="0" loc="(380,550)" name="Splitter">
@@ -5428,9 +5444,6 @@ b ff 3 80 50 2 80 19
       <a name="enable" val="false"/>
       <a name="select" val="4"/>
     </comp>
-    <comp lib="4" loc="(350,280)" name="Register">
-      <a name="width" val="1"/>
-    </comp>
     <comp lib="4" loc="(350,340)" name="Counter">
       <a name="max" val="0x3f"/>
       <a name="width" val="6"/>
@@ -5440,6 +5453,9 @@ b ff 3 80 50 2 80 19
     </comp>
     <comp lib="4" loc="(350,550)" name="Register"/>
     <comp lib="4" loc="(350,660)" name="Register">
+      <a name="width" val="1"/>
+    </comp>
+    <comp lib="4" loc="(360,840)" name="Register">
       <a name="width" val="1"/>
     </comp>
     <comp lib="4" loc="(390,750)" name="Counter">
@@ -5480,7 +5496,7 @@ b ff 3 80 50 2 80 19
     <wire from="(200,570)" to="(200,610)"/>
     <wire from="(200,570)" to="(210,570)"/>
     <wire from="(200,610)" to="(360,610)"/>
-    <wire from="(220,670)" to="(320,670)"/>
+    <wire from="(220,670)" to="(240,670)"/>
     <wire from="(220,700)" to="(260,700)"/>
     <wire from="(220,740)" to="(270,740)"/>
     <wire from="(240,240)" to="(310,240)"/>
@@ -5489,6 +5505,9 @@ b ff 3 80 50 2 80 19
     <wire from="(240,350)" to="(320,350)"/>
     <wire from="(240,390)" to="(590,390)"/>
     <wire from="(240,560)" to="(290,560)"/>
+    <wire from="(240,670)" to="(240,850)"/>
+    <wire from="(240,670)" to="(320,670)"/>
+    <wire from="(240,850)" to="(330,850)"/>
     <wire from="(250,480)" to="(260,480)"/>
     <wire from="(260,480)" to="(260,500)"/>
     <wire from="(260,500)" to="(320,500)"/>
@@ -5498,7 +5517,6 @@ b ff 3 80 50 2 80 19
     <wire from="(270,530)" to="(270,550)"/>
     <wire from="(270,550)" to="(270,740)"/>
     <wire from="(270,550)" to="(320,550)"/>
-    <wire from="(270,740)" to="(280,740)"/>
     <wire from="(290,340)" to="(290,360)"/>
     <wire from="(290,340)" to="(320,340)"/>
     <wire from="(290,490)" to="(290,510)"/>
@@ -5506,11 +5524,11 @@ b ff 3 80 50 2 80 19
     <wire from="(290,560)" to="(290,620)"/>
     <wire from="(290,560)" to="(320,560)"/>
     <wire from="(290,620)" to="(370,620)"/>
+    <wire from="(290,710)" to="(290,720)"/>
+    <wire from="(290,710)" to="(320,710)"/>
     <wire from="(300,660)" to="(300,720)"/>
     <wire from="(300,660)" to="(320,660)"/>
-    <wire from="(310,240)" to="(310,310)"/>
-    <wire from="(310,310)" to="(310,370)"/>
-    <wire from="(310,310)" to="(330,310)"/>
+    <wire from="(310,240)" to="(310,370)"/>
     <wire from="(310,370)" to="(310,520)"/>
     <wire from="(310,370)" to="(330,370)"/>
     <wire from="(310,520)" to="(310,580)"/>
@@ -5519,8 +5537,11 @@ b ff 3 80 50 2 80 19
     <wire from="(310,580)" to="(330,580)"/>
     <wire from="(310,690)" to="(310,790)"/>
     <wire from="(310,690)" to="(330,690)"/>
+    <wire from="(310,790)" to="(310,870)"/>
     <wire from="(310,790)" to="(370,790)"/>
-    <wire from="(330,300)" to="(330,310)"/>
+    <wire from="(310,870)" to="(340,870)"/>
+    <wire from="(320,710)" to="(320,840)"/>
+    <wire from="(320,840)" to="(330,840)"/>
     <wire from="(330,360)" to="(330,370)"/>
     <wire from="(330,510)" to="(330,520)"/>
     <wire from="(330,570)" to="(330,580)"/>
@@ -5531,12 +5552,13 @@ b ff 3 80 50 2 80 19
     <wire from="(340,760)" to="(340,800)"/>
     <wire from="(340,760)" to="(360,760)"/>
     <wire from="(340,800)" to="(610,800)"/>
-    <wire from="(350,280)" to="(500,280)"/>
+    <wire from="(340,860)" to="(340,870)"/>
     <wire from="(350,340)" to="(390,340)"/>
     <wire from="(350,490)" to="(390,490)"/>
     <wire from="(350,550)" to="(380,550)"/>
     <wire from="(350,660)" to="(360,660)"/>
     <wire from="(360,610)" to="(360,660)"/>
+    <wire from="(360,840)" to="(420,840)"/>
     <wire from="(370,620)" to="(370,710)"/>
     <wire from="(370,770)" to="(370,790)"/>
     <wire from="(380,770)" to="(380,780)"/>
@@ -5553,6 +5575,8 @@ b ff 3 80 50 2 80 19
     <wire from="(400,610)" to="(410,610)"/>
     <wire from="(400,620)" to="(410,620)"/>
     <wire from="(400,630)" to="(410,630)"/>
+    <wire from="(420,280)" to="(420,840)"/>
+    <wire from="(420,280)" to="(500,280)"/>
     <wire from="(430,640)" to="(430,650)"/>
     <wire from="(430,650)" to="(460,650)"/>
     <wire from="(450,600)" to="(470,600)"/>
