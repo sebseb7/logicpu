@@ -313,8 +313,19 @@ const instr = {
 			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
 		]
 	},
-	ld_r_a_i:{
+	ld_r_spo_spo:{
 		opcode: 37,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.instb_hi + lines.t_reset,
+		]
+	},
+	ld_r_a_i:{
+		opcode: 38,
 		steps: [
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
@@ -432,6 +443,16 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
+	add_r_spo:{
+		opcode: 67,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_add,
+			lines.instb_hi + lines.alu_out + lines.prefetch
+		]
+	},
 	add_a_i:{
 		opcode: 69,
 		steps: [
@@ -475,6 +496,15 @@ const instr = {
 			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
 			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
 			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_add,
+			lines.a_in + lines.alu_out + lines.prefetch
+		]
+	},
+	add_ra_spo:{
+		opcode: 75,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
 			lines.a_out + lines.alu_add,
 			lines.a_in + lines.alu_out + lines.prefetch
 		]
@@ -663,6 +693,14 @@ const instr = {
 			lines.instb_hi + lines.alu_out + lines.prefetch
 		]
 	},
+	rsh_spo:{
+		opcode: 178,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.alu_rsh,
+			lines.spo_abus_out + lines.ram_in + lines.alu_out + lines.t_reset
+		]
+	},
 	rshc_r:{
 		opcode: 192,
 		steps: [
@@ -744,6 +782,86 @@ const instr = {
 		]
 	},
 	
+	cmp_r_r:{
+		opcode: 240,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.instb_o + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.prefetch
+		]
+	},
+	cmp_r_i:{
+		opcode: 241,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.prefetch
+		]
+	},
+	cmp_r_a:{
+		opcode: 242,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.ir2_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.instb_ho + lines.alu_sub + lines.prefetch
+		]
+	},
+	cmp_a_i:{
+		opcode: 243,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub + lines.t_reset
+		]
+	},
+	cmp_a_a:{
+		opcode: 244,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.alu_sub + lines.t_reset
+		]
+	},
+	cmp_spo_spo:{
+		opcode: 245,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.op_in,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.spo_abus_out + lines.mem_out + lines.alu_sub + lines.t_reset
+		]
+	},
+	cmp_spo_i:{
+		opcode: 247,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.spo_abus_out + lines.mem_out + lines.alu_sub + lines.t_reset
+		]
+	},
+
+	cmp_ra_i:{
+		opcode: 248,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub + lines.prefetch
+		]
+	},
+	cmp_ra_a:{
+		opcode: 249,
+		steps: [
+			lines.pc_abus_out + lines.mem_out + lines.addr_inl,
+			lines.pc_abus_out + lines.mem_out + lines.addr_inh,
+			lines.addr_abus_out + lines.mem_out + lines.op_in,
+			lines.a_out + lines.alu_sub + lines.prefetch
+		]
+	},
 
 	irq: {
 		opcode: 255,
