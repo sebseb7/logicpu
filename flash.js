@@ -8,7 +8,7 @@ const port = new SerialPort({
 const { ReadlineParser } = require('@serialport/parser-readline')
 
 
-var rom = fs.readFileSync('demo_prime.bin');
+var rom = fs.readFileSync(process.argv[2]);
 
 console.log(rom.length);
 

@@ -49,11 +49,11 @@ var lines = {
 	addr_abus_out:0,
 	sp_abus_out:  1<<9,
 	pc_abus_out:  2<<9,
-	irq_abus_out: 3<<9,
-	irq_abus_out2:4<<9,
-	unused_1:     5<<9,
-	unused_2:     6<<9,
-	spo_abus_out: 7<<9,
+	spo_abus_out: 3<<9,
+	irq_abus_out: 4<<9,
+	irq_abus_out2:5<<9,
+	unused_1:     6<<9,
+	unused_2:     7<<9,
 
 	mem_out:      0,
 	a_out:        1<<4,
@@ -866,9 +866,9 @@ const instr = {
 	irq: {
 		opcode: 255,
 		steps: [
-			lines.sp_dec + lines.cie,
+			lines.sp_dec,
 			lines.sp_abus_out + lines.ram_in + lines.sp_dec + lines.pc_outl,
-			lines.sp_abus_out + lines.ram_in + lines.pc_outh,
+			lines.sp_abus_out + lines.ram_in + lines.pc_outh + lines.cie,
 			lines.irq_abus_out  + lines.mem_out + lines.addr_inl,
 			lines.irq_abus_out2 + lines.mem_out + lines.addr_inh,
 			lines.addr_abus_out + lines.pc_in + lines.t_reset,
@@ -987,7 +987,6 @@ function output() {
 output();
 
 /*
-
 var bank = bankD;
 
 const port = new SerialPort({
@@ -997,16 +996,16 @@ const port = new SerialPort({
 const { ReadlineParser } = require('@serialport/parser-readline')
 
 var currAddr = 0;
-var mode = 'erase';
-//var mode = 'compare';
+//var mode = 'erase';
+var mode = 'compare';
 const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 parser.on('data', function(data){
 	//console.log(data);
 	if(data == 'BOOT'){
 		console.log('connected to programmer, erasing');
-		var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+'ff\n';
+		//var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+'ff\n';
 		//var cmd = 'WR'+currAddr.toString(16).padStart(4,'0')+bankA[currAddr].toString(16).padStart(2,'0')+'\n';
-		//var cmd = 'RD'+currAddr.toString(16).padStart(4,'0')+'\n';
+		var cmd = 'RD'+currAddr.toString(16).padStart(4,'0')+'\n';
 		currAddr++;
 		port.write(cmd);
 		//console.log(cmd);
