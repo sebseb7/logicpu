@@ -1390,28 +1390,17 @@
     <comp lib="0" loc="(520,1590)" name="Tunnel">
       <a name="label" val="IO_OUT"/>
     </comp>
+    <comp lib="0" loc="(550,1100)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="AD_BUS"/>
+      <a name="width" val="16"/>
+    </comp>
     <comp lib="0" loc="(550,1350)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="AD_BUS"/>
       <a name="width" val="16"/>
     </comp>
-    <comp lib="0" loc="(560,1750)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="SIE"/>
-    </comp>
-    <comp lib="0" loc="(560,260)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="JMP"/>
-    </comp>
-    <comp lib="0" loc="(560,290)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="PC_ABUS_OUT"/>
-    </comp>
-    <comp lib="0" loc="(560,320)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="IRQ"/>
-    </comp>
-    <comp lib="0" loc="(580,1350)" name="Splitter">
+    <comp lib="0" loc="(560,1100)" name="Splitter">
       <a name="appear" val="right"/>
       <a name="bit0" val="1"/>
       <a name="bit10" val="1"/>
@@ -1430,10 +1419,42 @@
       <a name="bit9" val="1"/>
       <a name="incoming" val="16"/>
     </comp>
-    <comp lib="0" loc="(590,1100)" name="Tunnel">
+    <comp lib="0" loc="(560,1750)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="AD_BUS"/>
-      <a name="width" val="16"/>
+      <a name="label" val="SIE"/>
+    </comp>
+    <comp lib="0" loc="(560,260)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="JMP"/>
+    </comp>
+    <comp lib="0" loc="(560,290)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="PC_ABUS_OUT"/>
+    </comp>
+    <comp lib="0" loc="(570,1350)" name="Splitter">
+      <a name="appear" val="right"/>
+      <a name="bit0" val="1"/>
+      <a name="bit10" val="1"/>
+      <a name="bit11" val="1"/>
+      <a name="bit12" val="1"/>
+      <a name="bit13" val="1"/>
+      <a name="bit14" val="1"/>
+      <a name="bit15" val="0"/>
+      <a name="bit2" val="1"/>
+      <a name="bit3" val="1"/>
+      <a name="bit4" val="1"/>
+      <a name="bit5" val="1"/>
+      <a name="bit6" val="1"/>
+      <a name="bit7" val="1"/>
+      <a name="bit8" val="1"/>
+      <a name="bit9" val="1"/>
+      <a name="incoming" val="16"/>
+    </comp>
+    <comp lib="0" loc="(570,590)" name="Tunnel">
+      <a name="label" val="IRQ"/>
+    </comp>
+    <comp lib="0" loc="(570,620)" name="Tunnel">
+      <a name="label" val="IR_IN"/>
     </comp>
     <comp lib="0" loc="(590,1160)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -1459,25 +1480,6 @@
       <a name="bit7" val="0"/>
       <a name="bit8" val="0"/>
       <a name="bit9" val="0"/>
-      <a name="incoming" val="16"/>
-    </comp>
-    <comp lib="0" loc="(600,1100)" name="Splitter">
-      <a name="appear" val="right"/>
-      <a name="bit0" val="1"/>
-      <a name="bit10" val="1"/>
-      <a name="bit11" val="1"/>
-      <a name="bit12" val="1"/>
-      <a name="bit13" val="1"/>
-      <a name="bit14" val="1"/>
-      <a name="bit15" val="0"/>
-      <a name="bit2" val="1"/>
-      <a name="bit3" val="1"/>
-      <a name="bit4" val="1"/>
-      <a name="bit5" val="1"/>
-      <a name="bit6" val="1"/>
-      <a name="bit7" val="1"/>
-      <a name="bit8" val="1"/>
-      <a name="bit9" val="1"/>
       <a name="incoming" val="16"/>
     </comp>
     <comp lib="0" loc="(600,700)" name="Tunnel">
@@ -1917,22 +1919,44 @@
     <comp lib="1" loc="(490,1560)" name="Controlled Buffer">
       <a name="width" val="8"/>
     </comp>
+    <comp lib="1" loc="(510,600)" name="AND Gate">
+      <a name="facing" val="west"/>
+      <a name="size" val="30"/>
+    </comp>
     <comp lib="1" loc="(550,1670)" name="OR Gate">
       <a name="inputs" val="8"/>
       <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(550,320)" name="NOT Gate"/>
+    <comp lib="1" loc="(610,1120)" name="NOT Gate">
+      <a name="size" val="20"/>
+      <a name="width" val="15"/>
     </comp>
     <comp lib="1" loc="(610,210)" name="NOT Gate">
       <a name="facing" val="west"/>
     </comp>
     <comp lib="1" loc="(610,310)" name="AND Gate">
-      <a name="negate1" val="true"/>
       <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(620,1370)" name="Controlled Buffer">
+      <a name="control" val="left"/>
+      <a name="width" val="15"/>
+    </comp>
+    <comp lib="1" loc="(630,1090)" name="NOT Gate">
+      <a name="size" val="20"/>
+    </comp>
+    <comp lib="1" loc="(640,1120)" name="NOT Gate">
+      <a name="size" val="20"/>
+      <a name="width" val="15"/>
     </comp>
     <comp lib="1" loc="(660,1680)" name="AND Gate">
       <a name="size" val="30"/>
     </comp>
-    <comp lib="1" loc="(680,1090)" name="AND Gate">
-      <a name="negate1" val="true"/>
+    <comp lib="1" loc="(670,1120)" name="Controlled Buffer">
+      <a name="control" val="left"/>
+      <a name="width" val="15"/>
+    </comp>
+    <comp lib="1" loc="(680,1080)" name="AND Gate">
       <a name="size" val="30"/>
     </comp>
     <comp lib="1" loc="(690,710)" name="XOR Gate">
@@ -2148,20 +2172,20 @@ Tv6c/Dn5c/Ln5M/Jn5M/J39O/pz8eeXvfzQ8BsM=</a>
       <a name="addrWidth" val="11"/>
       <a name="contents">addr/data: 11 32
 compressed
-eJztWd2SqyAMvucpuD5XoCnYx6mu+/6PcPjVqAli7cza7e5MFzokIb9fIXRKjaCUdJ9RudH8c7M4&#13;
-7dLSkCfE2nhTRrh/Vpq8BDSVDFTum15RCYKq3VBtZQn3ranYsWWpxEKvrkpWoBJ7NkJJlsiyWKqb&#13;
-G1snLo6kbyevDXc+OsODXzNh/HZefPhNQN62NHNSfKe/2RDHK+EGamycMgTv8MXvDd6wRmliLcbE&#13;
-K5eSamy/QI7tAMgLm0lmtvuOqzBOFOw+tCSe4lovibNqnLQrhlpBlEGEOhAMnUnJyxCg1Pey6ECy&#13;
-rL7cHZdhyspTNWrULvYPP1iktYqW720gR5sr2M3SfjTLVOpxp/A11hLHUva8n+BiwHmjGlB3Dnon&#13;
-wPFLmgHVRGAcARebhevELK8iPgtfxOot8J9L0imPsllBYZjEV4U5cFnPtQWf6xf+KupaU3ZMv4/O&#13;
-UH0U2S8CY3NeapeXjRcwdB6D+kO4cYo5HTSQDnIrhgQSLVj6I7WAqsub0kz8ugdeYrGEsoJx1pjM&#13;
-b3solc+sA+aoqryouc4HyV6Xj2LB2yt61tLZnD2OH611nMx2lRmE6wrZ/Az3y2vzOfS+Pua83C4U&#13;
-dwcIsAMIfNjPMKdDVwIxRszJ9F7CFEyAUIQpuap5fEDEOMdAF5i8i93bJeu1A3Y0dAEDXcS9NZgB&#13;
-ZSC6WmKvoOlomokFND3NjR3Iy/kDmZ+2Cx+runKwxTpsv9Ypb21XuLimiD6O/sb8Vqe8tV24Rgcc&#13;
-0b+z4pXtCmHzFbi4rB5ryqaeKToWvePV/61TJoTRxjjKijh+km+ub1cqQqrjU3lhWHYxqi9CuYtx&#13;
-+IqiNd9d+eRIvtwunBr2mabiIjf8U1VlOw+lh2faufbSGRJ2Q0lCvWB+YExfbteIGj5D5y6ygZ5/&#13;
-EdOyQEXejmd6LuLrrrFfBzpHSqy5JTO/NgDHsmjLeEJTt1vJkUv16Xc/kTzoCEDTL49r50XSNzoJ&#13;
-m7yk4lO49uMAcrx7y3plxeZdXPwH+h4RDg==</a>
+eJztWVty6yAM/WcVfN8vsBVwlhO77v6XcHnasi3hV2ZqN+1MChkkoecJiEapHpSS7tMrN5p/bhan&#13;
+TVrq8oRY6x/KCPfPSpOXgKaSgcp90zMqQVDVC6qlLOG+VRt2rFkqMdGr2SQrUIk1G6EkS2RZLNXD&#13;
+jbUTF0fSt4PXuicfne7Fr5kwfjsvvvwmIB9LmjEpvtPfaIjjlfAA1VdOGYK3++L3Bm9YpTSxFmPi&#13;
+lUtJ1ddfIPu6A+SFxSQzLxxX8UnJGycKdu9aEoe45kvirBon7YqhVpBcTCS1J+gak5KXIUCp72XR&#13;
+gWRZfbk7LsOUlaeqVK9d7F9+sEhrFS1f20D2Nlewm6X9aJah1ONO4WusJY6l7Hk/wcWA80ZVoJ4c&#13;
+9A6A45c0A6qJwDgCLjYT14lR3ob4THwRq7fAfy5JhzzKZgWFYRC/KcyBy3quJfhcv/BnUdeasmP4&#13;
+fXSG6r3IfhEYG/NSu7ysvICu8RjU7sKNU8zpoIF0kEsxJJBowdLvqQVUXd6UauDXLfASiyWUFYyz&#13;
+ymR+20KpfEYdMMemyoua63yQbHX5KBa8PaNnLR3NWeP40VrHyWxnmUG4rpDNR7jfXpvH0Pv6mPN2&#13;
+u1DcHSDACiDwYT/DnA5dCcQYMSfTewpTMABCEabkrObxARHjHANdYPIudm2XrNcK2NHQBQx0EffW&#13;
+YAaUgehqiT2Dpr1pJibQdJgbO5CX8wcyP20XPlY15WCLedh+rVNubVe4uKaIvvb+xvxWp9zaLlyj&#13;
+HY7o31nxynaFsPkKnFxW9zVlU88UHYvuePW/dcqEMNoYR7khjp/km+vblYqQ6vhsvDBMuxibL0K5&#13;
+i7H7iqI131355Ei+3S6cGvZIU3GSG8IqtbGdh9LDM61ce+kMCbuhJKFeMD8wpm+3q0cNn65xF9lA&#13;
+z7+IaVmgIm/HIz0X8XnX2K8DnSMl1tySGV8bgGOZtGU8odm2W8mRU/Xpdz+RPOgIQNMvj3PnRdIb&#13;
+nYRNXlLxKVz7sQPZP71lrbJi8S4u/gP5/BEO</a>
       <a name="dataWidth" val="32"/>
       <a name="label" val="4x28C16"/>
     </comp>
@@ -2173,22 +2197,33 @@ m7yk4lO49uMAcrx7y3plxeZdXPwH+h4RDg==</a>
     <comp lib="4" loc="(630,1360)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-e 10 e 10 e 10 e 10
-e 10 e 10 28 3 39 5
-39 4 28 2 39 3 28 0
-39 2 39 1 28 8 39 0
-d2 4 2b 2 39 1 e2 2
-68 0 1 3 80 3b 2b 2
-67 3 2 4 80 20 39 2
-2 80 20 68 1 1 3 80
-5c 68 3 3 3 80 59 48
-3 2 2b 5 39 4 28 0
-39 2 28 8 39 0 2 80
-20 23 d0 5 2b 5 49 1
-3 80 c 39 5 39 4 69
-1 39 3 28 0 39 2 28
-8 39 0 2 80 20
-</a>
+compressed
+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&#13;
+mqAw</a>
     </comp>
     <comp lib="4" loc="(660,270)" name="Counter">
       <a name="max" val="0xffff"/>
@@ -4910,6 +4945,8 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(430,550)" to="(430,610)"/>
     <wire from="(430,780)" to="(430,820)"/>
     <wire from="(430,780)" to="(440,780)"/>
+    <wire from="(440,1580)" to="(440,1730)"/>
+    <wire from="(440,1730)" to="(580,1730)"/>
     <wire from="(440,310)" to="(450,310)"/>
     <wire from="(440,770)" to="(440,780)"/>
     <wire from="(440,790)" to="(440,820)"/>
@@ -4941,23 +4978,37 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(490,1700)" to="(520,1700)"/>
     <wire from="(500,1680)" to="(500,1690)"/>
     <wire from="(500,1690)" to="(520,1690)"/>
+    <wire from="(500,320)" to="(500,600)"/>
+    <wire from="(500,320)" to="(520,320)"/>
+    <wire from="(500,600)" to="(510,600)"/>
     <wire from="(500,770)" to="(500,810)"/>
     <wire from="(510,1670)" to="(510,1680)"/>
     <wire from="(510,1680)" to="(520,1680)"/>
-    <wire from="(550,1350)" to="(580,1350)"/>
+    <wire from="(540,590)" to="(570,590)"/>
+    <wire from="(540,610)" to="(560,610)"/>
+    <wire from="(550,1100)" to="(560,1100)"/>
+    <wire from="(550,1350)" to="(570,1350)"/>
     <wire from="(550,1670)" to="(630,1670)"/>
+    <wire from="(550,320)" to="(580,320)"/>
     <wire from="(560,1750)" to="(580,1750)"/>
     <wire from="(560,260)" to="(630,260)"/>
     <wire from="(560,290)" to="(570,290)"/>
-    <wire from="(560,320)" to="(570,320)"/>
+    <wire from="(560,610)" to="(560,620)"/>
+    <wire from="(560,620)" to="(570,620)"/>
     <wire from="(570,290)" to="(570,300)"/>
     <wire from="(570,300)" to="(580,300)"/>
-    <wire from="(580,1720)" to="(580,1750)"/>
+    <wire from="(580,1090)" to="(580,1110)"/>
+    <wire from="(580,1090)" to="(610,1090)"/>
+    <wire from="(580,1120)" to="(590,1120)"/>
+    <wire from="(580,1720)" to="(580,1730)"/>
+    <wire from="(580,1730)" to="(580,1750)"/>
     <wire from="(580,430)" to="(680,430)"/>
     <wire from="(580,480)" to="(630,480)"/>
-    <wire from="(590,1100)" to="(600,1100)"/>
     <wire from="(590,1160)" to="(600,1160)"/>
-    <wire from="(590,1190)" to="(610,1190)"/>
+    <wire from="(590,1190)" to="(680,1190)"/>
+    <wire from="(590,1320)" to="(590,1360)"/>
+    <wire from="(590,1320)" to="(610,1320)"/>
+    <wire from="(590,1370)" to="(600,1370)"/>
     <wire from="(590,220)" to="(590,240)"/>
     <wire from="(590,240)" to="(610,240)"/>
     <wire from="(60,200)" to="(160,200)"/>
@@ -4967,8 +5018,6 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(60,440)" to="(450,440)"/>
     <wire from="(600,1140)" to="(600,1160)"/>
     <wire from="(600,1140)" to="(700,1140)"/>
-    <wire from="(600,1360)" to="(610,1360)"/>
-    <wire from="(600,1370)" to="(630,1370)"/>
     <wire from="(600,1720)" to="(600,1750)"/>
     <wire from="(600,1750)" to="(620,1750)"/>
     <wire from="(600,700)" to="(650,700)"/>
@@ -4976,9 +5025,8 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(600,780)" to="(650,780)"/>
     <wire from="(600,820)" to="(650,820)"/>
     <wire from="(600,860)" to="(630,860)"/>
-    <wire from="(610,1070)" to="(630,1070)"/>
-    <wire from="(610,1150)" to="(610,1190)"/>
-    <wire from="(610,1150)" to="(700,1150)"/>
+    <wire from="(610,1070)" to="(650,1070)"/>
+    <wire from="(610,1120)" to="(620,1120)"/>
     <wire from="(610,1320)" to="(610,1360)"/>
     <wire from="(610,1320)" to="(890,1320)"/>
     <wire from="(610,1690)" to="(630,1690)"/>
@@ -4989,14 +5037,10 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(610,500)" to="(610,520)"/>
     <wire from="(610,500)" to="(630,500)"/>
     <wire from="(610,520)" to="(650,520)"/>
-    <wire from="(620,1110)" to="(630,1110)"/>
-    <wire from="(620,1120)" to="(700,1120)"/>
+    <wire from="(620,1370)" to="(630,1370)"/>
     <wire from="(620,280)" to="(620,310)"/>
     <wire from="(620,280)" to="(630,280)"/>
-    <wire from="(630,1070)" to="(630,1080)"/>
-    <wire from="(630,1080)" to="(650,1080)"/>
-    <wire from="(630,1100)" to="(630,1110)"/>
-    <wire from="(630,1100)" to="(640,1100)"/>
+    <wire from="(630,1090)" to="(640,1090)"/>
     <wire from="(630,350)" to="(640,350)"/>
     <wire from="(630,720)" to="(630,760)"/>
     <wire from="(630,720)" to="(650,720)"/>
@@ -5006,23 +5050,31 @@ d2 4 2b 2 39 1 e2 2
     <wire from="(630,800)" to="(650,800)"/>
     <wire from="(630,840)" to="(630,860)"/>
     <wire from="(630,840)" to="(650,840)"/>
+    <wire from="(640,1090)" to="(640,1100)"/>
+    <wire from="(640,1090)" to="(650,1090)"/>
+    <wire from="(640,1100)" to="(660,1100)"/>
+    <wire from="(640,1120)" to="(650,1120)"/>
     <wire from="(640,290)" to="(640,350)"/>
     <wire from="(640,350)" to="(820,350)"/>
     <wire from="(650,290)" to="(650,330)"/>
     <wire from="(650,330)" to="(720,330)"/>
     <wire from="(650,510)" to="(650,520)"/>
+    <wire from="(660,1100)" to="(660,1110)"/>
     <wire from="(660,1680)" to="(680,1680)"/>
     <wire from="(660,220)" to="(660,240)"/>
     <wire from="(660,240)" to="(690,240)"/>
     <wire from="(660,270)" to="(670,270)"/>
     <wire from="(660,510)" to="(660,520)"/>
     <wire from="(660,520)" to="(680,520)"/>
+    <wire from="(670,1120)" to="(700,1120)"/>
     <wire from="(670,220)" to="(670,270)"/>
     <wire from="(670,480)" to="(740,480)"/>
-    <wire from="(680,1090)" to="(690,1090)"/>
+    <wire from="(680,1080)" to="(690,1080)"/>
+    <wire from="(680,1150)" to="(680,1190)"/>
+    <wire from="(680,1150)" to="(700,1150)"/>
     <wire from="(680,430)" to="(680,520)"/>
     <wire from="(680,430)" to="(690,430)"/>
-    <wire from="(690,1090)" to="(690,1130)"/>
+    <wire from="(690,1080)" to="(690,1130)"/>
     <wire from="(690,110)" to="(690,180)"/>
     <wire from="(690,1130)" to="(700,1130)"/>
     <wire from="(690,180)" to="(770,180)"/>

@@ -267,9 +267,9 @@ const instr = {
 	reti: {
 		opcode: 20,
 		steps: [
-			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl + lines.sie,
+			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inl,
 			lines.sp_abus_out + lines.mem_out + lines.sp_inc + lines.addr_inh, 
-			lines.addr_abus_out + lines.pc_in + lines.t_reset,
+			lines.addr_abus_out + lines.pc_in + lines.t_reset + lines.sie,
 		]
 	},
 	ld_r_i:{
