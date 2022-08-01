@@ -1506,9 +1506,6 @@
       <a name="facing" val="east"/>
       <a name="label" val="MEM_OUT"/>
     </comp>
-    <comp lib="0" loc="(620,1750)" name="Tunnel">
-      <a name="label" val="CIE"/>
-    </comp>
     <comp lib="0" loc="(630,350)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="CLK"/>
@@ -1532,6 +1529,12 @@
       <a name="bit9" val="0"/>
       <a name="facing" val="west"/>
       <a name="incoming" val="16"/>
+    </comp>
+    <comp lib="0" loc="(670,1750)" name="Tunnel">
+      <a name="label" val="CIE"/>
+    </comp>
+    <comp lib="0" loc="(670,1780)" name="Tunnel">
+      <a name="label" val="RESET"/>
     </comp>
     <comp lib="0" loc="(670,220)" name="Splitter">
       <a name="bit1" val="0"/>
@@ -1941,6 +1944,10 @@
     <comp lib="1" loc="(620,1370)" name="Controlled Buffer">
       <a name="control" val="left"/>
       <a name="width" val="15"/>
+    </comp>
+    <comp lib="1" loc="(620,1760)" name="OR Gate">
+      <a name="facing" val="west"/>
+      <a name="size" val="30"/>
     </comp>
     <comp lib="1" loc="(630,1090)" name="NOT Gate">
       <a name="size" val="20"/>
@@ -5018,8 +5025,8 @@ mqAw</a>
     <wire from="(60,440)" to="(450,440)"/>
     <wire from="(600,1140)" to="(600,1160)"/>
     <wire from="(600,1140)" to="(700,1140)"/>
-    <wire from="(600,1720)" to="(600,1750)"/>
-    <wire from="(600,1750)" to="(620,1750)"/>
+    <wire from="(600,1720)" to="(600,1760)"/>
+    <wire from="(600,1760)" to="(620,1760)"/>
     <wire from="(600,700)" to="(650,700)"/>
     <wire from="(600,740)" to="(650,740)"/>
     <wire from="(600,780)" to="(650,780)"/>
@@ -5056,11 +5063,15 @@ mqAw</a>
     <wire from="(640,1120)" to="(650,1120)"/>
     <wire from="(640,290)" to="(640,350)"/>
     <wire from="(640,350)" to="(820,350)"/>
+    <wire from="(650,1750)" to="(670,1750)"/>
+    <wire from="(650,1770)" to="(660,1770)"/>
     <wire from="(650,290)" to="(650,330)"/>
     <wire from="(650,330)" to="(720,330)"/>
     <wire from="(650,510)" to="(650,520)"/>
     <wire from="(660,1100)" to="(660,1110)"/>
     <wire from="(660,1680)" to="(680,1680)"/>
+    <wire from="(660,1770)" to="(660,1780)"/>
+    <wire from="(660,1780)" to="(670,1780)"/>
     <wire from="(660,220)" to="(660,240)"/>
     <wire from="(660,240)" to="(690,240)"/>
     <wire from="(660,270)" to="(670,270)"/>
