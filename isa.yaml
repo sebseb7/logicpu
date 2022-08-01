@@ -15,6 +15,7 @@ general:
     - flags
     - df
     - dd
+    - io
     - o
     - sp
   identifier:
@@ -99,6 +100,13 @@ operand_sets:
         register: dd
         bytecode:
           value: 10
+          size: 4
+          position: suffix
+      register_io:
+        type: register
+        register: io
+        bytecode:
+          value: 14
           size: 4
           position: suffix
   register_a:
