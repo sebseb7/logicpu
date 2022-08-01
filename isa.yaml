@@ -109,6 +109,13 @@ operand_sets:
           value: 14
           size: 4
           position: suffix
+      register_flags:
+        type: register
+        register: flags
+        bytecode:
+          value: 9
+          size: 4
+          position: suffix
   register_a:
     operand_values:
       register_a:
@@ -183,6 +190,20 @@ operand_sets:
         register: dd
         bytecode:
           value: 10
+          size: 4
+          position: suffix
+      register_io:
+        type: register
+        register: io
+        bytecode:
+          value: 14
+          size: 4
+          position: suffix
+      register_flags:
+        type: register
+        register: flags
+        bytecode:
+          value: 9
           size: 4
           position: suffix
   wo_register:
